@@ -1,0 +1,294 @@
+% This is the main file for the template for doctoral thesis at
+% University of Zagreb, Faculty of Electrical Engineering and Computing
+% in Zagreb, Croatia.
+% Initial version was created in April 2013, last update was in July 2014.
+
+% Author: Jelena Bozek, jelena.bozek@fer.hr
+% Contributor: Vedran Miletic, vmiletic@inf.uniri.hr
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% POSTAVKE / SETTINGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt,oneside, a4paper]{book}
+\usepackage{etex}
+\usepackage{xcolor}
+\usepackage[pdftex]{graphicx}
+\usepackage{rotating}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+% required for printing index
+% use \index{name} in text
+%\usepackage{makeidx}
+%\makeindex
+% required for printing nomenclature
+% use \nomenclature{symbol}{description} in text
+%\usepackage{nomencl}
+%\makenomenclature
+%\renewcommand{\nomname}{Popis oznaka}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage[english]{babel}
+\usepackage{ae}
+\usepackage[unicode]{hyperref}
+\usepackage{mathptmx}
+\usepackage{amscd}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{setspace} 
+\linespread{1.3}
+\usepackage{fancyhdr} % setting up header and position of page numbers
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{\nouppercase{\fancyplain{}{\leftmark}}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\rfoot{\thepage}
+
+\usepackage{hhline}
+\usepackage{enumerate}
+\usepackage{delarray}
+\usepackage{array}  % package for some table properties
+\usepackage{tabularx} % package that allows dynamical changing table cell width
+\usepackage{multirow}  % package that enables multiple rows in a table
+\usepackage[bf, font=small]{caption}
+\usepackage[labelfont=small, font=small]{subcaption}
+\usepackage{wasysym}
+\usepackage{subeqnarray}
+\usepackage{aeguill}
+\usepackage{pdflscape} % setting page into landscape view
+\usepackage{enumitem} % for itemize lists
+\setlist{nolistsep}   % setting for itemize lists
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}  % to get unnumbered footnotes
+\renewcommand{\arraystretch}{1.5} % stretching row height
+
+\usepackage[square, numbers, sort]{natbib} 
+% change the name of Bibliography heading into "Literatura"
+% \addto\captionscroatian{%
+%   \renewcommand{\bibname}{Bibliography}
+% }
+
+% Adding a dot after chapter number in TOC 
+\let\savenumberline\numberline
+\def\numberline#1{\savenumberline{#1.}}
+
+% Adding dots after chapter titles to page number in TOC
+\makeatletter
+\renewcommand*\l@chapter[2]{%
+  \ifnum \c@tocdepth >\m@ne
+  \addpenalty{-\@highpenalty}%
+  \vskip 1.0em \@plus\p@
+  \setlength\@tempdima{1.5em}%
+  \begingroup
+  \parindent \z@ \rightskip \@pnumwidth
+  \parfillskip -\@pnumwidth
+  \leavevmode \bfseries
+  \advance\leftskip\@tempdima
+  \hskip -\leftskip
+  #1\nobreak\normalfont\leaders\hbox{$\m@th
+    \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
+    mu$}\hfill\nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+  \penalty\@highpenalty
+  \endgroup
+  \fi}
+\makeatother
+
+% adjust the line spacing in a matrix
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+
+% remove footer (page number) from TOC, list of figures and list of tables
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{empty}}}
+\AtBeginDocument{\addtocontents{lof}{\protect\thispagestyle{empty}}}
+\AtBeginDocument{\addtocontents{lot}{\protect\thispagestyle{empty}}}
+
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter
+
+%%%%%%%%%%%%%%%%%%%% NASLOVNICA / FRONT COVER PAGE %%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+  \fontsize{16pt}{20pt}\selectfont
+  \fontfamily{phv}\fontseries{mc}\selectfont
+  \newgeometry{left=3cm,right=3cm,top=3cm,bottom=2.5cm}
+  \setlength{\intextsep}{0pt plus 0pt minus 0pt}
+
+  \begin{center}
+    \begin{figure}[ht!]
+      \begin{center}
+        \includegraphics[height=4.1184cm, width=5.94cm]{logo_unizg_eng}
+      \end{center}
+    \end{figure}
+    \vspace{0cm}
+    {FACULTY OF ELECTRICAL ENGINEERING AND COMPUTING} \\
+    \vspace{3cm}
+    Filip Boltužić \\
+    \vspace{2cm}
+    {\fontsize{22pt}{22pt}\selectfont
+\textbf{
+COMPUTATIONAL METHODS FOR ARGUMENTATION MINING OF CLAIMS IN INTERNET DISCUSSIONS}} \\
+    \vspace{2cm}  
+    DOCTORAL THESIS \\    
+    \vfill{Zagreb, 2019}
+  \end{center}
+  \restoregeometry
+\end{titlepage}
+
+%%%%%%%%%%%%%% DRUGA UNUTARNJA STRANICA / SECOND INNER PAGE %%%%%%%%%%%%%%%
+\begin{titlepage}
+  \fontsize{16pt}{20pt}\selectfont
+  \fontfamily{phv}\fontseries{mc}\selectfont
+  \newgeometry{left=3cm,right=3cm,top=3cm,bottom=2.5cm}
+  \setlength{\intextsep}{0pt plus 0pt minus 0pt}
+
+  \begin{center}
+    \begin{figure}[ht!]
+      \begin{center}
+        \includegraphics[height=4.1184cm, width=5.94cm]{logo_unizg_eng}
+      \end{center}
+    \end{figure}		
+    \vspace{0cm}
+    {\fontsize{16pt}{16pt}{FACULTY OF ELECTRICAL ENGINEERING AND COMPUTING}} \\
+    \vspace{3cm}
+    Filip Boltužić \\
+    \vspace{2cm}
+    {\fontsize{22pt}{22pt}\selectfont\textbf{
+COMPUTATIONAL METHODS FOR ARGUMENTATION MINING OF CLAIMS IN INTERNET DISCUSSIONS}} \\
+    \vspace{2cm}   
+    DOCTORAL THESIS \\  
+    \vspace{5cm}   % adjust this spacing if necessary
+    Supervisor: Associate Professor Jan Šnajder, PhD \\
+    \vfill{Zagreb, 2019}
+  \end{center}
+  \restoregeometry
+\end{titlepage}
+
+%%%%%%%%%%%%%%% PRVA UNUTARNJA STRANICA / FIRST INNER PAGE %%%%%%%%%%%%%%%%
+\begin{titlepage}
+  \fontsize{16pt}{20pt}\selectfont
+  \fontfamily{phv}\fontseries{mc}\selectfont
+  \newgeometry{left=3cm,right=3cm,top=3cm,bottom=2.5cm}
+  \setlength{\intextsep}{0pt plus 0pt minus 0pt}
+
+  \begin{center}
+    \begin{figure}[ht!]
+      \begin{center}
+        \includegraphics[height=4.1184cm, width=5.94cm]{logo_unizg2}
+      \end{center}
+    \end{figure}		
+    \vspace{0cm}
+    {FAKULTET ELEKTROTEHNIKE I RAČUNARSTVA} \\
+    \vspace{3cm}
+    Filip Boltužić \\
+    \vspace{2cm}
+    {\fontsize{22pt}{22pt}\selectfont\textbf{
+RAČUNALNI POSTUPCI DUBINSKE ARGUMENTATIVNE ANALIZE TVRDNJI U INTERNETSKIM RASPRAVAMA
+}} \\
+    \vspace{2cm}    
+    DOKTORSKI RAD \\
+    \vspace{5cm}    % adjust this spacing if necessary
+	Mentor: Izv. Prof. dr. sc. Jan Šnajder \\
+    \vfill{Zagreb, 2019.}
+  \end{center}
+  \restoregeometry
+\end{titlepage}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+  \begin{minipage}{\dimexpr\textwidth-1cm}
+    \vspace{3cm}
+    Doktorski rad izrađen je na Sveučilištu u Zagrebu
+    Fakultetu elektrotehnike i računarstva, na Zavodu za 
+    elektroniku, mikroelektroniku, računalne i inteligentne sustave, u 
+    Laboratoriju za analizu teksta i inženjerstvo znanja (TakeLab).
+
+    \vspace{1cm}
+    Mentor: izv. prof. dr. sc. Jan Šnajder
+
+    \vspace{1cm}
+    Doktorski rad ima: XYZ stranica
+
+    \vspace{1cm}
+    Doktorski rad br.: \line(1,0){64}
+  \end{minipage}
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% insert info page about supervisor which is saved in separate file
+\include{eg_supervisor}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% insert optional page with thanks or dedication
+%\include{eg_thanks_dedication}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% insert page with abstract
+\include{eg_abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% insert page with extended abstract
+% prošireni sažetak na hrvatskom, ako rad nije pisan na tom jeziku
+%\include{eg_prosireni_sazetak}
+% prošireni sažetak na engleskom, ako rad nije pisan na tom jeziku
+\include{eg_extended_abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TOC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{empty} % remove header/footer 
+\tableofcontents
+\cleardoublepage % start new page
+
+\pagestyle{fancyplain} % puts headers/footers back on
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+%%%%%%%%%%%%%%%%%%%%%%%% POGLAVLJA / CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{eg_chapter}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
+
+%%%%%%%%%%%%%%%%%%%%%%% LITERATURA / BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%
+% bibliography style file is modified IEEEtran.bst file,
+% changed to suit FER's literature style
+\addcontentsline{toc}{chapter}{Literatura}
+\bibliographystyle{IEEEtranFER} 
+\bibliography{eg_biblio}
+
+%%%%%%%%%%%%%%%%%%%%%%% POPIS OZNAKA / NOMENCLATURE %%%%%%%%%%%%%%%%%%%%%%%
+% notation and list of symbols if needed
+%\printnomenclature
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% KAZALO POJMOVA / INDEX %%%%%%%%%%%%%%%%%%%%%%%%
+% optional index
+%\printindex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% insert optional list of figures
+% \listoffigures
+%\cleardoublepage % start new page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% insert optional list of tables
+% \listoftables
+%\cleardoublepage % start new page
+
+%%%%%%%%%%%%%%%%%%%%%%%%% ŽIVOTOPIS / BIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{eg_zivotopis}
+\include{eg_biography}
+
+\end{document}
