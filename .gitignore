@@ -40,10 +40,6 @@
 *.synctex.gz(busy)
 *.pdfsync
 
-## Build tool directories for auxiliary files
-# latexrun
-latex.out/
-
 ## Auxiliary and intermediate files from other packages:
 # algorithms
 *.alg
@@ -63,9 +59,6 @@ acs-*.bib
 
 # changes
 *.soc
-
-# comment
-*.cut
 
 # cprotect
 *.cpt
@@ -137,14 +130,6 @@ acs-*.bib
 # listings
 *.lol
 
-# luatexja-ruby
-*.ltjruby
-
-# makeidx
-*.idx
-*.ilg
-*.ind
-
 # minitoc
 *.maf
 *.mlf
@@ -193,20 +178,6 @@ sympy-plots-for-*.tex/
 *.pytxcode
 pythontex-files-*/
 
-# tcolorbox
-*.listing
-
-# thmtools
-*.loe
-
-# TikZ & PGF
-*.dpth
-*.md5
-*.auxlock
-
-# todonotes
-*.tdo
-
 # vhistory
 *.hst
 *.ver
@@ -217,32 +188,9 @@ pythontex-files-*/
 # xcolor
 *.xcp
 
-# xmpincl
-*.xmpi
-
-# xindy
-*.xdy
-
-# xypic precompiled matrices
-*.xyc
-
-# endfloat
-*.ttt
-*.fff
-
-# Latexian
-TSWLatexianTemp*
-
-## Editors:
-# WinEdt
-*.bak
-*.sav
-
-# Texpad
-.texpadtmp
-
-# LyX
-*.lyx~
+=======
+# easy-todo
+*.lod
 
 # Kile
 *.backup
