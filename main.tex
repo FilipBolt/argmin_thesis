@@ -10,11 +10,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%% POSTAVKE / SETTINGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt,oneside, a4paper]{book}
 \usepackage{etex}
-\usepackage{xcolor}
+%\usepackage{xcolor}
 \usepackage[pdftex]{graphicx}
 \usepackage{rotating}
 \usepackage{epsfig}
 \usepackage{epstopdf}
+
 % required for printing index
 % use \index{name} in text
 %\usepackage{makeidx}
@@ -36,6 +37,28 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+\usepackage{booktabs}
+
+\usepackage[inline]{enumitem}
+
+\setlist[description]{leftmargin=3cm,labelindent=\parindent}
+\makeatletter
+\def\namedlabel#1#2{\begingroup
+    #2%
+    \def\@currentlabel{#2}%
+    \phantomsection\label{#1}\endgroup
+}
+
+\makeatother
+% editing a cell 
+% https://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell/19678
+\usepackage{makecell}
+\renewcommand\theadalign{bc}
+\usepackage{xspace}
+
+
+\newcommand{\ComArg}{\mbox{\textsc{ComArg}}\xspace}
 
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{setspace} 
@@ -47,8 +70,10 @@
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \rfoot{\thepage}
 
+\usepackage{minted}
+\usepackage{listings}
 \usepackage{hhline}
-\usepackage{enumerate}
+%\usepackage{enumerate}
 \usepackage{delarray}
 \usepackage{array}  % package for some table properties
 \usepackage{tabularx} % package that allows dynamical changing table cell width
@@ -59,11 +84,21 @@
 \usepackage{subeqnarray}
 \usepackage{aeguill}
 \usepackage{pdflscape} % setting page into landscape view
-\usepackage{enumitem} % for itemize lists
 \setlist{nolistsep}   % setting for itemize lists
+
+\usepackage[toc,page]{appendix}
 
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}  % to get unnumbered footnotes
 \renewcommand{\arraystretch}{1.5} % stretching row height
+
+\newcounter{rowcntr}[table]
+\renewcommand{\therowcntr}{\thetable.\arabic{rowcntr}}
+
+% A new columntype to apply automatic stepping
+\newcolumntype{N}{>{\refstepcounter{rowcntr}\therowcntr}c}
+
+% Reset the rowcntr counter at each new tabular
+\AtBeginEnvironment{tabular}{\setcounter{rowcntr}{0}}
 
 \usepackage[square, numbers, sort]{natbib} 
 % change the name of Bibliography heading into "Literatura"
@@ -227,7 +262,7 @@ RAČUNALNI POSTUPCI DUBINSKE ARGUMENTATIVNE ANALIZE TVRDNJI U INTERNETSKIM RASPR
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % insert info page about supervisor which is saved in separate file
-\include{eg_supervisor}
+\include{supervisor}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % insert optional page with thanks or dedication
@@ -235,14 +270,14 @@ RAČUNALNI POSTUPCI DUBINSKE ARGUMENTATIVNE ANALIZE TVRDNJI U INTERNETSKIM RASPR
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % insert page with abstract
-\include{eg_abstract}
+\include{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % insert page with extended abstract
 % prošireni sažetak na hrvatskom, ako rad nije pisan na tom jeziku
-%\include{eg_prosireni_sazetak}
+\include{prosireni_sazetak}
 % prošireni sažetak na engleskom, ako rad nije pisan na tom jeziku
-\include{eg_extended_abstract}
+%\include{eg_extended_abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -253,12 +288,29 @@ RAČUNALNI POSTUPCI DUBINSKE ARGUMENTATIVNE ANALIZE TVRDNJI U INTERNETSKIM RASPR
 
 \pagestyle{fancyplain} % puts headers/footers back on
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
 %%%%%%%%%%%%%%%%%%%%%%%% POGLAVLJA / CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{eg_chapter}
 
+\include{01_introduction}
+% \include{eg_chapter}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% PRILOZI / APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\appendix
+%\addcontentsline{toc}{section}{Appendices}
+%\renewcommand{\thechapter}{A}
+%\renewcommand{\thesection}{\Alph{section}}
+%\setcounter{section}{0}
+
+\begin{appendices}
+
+\input{90_datasets}
+
+\input{91_annotation_guidelines}
+
+\end{appendices}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \backmatter
@@ -268,7 +320,10 @@ RAČUNALNI POSTUPCI DUBINSKE ARGUMENTATIVNE ANALIZE TVRDNJI U INTERNETSKIM RASPR
 % changed to suit FER's literature style
 \addcontentsline{toc}{chapter}{Literatura}
 \bibliographystyle{IEEEtranFER} 
-\bibliography{eg_biblio}
+\bibliography{bibliography}
+% \bibliography{eg_biblio}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%% POPIS OZNAKA / NOMENCLATURE %%%%%%%%%%%%%%%%%%%%%%%
 % notation and list of symbols if needed
@@ -288,7 +343,7 @@ RAČUNALNI POSTUPCI DUBINSKE ARGUMENTATIVNE ANALIZE TVRDNJI U INTERNETSKIM RASPR
 %\cleardoublepage % start new page
 
 %%%%%%%%%%%%%%%%%%%%%%%%% ŽIVOTOPIS / BIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{eg_zivotopis}
-\include{eg_biography}
+\include{zivotopis}
+\include{biography}
 
 \end{document}

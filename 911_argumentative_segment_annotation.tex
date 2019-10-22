@@ -1,0 +1,23 @@
+\section{Argumentative segment annotation}
+
+Iz izvornog korisnickog komentara potrebno je kopirati sve atomicke segmente u
+stupac D. Za svaki segment se dodaje oznaka rednog broja u postu (segment S1,
+S2, S3). Sav tekst koji pripada segmentu S1 valja kopirati u stupac D, dok je u
+originalnom postu potrebno ubaciti “tagove” <Sx> za pocetak segmenta Sx i </Sx>
+za kraj segmenta SX. Isprekidane segmente potrebno je vise puta oznaciti
+tagovima. U stupac E potrebno je staviti oznaku/identifikator segmenta (S1, S2,
+... , Sx). Oprez: svaki otvoreni tag mora imati zatvoreni par. 
+
+Primjer 1: 
+
+Tekst: People are great, they have many virtues. 
+Segment S1: People are great
+Segment S2: they have many virtues
+Editirani tekst: <S1>People are great</S1>, <S2>they have many virtues</S2>. 
+
+Primjer 2: 
+Tekst: People are smart and stupid. 
+Segment S1: People are smart
+Segment S2: People are stupid
+Editirani tekst: <S1><S2>People are</S2> smart</S1> and <S2>stupid</S2>
+
