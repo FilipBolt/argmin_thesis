@@ -1,23 +1,343 @@
 \section{Argumentative segment annotation}
+\label{sec:argseg_annotation}
 
-Iz izvornog korisnickog komentara potrebno je kopirati sve atomicke segmente u
-stupac D. Za svaki segment se dodaje oznaka rednog broja u postu (segment S1,
-S2, S3). Sav tekst koji pripada segmentu S1 valja kopirati u stupac D, dok je u
-originalnom postu potrebno ubaciti “tagove” <Sx> za pocetak segmenta Sx i </Sx>
-za kraj segmenta SX. Isprekidane segmente potrebno je vise puta oznaciti
-tagovima. U stupac E potrebno je staviti oznaku/identifikator segmenta (S1, S2,
-... , Sx). Oprez: svaki otvoreni tag mora imati zatvoreni par. 
+Annotating segments from user comments divides an
+argument into claims. The claims can be transformed into microstructures
+(as done to create the microstructure dataset described in \ref{item:microstructures_dataset} or 
+formalized structures (as done to create the argument structure 
+dataset described in \ref{item:structure_dataset}). Annotating segments 
+involves paraphrasing extracted
+segments to help streamline the annotation of segments to structures. 
 
-Primjer 1: 
+The task is to segment debate posts into claims. Each 
+annotator gets a sheet in a Google Sheets file with their name. 
+Column $C$ contains a user comment on the topic of \textit{Should marijuana be legal} (MA).
+The annotator needs to carefully read the user comment, determine the stance of the 
+comment along with the explicit and implicit premises upon which the comment 
+founds the expressed stance. 
 
-Tekst: People are great, they have many virtues. 
-Segment S1: People are great
-Segment S2: they have many virtues
-Editirani tekst: <S1>People are great</S1>, <S2>they have many virtues</S2>. 
+For each comment, the annotation involves:
+\begin{enumerate}
+\item extracting all argumentative segments of the comment as an atomic claim,
+\item label the type of extracted segments (options in section X), and
+\item create a paraphrase of the extracted segment (guidlines on creating paraphrases in section Y).
+\end{enumerate}
+All argumentative segments should be copied to column $D$. 
+Each extracted segment needs to be marked with a integer which denotes the
+ordering of appearance in the post (segment $S1$, $S2$, $S3$, \dots)
+All text belonging to segment $S1$ needs to be copied to column $D$, whereas
+the original comment text needs to be edited to mark the segments belonging to 
+the extracted segments. The beginning and end 
+of the segment $Sx$ need to be marked with \texttt{<Sx>} and \texttt{</Sx>} respectively. 
+Discontiguous segments are also allowed, they need to be marked with start and end tags
+for each segment. Copying discontiguous segments is done by concatenating all 
+instances in order of appearance. 
+Column $E$ needs to contain the segment 
+identifier ($S1$, $S2$, \dots). Please note that each start tag needs to be
+paired with an end tag. 
 
-Primjer 2: 
-Tekst: People are smart and stupid. 
-Segment S1: People are smart
-Segment S2: People are stupid
-Editirani tekst: <S1><S2>People are</S2> smart</S1> and <S2>stupid</S2>
+\noindent Example 1: 
 
+\begin{itemize}
+  \item[] Comment: ``People are great, they have many virtues.''
+  \item[] Segment $S1$: ``People are great''
+  \item[] Segment $S2$: ``they have many virtues''
+  \item[] Edited comment: ``\texttt{<S1>}People are great\texttt{</S1>},
+  \texttt{<S2>}they have many virtues\texttt{</S2>}. ''
+\end{itemize}
+
+\noindent Example 2:
+\begin{itemize}
+\item[] Comment: ``People are smart and stupid.''
+\item[] Segment $S1$: ``People are smart''
+\item[] Segment $S2$: ``People are stupid''
+\item[] Edited comment: ``\texttt{<S1><S2>}People are\texttt{</S2>} smart\texttt{</S1>}
+and \texttt{<S2>}stupid\texttt{</S2>}''
+\end{itemize}
+
+\subsection{Argumentative segment type}
+
+The extracted segment needs to have a labelled segment type in column $F$ of
+the Google sheets document. The segment needs to be classified according to two
+taxonomies. First, the segment needs to be classified as either a 
+\begin{enumerate}
+\item fact -- statement that is true or untrue,
+\item policy -- statement providing a solution or another series of questions in response to a fact,
+\item value -- judgement, appraisal or evaluation. 
+\end{enumerate}
+Second, the segment needs to be labelled as either a 
+\begin{enumerate}
+\item assertion -- explicit statement or announcement or
+\item rhetorical question -- question not expecting an answer. 
+\end{enumerate}
+More on facts, values and policies \citep{factvaluepolicy}.
+
+\subsection{Segment paraphrase annotation}
+
+For each extracted segment, a paraphrased needs to be constructed. The paraphrase needs to
+be assigned to column $G$ in spirit of the following principles:
+\begin{itemize}
+\item \textbf{Argumentativeness} -- Only argumentative text should be paraphrased; 
+\item \textbf{Atomicity} -- A claim should convey a single thought; 
+\item \textbf{Authority} -- Experts in claims from expert opinion should be made explicit in the paraphrase; 
+\item \textbf{Brevity} -- Paraphrases should keep only the relevant argumentative content; 
+\item \textbf{Canonicity} -- Canonical terms and phrases are preferred over idiomatic language;
+\item \textbf{Contextuality} -- Claims should be paraphrased by considering their local and
+topical context as well as their context;
+\item \textbf{Declarativity} -- paraphrases should 
+be in declarative form;
+\item \textbf{Dereferencing} -- Pronouns andnominal  references
+should be  resolved;  and
+\item \textbf{Explicitness} -- Only explicitly stated
+information should be paraphrased, and not whatever might be implied by the claim
+\end{itemize}
+
+\subsection{Examples of segment annotation}
+
+\begin{mydef}
+By banning gay adoption, children in gay couple households have no legal status
+should something happen to the parents, including death or serious illness.
+The child cannot claim inheritances or other household assets in case of death.
+If one parent dies, the second parent has no legal right to take custody or
+care for the child.   A parent without legal right to a child cannot legally
+register him/her for school.   Parents cannot put children on some health
+insurance plans.   Parents cannot make medical decisions for the child.   * The
+child has no claim to the social security or other insurance benefits of the
+parent.   Gay couple parents without adoption rights do not benefit from the
+generous tax deductions granted to heterosexual parents.
+\end{mydef}
+
+\noindent Izdvojeni segmenti:
+\begin{itemize}
+\item[] \textbf{Segment1:} ``By banning gay adoption, children in gay couple
+households have no legal status should something happen to the parents,
+including death or serious illness.''
+\item[] \textbf{Type}: Fact, assertion
+\item[] \textbf{Paraphrase}: ``Children without a legal status are not
+protected in case something happens to their parents''
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment2}: ``The child cannot claim inheritances or other household assets in case of death.''
+\item[] \textbf{Type}: Fact, assertion
+\item[] \textbf{Paraphrase}: ``Children without a legal status cannot claim
+inheritance or other household assets in case of death.''
+\end{itemize} 
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment3}: ``If one parent dies, the second parent has no legal
+right to take custody or care for the child.''
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: ``If one parent dies, the second parent has no legal
+right to take custody or care for the child.'' (same)
+
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment4}: ``A parent without legal right to a child cannot
+legally register him/her for school.''
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: ``A parent without legal right to a child cannot
+legally register him/her for school.'' (same)
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment5}: ``Parents cannot put children on some health insurance plans.''
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: ``Parents cannot put children on some health insurance plans.'' (same)
+
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment6}: ``Parents cannot make medical decisions for the child.''
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: ``Parents cannot make medical decisions for the child.''
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment7}: ``The child has no claim to the social security or
+other insurance benefits of the parent''
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: ``The child has no claim to the social security or
+other insurance benefits of the parent''
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment8}: ``Gay couple parents without adoption rights do not
+benefit from the generous tax deductions granted to heterosexual parents.''
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: ``Unmarried gay parents cannot claim adoption rights
+to benefit from tax deductions.''
+\end{itemize}
+
+\begin{mydef}
+No it shouldnt be allowed. Marriage is when man and women get married. In the
+Bible it says that its a sin for marrying your same gender and its a immoral
+sin. Look at the animals they have one male and one female you dont see 2 male
+horse with each other or any other animals. Look at the example animals make
+learn from them.
+\end{mydef}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment1}: it shouldnt be allowed
+\item[] \textbf{Type}: policy, assertion
+\item[] \textbf{Paraphrase}: Gay marriage should not be allowed.
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment2}: Marriage is when man and women get married.
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: Marriage is between a man and a woman.
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment3}: In the Bible it says that its a sin for marrying your same gender and its a immoral sin.
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: According to the bible, same-sex marriage is immoral.
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment4}: Look at the animals they have one male and one female
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: Animals of opposite sex pair up.
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment5}: you dont see 2 male horse with each other or any other animals
+\item[] \textbf{Type}: fact, assertion
+\item[] \textbf{Paraphrase}: Animals of same sex do not pair up.
+\end{itemize}
+
+\begin{itemize}[topsep=0.3cm]
+\item[] \textbf{Segment6}: Look at the example animals make learn from them.
+\item[] \textbf{Type}: policy, assertion
+\item[] \textbf{Paraphrase}: We should learn from how animals behave.
+\end{itemize}
+
+\subsubsection{Segment atomicity}
+
+\begin{mydef}
+I do not at all feel as God wants two men or two woman to be together, as he
+has made each a man and a woman to combine and be together. However, it is our
+constitutional right to make our own chices in America. What I believe should
+be "exit only" is non of my business where people put things. As far as a legal
+bond, we are considered "one nation under God" but , the goverment would make a
+benifit from gay marriage, wether I a gree or not. Like I said we should have
+the freedom to choose, we are Americans and our ancestors fought for our
+freedom!!!!! Hey and I hope everyone is fighting to keep seatbelts a
+choice,please keep fighting for our FREEDOM of choice!!!
+\end{mydef}
+This extracted segment expresses two separate ``thoughts''
+\begin{itemize}
+\item[] ``What I believe should be "exit only" is non of my business where people put
+things.''
+\end{itemize}
+therefore it should be divided into two segments:
+\begin{itemize}
+\item[]  ``I believe should be "exit only"''
+\item[] ``is non of my business where people put things''
+\end{itemize}
+
+\subsection{Assuming too many implicit premises}
+
+\begin{mydef}
+I do not at all feel as God wants two men or two woman to be together, as he
+has made each a man and a woman to combine and be together. However, it is our
+constitutional right to make our own chices in America. What I believe should
+be "exit only" is non of my business where people put things. As far as a legal
+bond, we are considered "one nation under God" but , the goverment would make a
+benifit from gay marriage, wether I a gree or not. Like I said we should have
+the freedom to choose, we are Americans and our ancestors fought for our
+freedom!!!!! Hey and I hope everyone is fighting to keep seatbelts a
+choice,please keep fighting for our FREEDOM of choice!!!
+\end{mydef}
+The segment ``our ancestors fought for our freedom'' can be understood
+such that the author believes that freedom refers to the freedom of choice.
+This might be the case, but concluding so requires making assumptions based 
+derived on implicit premises. 
+
+Moze se shvatiti kako je autor htio reci da se sloboda odnosi na slobodu
+izbora. To je vrlo vjerojatno istina, ali tu se radi o implicitnom znanju, do
+kojeg moramo doci ako dodamo implicitne premise. Tako mozemo dobiti iducu
+parafrazu. Doing so leads to the following paraphrase solution:
+\begin{itemize}
+\item[] ``American ancestors fought for freedom to choose''
+\end{itemize}
+This paraphrase assumes ``freedom to choose''. But, the same segment can be
+paraphrased not to include implicit knowledge and paraphrase in the following way 
+(while also dereferencing the pronoun ``our'' to ``Americans''):
+\begin{itemize}
+\item[] ``Ancestors of current Americans fought for freedom of Americans.''
+\end{itemize}
+
+\subsection{Reusing segment parts}
+
+\begin{mydef}
+As you say, "Marriage is something in particular." Its a legal union requiring
+a license from a government office, not from a religious organization. That's
+why gay people are fighting for "equal rights", not "equal rites."   For the
+government to remain neutral on this issue, they need to stop denying gay
+people the same rights as others to marry. As it is, the federal government is
+anything but neutral. They deny over one thousand federal benefits to people
+legally married in several states who happen to be of the same sex.
+\end{mydef}
+One candidate segment to extract would be:
+\begin{itemize}
+\item[] ``For the government to remain neutral on this issue, they need to stop
+denying gay people the same rights as others to marry''
+\end{itemize}
+This segment actually contains three connected atomic segments (in paraphrased form):
+\begin{itemize}
+\item[] ``The government needs to remain neutral on this issue''
+\item[] ``The government needs to stop denying gay people rights to marry''
+\item[] ``Everyone but gay people have the rights to marry''
+\end{itemize}
+
+
+\begin{mydef}
+This is the dictionary definition of marriage:   a.   the social institution
+under which a man and woman establish their decision to live as husband and
+wife by legal commitments, religious ceremonies, etc. Antonyms: separation.
+b.   a similar institution involving partners of the same gender: gay marriage.
+Antonyms: separation.   2.   the state, condition, or relationship of being
+married; wedlock: a happy marriage. Synonyms: matrimony. Antonyms: single life,
+bachelorhood, spinsterhood, singleness; separation.   3.   the legal or
+religious ceremony that formalizes the decision of two people to live as a
+married couple, including the accompanying social festivities: to officiate at
+a marriage. Synonyms: nuptials, marriage ceremony, wedding. Antonyms: divorce,
+annulment.   4.   a relationship in which two people have pledged themselves to
+each other in the manner of a husband and wife, without legal sanction: trial
+marriage.   5.   any close or intimate association or union: the marriage of
+words and music in a hit song. Synonyms: blend, merger, unity, oneness;
+alliance, confederation. Antonyms: separation, division, disunion, schism.
+There is no mention of the reason for marriage being to Pro-create, the only
+reason people should get married should be because they love each other and if
+two Gay people love each other they should be allowed to marry. You can
+Pro-create without getting married and I know many straight married people who
+dont have Children they married because they loved each other not to have
+children and Gay people should be allowed this right as well
+\end{mydef}
+Segment ``many straight married people who dont have Children they married
+because they loved each other not to have children''
+can be divided into three atomic segments:
+\begin{itemize}
+\item[] ``many straight married people who don't have Children''
+\item[] ``many people married because they loved each other''
+\item[] ``many people married not to have children''
+\end{itemize}
+
+\subsection{Recognizing value segments}
+
+Value segments often involve explicitly judging the value of an object.
+Sometimes, the judgement can be made implicitly, but seeing explicit 
+expressions should be preffered. For example: 
+``People argue Gay marriage will lead to and allow
+untraditional families.'' is a factual statement, because 
+the author expresses his views of public opinion. If the author expressed
+his personal view like ``gay marriages lead to untraditional families''
+this could be considered a value statement, with the key part being
+the word ``untraditional'' which expresses negativity towards ``gay marriages''.
+Wheter there is a another view holder can influence the segment type. 
+The segment ``The bible says Gay rights are immoral'' is considered a factual statement, 
+whereas the segment ``Gay rights are immoral'' is considered to be a 
+value segment since the segment is attributed to the author. 

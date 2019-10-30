@@ -1,0 +1,90 @@
+\section{Argument Recognition Annotation}
+\label{sec:argrec_annotation}
+
+Argument recognition is the task of recognizing which (from a set of predefined)
+arguments is mentioned in a target comment and how. The goal of the task is 
+to label argument-comment pairs with a label:
+\begin{itemize}
+\item A -- explicitly attacks the argument
+\item a -- vaguely/implicitly attacks the argument
+\item N -- makes no useof the arguments
+\item s -- vaguely/implicitly supports the argument
+\item S -- explicitly supports the argument
+\end{itemize}
+Labeling the dataset according the guidlines below
+produced the \ComArg dataset (described in \ref{item:comarg} and \citep{boltuzic2014back}).
+
+\subsection{Annotation Guidelines}
+
+There is an online discussion about ``gay rights''. The topic is ``SHOULD GAY
+PEOPLE BE ALLOWED TO MARRY?''. Users post comments on the discussion forum,
+which express opinions that are either for or against gay marriages. For
+example: COMMENT: ``Gay people shouldn’t marry because they can’t have
+children.''
+In these discussions, users often refer to certain well-established arguments .
+For example, typical arguments are:
+\begin{itemize}
+\item ARGUMENT 1: ``All people should be treated equally.''
+\item ARGUMENT 2: ``Marriage should be between two believers who can produce godly offspring.''
+\item ARGUMENT 3: ``Marriage is about more than procreation, therefore gay couples should not be denied the right to marry due to their biology.''
+\end{itemize}
+
+\noindent Your task is to detect WHICH arguments are used in a comment and HOW. You will
+be presented with three arguments for each comment. For each argument, there
+will be five check boxes, numbered 1 (DENIED) through 5 (APPROVED). 
+
+\noindent For each argument, you need to do the following:
+\begin{itemize}
+\item if the comment directly denies the argument, check 1 (DENIED).
+\item if the comment does not refer to the argument, check 3 (NOT MENTIONED)
+\item if the comment approves the argument to make its point, check 5 (APPROVED).
+\end{itemize}
+
+\noindent You might feel that the comment approves or denies the argument, but you're not
+completely certain. If you think that the argument is indirectly or partially
+denied, check option 2, which is the option between DENIED and NOT MENTIONED.
+Conversely, if you think that the argument is indirectly or partially approved,
+check option 4, which is the option between NOT MENTIONED and APPROVED.
+Note that it will often be the case that an argument is not mentioned.
+
+Also note that if a comment and an argument express a different opinion, it
+does not automatically mean that the argument is denied. For example, a comment
+``Marriage is a religious institution, and the major world religions frown upon
+homosexuality'' does not deny the argument ``Gay couples should be able to take
+advantage of the fiscal and legal benefits of marriage''. Here, the comment and
+the argument do express different opinions over the issue, but the argument
+itself is not mentioned in the comment.
+
+Consider again the example above. To detect whether and how ARGUMENTS 1-3 are
+used in COMMENT, think in the following way.
+In case of ARGUMENT 1: ``All people should be treated equally.''
+
+\begin{enumerate}
+\item    ARGUMENT 1 refers to human equality
+\item    COMMENT does NOT refer to human equality
+\item    Therefore, check option 3 (NOT MENTIONED) for ARGUMENT 1.
+\end{enumerate}
+
+\noindent In case of ARGUMENT 2: ``Marriage should be between two believers who can
+produce godly offspring.''
+
+\begin{enumerate}
+\item ARGUMENT 2 implies that having children is a necessary condition for
+marriage
+\item COMMENT states that gay people shouldn’t marry because they cannot have
+children, implying that having children is a necessary condition for marriage
+\item BOTH claims are about having children and make the same point
+\item therefore, COMMENT supports ARGUMENT 2
+\item check option 5 (APPROVED)
+\end{enumerate}
+
+\noindent In case of ARGUMENT 3: ``Marriage is about more than procreation, therefore gay
+couples should not be denied the right to marry due to their biology.''
+
+\begin{enumerate}
+\item ARGUMENT 3 implies that having children is not a necessary condition for marriage
+\item COMMENT states that gay people shouldn’t marry because they cannot have children, implying that having children is a necessary condition for marriage
+\item BOTH claims are about ``having children'', but COMMENT states the opposite of ARGUMENT 3
+\item therefore, COMMENT denies ARGUMENT 3
+\item check option 1 (DENIED)
+\end{enumerate}

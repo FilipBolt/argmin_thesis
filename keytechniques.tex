@@ -1,0 +1,551 @@
+\chapter{Natural Language Processing Techniques}
+
+- some intro \\
+
+- in the rest of the chapter we will mention machine learning
+approaches used to classify text into labels~\ref{sec:machine_learning}
+
+%TODO divide section to sequence models and (non)-sequence models
+
+\section{Machine Learning}
+\label{sec:machine_learning}
+
+- machine learning algorithms learn from data \\
+- two basic purposes: supervised and unsupervised algorithms \\
+- supervised algorithms fit a set of $n$ samples of 
+input data $\textbf{X}^n \in \mathbb{R}^n$ to the set of their correponding 
+labels $y^n $. When the labels are discrete $y \in \{1, 2, \dots , V\}$ 
+supervised learning is called classification (of $V$ classes), 
+whereas learning to fit continuous values ($y \in \mathbb{R}$) 
+is denoted regression \\
+
+\subsection{Support Vector Machines}
+
+Support Vector Machines (SVM) \citep{cortes1995support} is one of the most
+popular machine learning algorithms. The algorithm has proven useful for many
+text-based problems, such as spam classification \citep{drucker1999support},
+sentiment analysis \citep{wang2012baselines}, text categorization
+\citep{joachims1998text}, and text classification in general
+\citep{tong2001support, ikonomakis2005text}. Originally designed as a simple
+binary classification procedure, it has been extended to support multiclass
+classification \citep{weston1998multi}, structured prediction
+\citep{tsochantaridis2005large}, weighted learning \citep{huang2005weighted} and
+other. 
+
+Consider a binary classification problem where one has
+a training set $S$ consisting of $N$ pairs of examples with assigned labels
+$(x_i, y_i)$.
+
+$$
+S = \{(x_1, y_1), (x_2, y_2), \dots, (x_N, y_N)\}
+$$
+where $\forall i, x_i \in \mathbb{R}^d, y_i \in {0, 1}$.
+The SVM algorithm first projects the input data $x_i$ to 
+higher dimensional space using a 
+feature transform function $\phi(x_i)$ then attempts to 
+find support vectors which are solutions to the equations:
+\begin{align*}
+\textbf{w}^T \phi(X) + b = -1 \\
+\textbf{w}^T \phi(X) + b = 1
+\end{align*}
+
+The solutions to the equations represent margins which divide
+the two classes ${-1, 1}$.
+The margin width is $\frac{2}{||w||}$. 
+To find the weights, one needs to 
+optimize for two criteria 
+\begin{enumerate*}[label=(\arabic*)]
+\item maximize margin width and
+\item minimize classification loss
+\end{enumerate*} which is done by
+$$
+\min_{\textbf{w}} \left( \frac{1}{2}||\textbf{w}||^2 + C \sum_{i=1}^{N} \xi_i \right)
+$$
+where $\xi_i$ is the loss function and $C$ is a parameter of the model.
+Typically, \textit{hinge loss} is used as the loss function $\xi_i(x_i, y_i) =
+\max(0, 1 - y_i(\textbf{w}^T x_i + b))$ This problem can be solved using
+various methods, such as quadratic programming \citep{wu2005svm} or stochastic
+optimization \citep{wang2012breaking}.
+
+\subsection{Viterbi algorithm}
+\label{sec:viterbi}
+
+The Viterbi algorithm is a recursive optimal solution to the problem of
+estimating the state sequence of a discrete finite-state Markov process
+\citep{howard1960dynamic} observed in memoryless noise
+\citep{forney1973viterbi}. A Markov process is a stochastic process
+whose future state values (time is discrete) are determined by
+recent ones. Such a process generates a sequence of $T$ states 
+$\textbf{x} = (x_0, \dots, x_T)$, where 
+$x_t \in \{1, 2, \dots, K\}$, $\forall t \in {1, \dots, T}$
+under the condition that :
+$$
+P(x_{t + 1} | x_0, x_1,\dots,x_t) = P(x_{t + 1} | x_t).
+$$
+Using the Viterbi algorithm it is then possible 
+to find the most likley sequence of states -- 
+the \textbf{Viterbi path}.
+
+More formally, if we observe a sequence of
+observations $\textbf{y} = (y_1, \dots, y_T)$ with output states
+$y_i \in O = \{o_1, \dots, o_N\}$ with an initial state probability
+probility array $\bm{\pi} = \{\pi_1,\dots, \pi_K\}$
+behaving under a transition matrix $A$ of size $K \times K$
+with element $A_ij$ storing the transition probability of
+$s_i$ to $s_j$, 
+and emission matrix $B$ of size $K \times N$ with 
+element $B_ij$ storing probability of observing $o_j$ from $s_i$,
+where $T$ is the number of steps, 
+$K$ the number of possible states, and $N$ is the number of 
+possible observations. We wish to find
+$\textbf{x} = (x_1, \dots, x_T)$
+as a sequence of states $x_i \in S = \{s_1, \dots, s_K\}$ 
+most likely to generate the observed outputs under the 
+conditions specified. 
+
+A forward pass is made, which populates two
+tables $T_1$ and $T_2$, both of size
+$K \times T$. An element $T_1[i, j]$ stores 
+probablities of the most likely path so far with 
+$x_j = s_i$ that generates $\textbf{y} = (y_1, \dots, y_j)$.
+$T_2[i, j]$ stores elements $x_{j - 1}$ of the most
+likely path $\bm{\hat{x}} = (\hat{x}_1, \dots, \hat{x}_j = s_j)$:
+\begin{align*}
+T_1[i, j] = \max_k (T_1[k, j - 1] \cdot A_{ki} \cdot B_{iy_j}) \\
+T_2[i, j] = \argmax_k (T_1[k, j - 1] \cdot A_{ki})
+\end{align*}
+calculated for each $k \in \{1, 2, \dots, K\}$, subsequence
+of length $\forall j, 2 \leq j \leq T$
+
+\subsection{Long short-term memory networks}
+\label{sec:lstm}
+
+\begin{figure}
+\includegraphics[scale=0.23]{lstm_2.png}
+\caption{Long short-term memory network cell diagram. The cell consists of the 
+	cell, input gate, forget gate and output gate. The LSTM receives
+	the hidden state at the previous time step ($h_{t - 1}$) and $x_t$
+	and outputs the hidden state $h_{t}$
+	Adopted from 
+\citep{graves2013hybrid} }
+\label{fig:lstm_arch}
+\end{figure}
+
+Long short-term memory (LSTM) is an recurrent neural network
+designed to process sequences of data 
+\citep{gers1999learning}. A unit of LSTM consists of 
+a cell, an input gate, an output gate and a forget gate.
+The cell stores information over time intervals and the
+gates control which data will be passed on the cell 
+or not. Figure \ref{fig:lstm_arch} shows an LSTM cell. 
+The input gate ($i$, which new information is going to be stored), 
+forget gate ($f$, which information is going to be forgotten from 
+the cell state), and output gate ($o$, which is the final output 
+of the block) 
+are calculated (at timestep $t$) from the input ($\mathbf{x_t}$) and 
+previously calculated hidden state ($\mathbf{h_{t-1}}$):
+\begin{align*}
+	\mathbf{i_t} &= \sigma(\mathbf{w_i} [\mathbf{x_t}, \mathbf{h_{t - 1}}] + b_i) \\
+	\mathbf{f_t} &= \sigma(\mathbf{w_f} [\mathbf{x_t}, \mathbf{h_{t - 1}}] + b_f) \\
+	\mathbf{o_t} &= \sigma(\mathbf{w_o} [\mathbf{x_t}, \mathbf{h_{t - 1}}] + b_o) \\
+\end{align*}
+where $\mathbf{w_i, w_f, w_o}$ and $\mathbf{b_i, b_f, b_o}$
+are learnable weights of the network and $\sigma$ is the 
+sigmoid function ($\sigma(x) = 1 / (1 + e^{-x})$). Next, the 
+cell state ($c_t$) and next hidden state ($h_t$) can be calculated as:
+\begin{align*}
+	\mathbf{\hat{c_t}} &= tanh(\mathbf{w_c} [\mathbf{x_t}, \mathbf{h_{t - 1}}] + b_c) \\
+	\mathbf{c_t} &= \mathbf{f_t} \cdot \mathbf{c_{t - 1}} + \mathbf{i_t} \cdot \mathbf{\hat{c_t}} \\
+	\mathbf{h_t} &= \mathbf{o_t} \cdot tanh(\mathbf{c_t}) \\
+\end{align*}
+where $tanh$ represents the hyperbolic tangent function.
+
+
+The advantage over regular recurrent neural networks, which
+don't posses any gating mechanism, is to stop the 
+vanishing \citep{hochreiter1998vanishing}
+and exploding gradient problems \citep{pascanu2012understanding}. 
+The gradients from backpropagation 
+can either vanish or explode when training
+neural networks causing weight changes to either
+stop (vanish) or take on extreme values (explode).
+LSTM networks have been successfully applied to a number of problems,
+such as language modeling 
+\citep{sundermeyer2012lstm}, 
+text classification 
+\citep{zhou2015c}, question answering 
+\citep{zhu2016visual7w}, machine translation
+\citep{luong2014addressing}, and many more. LSTM networks are widely considered 
+to provide a strong baseline for 
+text-based problems. There exist many variations of LSTM networks, 
+one example being gated recurrent units (GRU) \citep{chung2014empirical}.
+
+\subsection{Conditional Random Fields}
+\label{sec:crf}
+
+Conditional random fields (CRF) is a framework for building probablistic 
+models to segment and label sequence data \citep{wallach2004conditional}
+When trying to predict a vector $\mathbf{Y} = \{y_0, \dots, y_t\}$
+of random variables given an observed feature vector 
+$\mathbf{X} = \{x_0, \dots, x_t\}$. 
+the typical supervised classification approach would be 
+to learn independent classifiers to map $\forall i,  x \to y_i$
+\citep{sutton2012introduction}.
+However, this approach doesn't take into account possible dependencies
+that may exist between labels, example being that neighboring 
+regions in an image tend to have similar labels. 
+Thus, predicting output variables can be represented as a graphical model.
+Graphical models can be directed and undirected, but 
+in the scope of this thesis, we limit ourselves to 
+directed linear conditional random fields
+and all subsequent definitions apply only to those. 
+For an overview of other CRF, I recommend an
+introductory, but comprehensive tutorial 
+on CRFs \citep{sutton2012introduction} and the original paper on CRF by Lafferty et. al
+\citep{lafferty2001conditional}. 
+
+Formally, let $G = (V, E)$ be a graph such that $\mathbf{Y} = (\mathbf{Y}_v)_{v
+\in V}$, so that $\mathbf{Y}$ is indexed by the vertices of $G$. Then
+$(\mathbf{X}, \mathbf{Y}$) is a \textit{conditional random field} in case, when
+conditioned on $\mathbf{X}$, the random variables $\mathbf{Y}_v$ obey the
+Markov property with respect to the graph: $p(\mathbf{Y}_v | \mathbf{X},
+\mathbf{Y}_w, w \neq v) = p(\mathbf{Y}_v | \mathbf{X}, \mathbf{Y}_w, w \sim v)$
+, where $w \sim v$ means that $w$ and $v$ are neighbors in $G$
+\citep{lafferty2001conditional}. 
+For the linear chain case, $G$ is a simple chain
+defined by: $G = (V = \{1, \dots, m\}, E = \{(i, i + 1)\})$, making 
+$\mathbf{X} = (\mathbf{X_1}, \mathbf{X_2}, \dots, \mathbf{X_t})$
+and $\mathbf{Y} = (\mathbf{Y_1}, \mathbf{Y_2}, \dots, \mathbf{Y_t})$.
+%as depicted in figure~\ref{fig:chaincrf}. 
+Now, the joint distribution of $X$ and $Y$ over $T$ time steps 
+can be factorized as:
+$$
+p(x, y) = \prod_{t=1}^{T} p(y_t | y_{t - 1}) p(x_t | y_t)
+$$
+By setting $\theta_{ij} = \log p(y' = i | y = j)$ and
+$\mu_{oi} = \log p(x = o | y = i)$ the joint distribution
+can be rewritten as:
+$$
+p(x, y) = \frac{1}{Z} \prod_{t=1}^{T} exp \left\{ \sum_{i, j \in S} \theta_{ij} \mathbf{1}_{\{y_t=i\}} \mathbf{1}_{\{y_{t-1} = j\}}
++ \sum_{i \in S} \sum_{o \in O} \mu_{oi} \mathbf{1}_{\{y_t = i\}}\mathbf{1}_{\{x_t  = o\}} \right\}
+$$
+where $\theta = \{theta_{ij}, \mu_{oi}\}$ are parameters of the distribution and $Z$ is the
+normalization constant. This can be shortened by 
+introducing a \textit{feature function}
+defined as $f_k (y_t, y_{t - 1}, x_t)$:
+$$
+p(x, y) = \frac{1}{Z} \prod_{t=1}^{T} exp \left\{ \sum_{k=1}^{K} \theta_k f_k(y_t, y_{t - 1}, x_t) \right\}
+$$
+Now, we can derive conditional distribution $p(y | x)$:
+\begin{equation}\label{eq:cond_crf}
+p(y | x) = \frac{p(y, x)}{\sum_{y'} p(y', x)}  = 
+\frac{\prod_{t=1}^{T} exp \left\{ \sum_{k=1}^{K} \theta_k f_k(y_t, y_{t - 1}, x_t) \right\}}
+{\sum_{y'} \prod_{t=1}^{T} exp \left\{ \sum_{k=1}^{K} \theta_k f_k(y'_t, y'_{t - 1}, x_t) \right\}}
+\end{equation}
+which is the definition of the \textit{linear-chain conditional random field}.
+This definition can be extended such that the feature function can depend on 
+multiple inputs, as the vector $x_t$ (representing all observations of $x$
+until time step $t$) can be a parameter of the feature function $f_k$. 
+
+Deriving inference in CRFs (finding 
+$y^* = \argmax_y p(y | x)$) 
+in the general case is intractable since 
+it requires computing all possible $p(y_t, y_{t - 1} | x)$ 
+and the normalizing constant $Z$, which grows exponentially with the 
+sequence length. 
+However, in the case of the linear-chain CRF it is possible to 
+use dynamic-programming algorithms, such as the
+forward-backward algorithm \citep{devijver1985baum} 
+for computing the marginal distributions and 
+the Viterbi algorithm
+(section~\ref{sec:viterbi}) for computing
+the most probable assignment. 
+To estimate parameters $\theta$ of a conditional 
+random field \textit{maximum likelyhood} is used.
+A training dataset of $N$ samples $\{\mathbf{x}^{(i)}, \mathbf{y}^{(i)}\}^{N}_{i=1}$
+where each $\mathbf{x}^{(i)} = \{x_{1}^{(i)}, \dots, x_{T}^{(i)}\}$
+is a sequence of inputs
+and $\mathbf{y}^{(i)} = \{y_{1}^{(i)}, \dots, y_{T}^{(i)}\}$ is 
+a sequence of labels. To esimate parameters, we
+minimize log likelyhood expressed as a function of parameters $\theta$:
+
+$$
+\theta^{*} = \argmin_{\theta} \sum_{i=1}^{N} \log p(\mathbf{y}^{(i)} | \mathbf{x}^{(i)} ; \theta)
+$$
+Expanding the conditional likelyhood using the definition of conditional random field
+(equation~\ref{eq:cond_crf}) and adding an $L_2$ regularization factor $1/2 \sigma^2$ 
+to penalize large weights:
+$$
+\sum_{i=1}^{N} \sum_{t=1}^{T} \sum_{k=1}^{K} \theta_k f_k (y_{t}^{(i)}, y_{t - 1}^{(i)} x_{t}^{(i)}) 
+- \sum_{i=1}^N \log Z(x^{(i)}) - \sum_{k=1}^{K} \frac{\theta_{k}^{2}}{2 \sigma^2}
+$$
+Deriving to find the optimal set of $\theta$, we end up with:
+$$
+\frac{\partial }{\partial \theta_k} = \sum_{i=1}^{N} \sum_{t=1}^{T} f_k (y_{t}^{(i)}, y_{t - 1}^{(i)} x_{t}^{(i)}) 
+- \sum_{i=1}^{N} \sum_{t=1}^{T} \sum_{y, y'} f_k (y, y', x_{t}^{(i)}) p(y, y'|x^{(i)}) - \frac{\theta_k}{\sigma^2}
+$$
+The result is a concave function (which is useful since we're looking for the 
+maximum) since it is of the form $\log \sum_i \exp x_i$, thus can be optimized by
+any hill climbing technique, with the 
+Broyden-Fletcher-Goldfarb-Shanno algorithm \citep{liu1989limited} being a popular 
+choice. 
+
+CRFs, particularly linear-chain CRFs
+have been widely applied in natural language processing in tasks such as
+named entity recognition \citep{liu2011recognizing}, shallow parsing \citep{sha2003shallow}, 
+extracting syntax from text \citep{taskar2004max}, 
+semantic role labeling \citep{cohn2005semantic}, citation extraction \citep{wellner2004integrated}, 
+sentiment analysis \citep{patra2014ju_cse} and many more. 
+
+%TODO Applications of CRF
+% Extracting syntax from natural-language text 
+
+% \begin{figure}
+% 	\includegraphics[scale=0.55]{pos_example.jpeg}
+% \end{figure}
+\begin{figure}
+	\includegraphics[width=\textwidth]{different_markovs.png}
+	\caption{Visualization of differences between generative and discriminative approaches
+	as well as sequential and non sequential approaches.
+	Adopted from \citep{sutton2012introduction}}
+	\label{fig:different_graphicals}
+\end{figure}
+
+% \begin{figure}
+% 	\includegraphics[scale=0.23]{chain_crf.png}
+% 	\caption{Linear chain conditional random field \citep{chaincrffigure}}
+% 	\label{fig:chaincrf}
+% \end{figure}
+
+
+
+\subsection{Hidden Markov Model}
+\label{sec:hmm}
+
+Hidden Markov model (HMM) represent two stochastic 
+processes.  
+The first process has Markov properties (described in~\ref{sec:viterbi}) and
+is unobservable (hidden), but is observed
+through the second process that produces a sequence of
+observations \citep{rabiner1986introduction}.
+More formally, let 
+$X_n$ and $Y_n$ represent two discrete time stochastic processes
+$n \geq 1$. $(X_n, Y_n)$ are a HMM if 
+\begin{itemize}
+\item $X_n$ is not directly observable a Markov process and
+\item 
+$P(Y_n \in A | X_1 = x_1, \dots, X_n = x_n) = P(Y_n \in A | X_n = x_n)$
+		for every $n \geq 1$, and set of states $A$. 
+\end{itemize}
+Figure~\ref{fig:hmm} depicts an example processes $X_n$ and $Y_n$ of a
+Hidden Markov model. 
+
+\begin{figure}
+	\includegraphics[scale=0.3]{hmm_example.png}
+\caption{Visualization of a Hidden Markov Model. Upper circles represent hidden 
+	states ($X_n$). Lower (colored) circles represent emitted observable states ($Y_n$)
+	Adopted from \citep{hmm_figure}
+	}
+\label{fig:hmm}
+\end{figure}
+
+HMM is used to compute the likelyhood state sequences (often denoted
+as \textit{hidden states}) of $X_n$ based on the 
+observed sequence $Y_n$, conditional transition probability (often denoted
+\textit{emission probability}) $P(Y_n \in A | X_n = x_n)$.
+The Baum-Welch algorithm is used to fit the paramteres of the HMM based on the
+observed data \citep{baggenstoss2001modified}. The Viterbi algorithm (described
+in more detail in~\ref{sec:viterbi}) can be used to efficiently 
+find the most likely sequence of hidden states based on 
+the hidden state transition probabilities ($P(X_n | X_{n - 1})$,
+emission probabilities ($P(Y_n | X_n)$), and initial state information $(P(X_1)$. 
+
+HMM have been employed to model numerous tasks, such as 
+speech recognition \citep{schuller2003hidden},
+handwriting recognition, functional MRI brain mapping,  network anomaly
+detection \citep{yu2010hidden} and many more.
+
+\subsection{LSTM-CRF Model for Sequence Tagging}
+
+\begin{figure}
+	\includegraphics[width=0.8\textwidth]{biLstmCRF.pdf}
+	\caption{A BiLSTM CRF model. Adopted from 
+	\citep{huang2015bidirectional}
+	}
+	\label{fig:bilstm_crf}
+\end{figure}
+
+
+LSTM networks do a very good job of encoding sentences
+(see section~\ref{sec:lstm}) to perform classification using only 
+word embeddings as features (more on embeddings in section),
+%TODO add reference
+but do not take neighboring label information when performing sequence
+classification which is important to solve sequence tagging
+problems (such as named entity recognition \citep{nadeau2007survey}).
+CRFs (see section~\ref{sec:crf}) allow for modeling label level 
+dependencies and can work with arbitrary features, which have usually been
+handcrafted.
+Therefore, using an LSTM layer to encode words as features can be an input to a
+CRF model which then uses standard 
+parameter estimation to estimate its parameters. 
+The combination of a bi-directional LSTM and a CRF is shown in figure~\ref{fig:bilstm_crf}.
+
+CRF can use an arbitrary feature function $f_k$
+to define its conditional probability (~\ref{eq:cond_crf}).
+This feature function can 
+be understood as the score of how well the sequence 
+of states $y$ fit the given input $x$ and parameters $\theta$:
+This score can be calculated as
+:
+$$
+s_{LSTM-CRF}(x, y) = \sum_{t=0}^{T} \left( A_{t, t-1} + LSTM(x_t) \right)
+$$
+where $A$ is the transition matrix between states of $y$ with element
+$A_{t, t-1}$ is the transition from state $y_{t-1}$ to state $y_{t}$, and $LSTM$
+encodes input sentence using an LSTM network.
+Dynamic programming methods (such as Viterbi~\ref{sec:viterbi}) can be used 
+to efficiently compute optimal tag sequences
+for inference. More details can be found in \citep{huang2015bidirectional}.
+
+\section{Machine learning model validation}
+
+Machine learning models are evaluated on unseen data
+to estimate their performance. Traning and testing on the same
+data would lead to overfitting, meaning the model would
+not be able to generalize on new data. 
+To prevent that, 
+data is organized such that 
+ models aren't trained on data they are evaluated on
+(section~\ref{sec:selection})
+after which models are evaluated on unseen data by 
+comparing model predictions versus correct (gold) data
+through various metrics (section ~\ref{sec:metrics})
+
+\subsection{Model selection}
+\label{sec:selection}
+
+The basic model selection method is \textit{holdout}. 
+In holdout, the dataset is randomly partitioned into three 
+samples: training set (used to train the model), 
+validation set (used to assses model performance during training),
+and test set (used to asses model performance after training). 
+
+\begin{figure}
+	\includegraphics[scale=0.7]{kfold.png}
+	\caption{
+		Illustration of partitioning a dataset using k-fold model 
+	selection using $k = 4$. In each case, $k - 1$ folds
+	are used for the training set (green), and the remaining fold is
+	the test set (blue). Adopted from \citep{pedregosa2015feature}}
+	\label{fig:kfold}
+\end{figure}
+
+Another technique to partition datasets into training and test datasets
+is cross validation \citep{arlot2010survey} (illustrated in~\ref{fig:kfold})
+The training dataset is then used to train the model, and the remaining
+test dataset is used to evaluate the resulted trained model. 
+\textit{K-fold} cross-validation is the most commonly used
+cross-validation technique in which the dataset is partitioned into 
+$k$ equally sized samples called folds. One of the $k$ folds is
+used as a test dataset, the rest comprise the training dataset. This
+procedure is repeated $k$ times (usually $k \in [4, 10] \cap k \in Z$).
+Using this method each dataset instance is in the test set 
+exactly once. 
+
+In addition to partitioning the data, model selection often involves finding
+the optimal hyperparameters of the model, which involves  training and
+evaluating the model with a different set of hyperparameters.  Exhaustively
+searching through all possible combinations of hyperparameters is called
+\textit{grid search} \citep{bergstra2012random}. There are some more advanced
+techniques such as \textit{Bayesian optimization}.  For an overview of
+hyperparameter optimization techniques see \citep{snoek2012practical}.
+
+\subsection{Metrics}
+\label{sec:metrics}
+
+Machine learning models are evaluted using metrics to quantify
+performance. Supervised classification is more straightforward 
+to evaluate and is usually evaluated by calculating  
+precision, recall, and f-score. 
+
+In a binary classification setting, we compare bit vectors ($1$ represents the
+positive class) of predicted and gold labels. Element-wise comparison will
+always give one of four combinations in a confusion matrix (shown in
+table~\ref{tab:conf_mat}). Accuracy, precision, recall, and fscore between 
+a gold vector $\mathbf{a} = (a_0, a_1, \dots, a_n); \forall i a_i \in \{0, 1\}$ 
+and a predicted vector 
+$\mathbf{b} = (b_0, b_1, \dots, b_n); \forall i b_i \in \{0, 1\}$
+are then defined as:
+\begin{align*}
+	accuracy(\mathbf{a, b}) &= \frac{TP + TF}{TP + FP + FP + FN} \\
+	precision(\mathbf{a, b}) &= \frac{TP}{TP + FP} \\
+	recall(\mathbf{a, b}) &= \frac{TP}{TP + FN} \\
+	fscore_{\beta}(\mathbf{a, b}) &= (1 + \beta^2) 
+	\cdot \frac{precision(\mathbf{a, b}) \cdot recall(\mathbf{a, b})}
+	{\beta^2 \cdot precision(\mathbf{a, b}) + recall(\mathbf{a, b})}
+\end{align*}
+$F_1$ ($\beta = 1$) score, which evenly weighs between 
+precision and recall, is usually used.
+In the case of multiclass classification, listed metrics are first calculated 
+per class in a one vs. rest approach. Then, they are usually 
+aggregated by
+\textit{micro}, \textit{macro}, or \textit{weighted} averaging. Macro
+averaging is an average of per-class scores, micro
+averaging divides all positives with the total number of 
+samples, whereas weighted averaging is equivalent to macro averaging,
+but weighs each score with total number of samples for a class. 
+
+\begin{table}
+	\centering
+	\begin{tabular}{c c|c c}
+	\toprule
+	& & \multicolumn{2}{c}{Predicted} \\
+	\multirow{4}{*}{Gold} & & $1$ & $0$ \\ \hline
+	& $1$ & \textit{True positive (TP)} & \textit{False positive (FP)} \\
+		& $0$ & \textit{False negative (FN)} & \textit{True negative (TN)} \\
+	\bottomrule
+\end{tabular}
+	\caption{Confusion matrix}
+	\label{tab:conf_mat}
+\end{table}
+
+\section{Chain classifier}
+
+Multilabel classification is a classification problem where 
+a single instance may be assigned more than one class, making it 
+a generalization of multiclass classification.
+Formally, multiclass classification is the problem of finding 
+a model that maps $x$ to binary vectors $y$. Typically, 
+multilabel classification is usually framed as either:
+\begin{enumerate}
+\item transformation into binary classification problems -- \textit{binary relevance} \citep{luaces2012binary} or
+\item transformation into multiclass problems \textit{label powerset}.
+\end{enumerate}
+The binary relevance method transforms multilabel classification
+into multiple binary problems; one problem for each label, such that each
+binary model is trained to predict the relevance of one of the labels
+\citep{read2011classifier}.
+
+
+
+
+
+- (optional) joint modeling of sequence and classification \\
+
+
+- unsupervised methods \\
+
+- Clustering \\
+- Hierarhical clustering \\
+- Clustering criteria \\
+
+word representations \\
+- count vectors (ngram) \\
+- tf-idf (ngram) \\
+- distributed representations (word2vec) \\
+
+- Evaluation metrics \\
+- precision, recall, f1 \\
+- micro, macro f1 \\
+- silhuetete score (clustering) \\
