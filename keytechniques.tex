@@ -510,42 +510,311 @@ but weighs each score with total number of samples for a class.
 	\label{tab:conf_mat}
 \end{table}
 
-\section{Chain classifier}
+\section{Chain classification}
 
 Multilabel classification is a classification problem where 
 a single instance may be assigned more than one class, making it 
 a generalization of multiclass classification.
 Formally, multiclass classification is the problem of finding 
-a model that maps $x$ to binary vectors $y$. Typically, 
+a model that maps $x$ to binary vectors $y$, $y \in L = \{1, 2, \dots, N\}$. Typically, 
 multilabel classification is usually framed as either:
 \begin{enumerate}
-\item transformation into binary classification problems -- \textit{binary relevance} \citep{luaces2012binary} or
-\item transformation into multiclass problems \textit{label powerset}.
+	\item transformation into binary classification problems -- \textit{binary relevance} (BR) \citep{luaces2012binary} or
+	\item transformation into multiclass problems \textit{label powerset} (LR).
 \end{enumerate}
 The binary relevance method transforms multilabel classification
 into multiple binary problems; one problem for each label, such that each
 binary model is trained to predict the relevance of one of the labels
+\citep{read2011classifier}. This method trains $|L|$ binary classifiers
+$C_1, \dots, C_{|L|}$ where each classifier $C_j$ predicts the $0/1$ association
+for each correponding label $l_j \in L$ \citep{read2011classifier}.
+Transforming from multi-label to binary with the BR method,
+label correlations that might exist in training data are ignored, therefore
+predicted labels might contain label combinations that might never occur in practice. 
+
+\begin{figure}
+\begin{algorithmic}[1]
+\For{$j \in 1 \dots |L|$}
+  \State $D' \gets \{\}$
+	\For{$(x, S) \in D$}
+	  \State $D' \gets D' \cup (x, l_1, \dots, l_{j - 1}, l_j)$
+	  \State $C_j: D' \gets l_j \in \{0, 1\}$
+	\EndFor
+\EndFor
+\end{algorithmic}
+\caption{Classifier chain training phase for dataset 
+	$D = \{(x_1, S_1), \dots, (x_n, S_n)\}$
+	and label set $L$.
+	Adopted from~\citep{read2011classifier}
+	}
+
+\label{alg:train_chain_classifier}
+\end{figure}
+
+\begin{figure}
+\begin{algorithmic}[1]
+\State $Y \gets \{\}$
+\For{$j \in 1 \dots |L|$}
+  \State $Y \gets Y \cup (l_j \gets C_j: (x, l_1, \dots, l_{j - 1})$
+\EndFor
+\Return $(x, Y)$
+\end{algorithmic}
+\caption{Classifier chain prediction phase for instance $x$ 
+	and label set $L$.
+	Adopted from~\citep{read2011classifier}
+	}
+\label{alg:test_chain_classifier}
+\end{figure}
+
+The label powerset method combines entire label sets into atomic labels 
+to form a single-label problem for which the set of possible labels 
+represents all distinct label subsets in the original multi-label 
+representation. Each example $(x_i, S)$ is transformed into 
+$(x_i, l)$, where $S$ represents the label combination set and
+$l$ represents an atomic label representing the same combination set $S$
+\citep{read2011classifier}. LR takes into 
+consideration label correlations, but the number of combinations
+is exponentially dependent on the number of labels $2^{|L|}$. 
+
+The classifier chain method ($CC$) involves $|L|$ binary classifiers as in BM. 
+Classifiers are chained such that each classifier deals with 
+a single binary relevance problem $l_j \in L$ using an extended feature space of 
+previous classifiers 
+forming a chain of classifiers \citep{read2011classifier}.
+The training phase is outlined in figure~\ref{alg:train_chain_classifier}. 
+Each classifier $C_j$ in the chain is responsible for predicting 
+the binary association of label $l_j$ using all prior 
+binary relevance predictions in the chain $l_1, \dots, l_{j - 1}$.
+The classification starts with $C_1$ determining 
+$prediction(l_1 | x)$ propagating along the chain
+to predict $prediction(l_j | x_i, l_1, \dots, l_{j-1})$, outlined 
+in figure~\ref{alg:test_chain_classifier}
 \citep{read2011classifier}.
+The idea of the chaining method is to overcome the label independence problem
+inherent to BM, retaining lower complexity advantages. 
+For a more detailed complexity analysis see \citep{read2011classifier}. 
+However, the ordering labels to train can have a significant effect on 
+the classification accuracy. 
 
+To overcome the ordering problems of classifier chains, one
+can perform ensembling. 
+Ensembling methods are learning algorithms 
+that construct a set of classifiers and then classify new data 
+points by taking a (weighted) vote of their predictions \citep{dietterich2000ensemble}.
+Ensembling has proven to be succesful for multi-label 
+problems, especially since it is usually easy to paralelize. 
+\citep{tsoumakas2007random}. Classifier chains can also be
+ensembled to try and overcome the ordering bias. An Ensemble 
+Classifier Chain ($ECC$) trains $m$ chain classifiers training
+each classifier with a random chain ordering (of $L$) and a random
+subset of the dataset. Predictions of each  model $C_k, k \in \{1, \dots, m\}$ 
+are then summed so that each label receives a number of votes
+\citep{dimitriadou2001voting}.
 
+\section{Hierarchical clustering}
+\label{sec:hierarhical_clustering}
 
+As opposed to supervised machine learning (described in
+section~\ref{sec:machine_learning}), unsupervised machine learning
+has no access to labeled data. The goal of unsupervised machine learning,
+often denoted as \textit{clustering} is to separate 
+a finite unlabeled dataset into a finite and discrete set of 
+\textit{natural} hidden data structures \citep{xu2005survey}.
+Evaluating resulting clusters can be subjective, as there is a mere 
+requirement that patterns in the same cluster should be similar to each
+other, more than patterns in other clusters. More formally, 
+given a set of input patterns $X = \{x_1, \dots, x_N\}$, where
+$x_j = (x_{j1}, \dots, x_{jd})$ partitioning (clustering) can 
+be performed in two ways \citep{xu2005survey}:
+\begin{description}
+\item[Hard clustering] seeks to partition $X$ into $K$ partitions $C=\{C_1, \dots, C_K\}, K \leq N$
+	such that 
+	\begin{enumerate}
+	\item $C_i \neq \emptyset, i = 1, \dots, K$, 
+	\item $\cup_{i=1}^{K} C_i = X$, and
+	\item $C_i \cap C_j = \emptyset , i, j = 1, \dots K$ and $i \neq j$.
+	\end{enumerate}
+\item[Hierarchical clustering] constructs a tree-like partition of $X$ as 
+	$H = \{H_1, \dots, H_Q\}, Q \leq N$ such that
+	$C_i \in H_m, C_j \in H_n$ and $m > n$
+	imply $C_i \in C_j$ or $C_i \cap C_j = \emptyset, \forall i, j, j \neq
+		i, m = 1 \dots Q, l = 1 \dots Q$
+\end{description}
 
+\begin{figure}
+	\includegraphics{clustering_linkage.jpg}
+	\caption{
+		Agglomerative hierarchical clustering produces a sequence of
+		clusterings that can be represented as a dendrogram. Each
+		interior node of the dendrogram corresponds to a merging of two
+		clusters. Adopted from \citep{bien2011hierarchical}
+	}
 
-- (optional) joint modeling of sequence and classification \\
+	\label{fig:clustering}
+\end{figure}
 
+Hierarchical clustering is further subdivided into:
+\begin{description}
+	\item[Agglomerative]: a ``bottom-up'' approach where each observation
+		starts in a single cluster and pairs of clusters are merged up the hierarchy and
+	\item[Divisive]: a ``top-down'' approach where all observations start in one cluster on which
+		splits are recursively performed down the hierarchy.
+\end{description}
+An example of agglomerative clustering is shown in figure~\ref{fig:clustering}. 
+In order to determine which clusters should be combined (in the agglomerative case) or 
+split (in the divisive case) there have to be defined measures of distance and a \textit{linkage 
+criterion} which specifies the dissimilarity of clusters based on pairwise observation 
+distances. Some common distance measures between two observations $a$ and $b$ are:
+\begin{description}
+	\item[Euclidan]: $||a - b||_2 = \sqrt{\sum_i (a_i - b_i)^2}$, 
+	\item[Manhattan]: $||a - b||_1 = \sum_i |a_i - b_i|$, and
+	\item[Maximum]: $||a - b||_{\infty} = \max_i |a_i - b_i|$.
+\end{description}
+and some common linkage criterion (according to \citep{szekely2005hierarchical}
+between two clusters of observations $A$ and $B$ 
+using distance metric $d$ are:
+\begin{description}
+	\item[Complete linkage]: $\max \{d(a, b): a \in A, b \in B\}$,
+	\item[Minimum linkage]: $min \{d(a, b): a \in A, b \in B\}$,
+	\item[Unweighted linkage]: $\frac{1}{|A| \cdot |B|} \sum_{a \in A} \sum_{b \in B} d(a, b)$,
+	\item[Weighted average linkage]: $d(i \cup j, k) = \frac{d(i, k) + d(j, k)}{2}$, and
+	\item[Ward's linkage] that minimizes the total within-cluster variance. It is calculated as
+		$$
+		\sum_{i \in A \cup B} ||x_i - m_{A \cup B}||^2 - \sum_{i \in A}||x_i - m_A||^2 
+		- \sum_{i \in B} ||x_i - m_B||^2
+		$$ 
+		where $m_j$ is the center of cluster $j$  and $x_i$ is a datapoint
+		in cluster $i$ \citep{ward1963hierarchical}.
+\end{description}
 
-- unsupervised methods \\
+% \citep{kaufman2009finding}
+% \citep{reynolds2006clustering}
 
-- Clustering \\
-- Hierarhical clustering \\
-- Clustering criteria \\
+\subsection{Clustering evaluation}
 
-word representations \\
-- count vectors (ngram) \\
-- tf-idf (ngram) \\
-- distributed representations (word2vec) \\
+One standard way to evaluate the result of clustering is by
+calculating the silhouette score \citep{reynolds2006clustering}. 
+Let $C_M = \{C_1, \dots, C_k\}$ describe a clustering result, an 
+exhaustive partitioning of dataset $D$. Then define the mean distance
+between a single instance $i$ in cluster $C_i$ and all other points in the same cluster as
+$$
+a(i) = \frac{1}{|D_i| - 1} \sum_{j \in C_i, i \neq j} d(i, j)
+$$
+where $d(i, j)$ is the distance between data points $i$ and $j$ in
+the cluster $C_i$. Then, define mean dissimilarity of an instance $i$ to
+clusters it does not belong to $C \neq C_i$ as
+$$
+b(i) = \min_{k \neq i} \frac{1}{|C_k|} \sum_{j \in C_k} d(i, j)
+$$.
+Now, silhouette value of a single instance $i$ is defined as:
+\begin{align}\label{eq:silhouette}
+	s(i) &= \frac{b(i) - a(i)}{\max\{a(i), b(i)\}} \textrm{, if } |C_i| > 1 \\
+	s(i) &= 0 \textrm{, if } |C_i| = 1
+\end{align}
+with $-1 \leq s(i) \leq 1$. Silhouette score close to $1$ means that a data point $i$
+is very well matched with respect to the neighboring cluster, having large $a(i)$, whereas
+having a large $b(i)$ makes silhouette score close to $-1$ implying that a data point is badly matched 
+and it might be more appropriate to have it in the neighboring cluster. 
+Silhouette score reflects how tightly grouped all data points in the cluster are
+\citep{kaufman2009finding}.
 
-- Evaluation metrics \\
-- precision, recall, f1 \\
-- micro, macro f1 \\
-- silhuetete score (clustering) \\
+\begin{table}
+	\centering
+	\begin{tabular}{c c c c c c c}
+		\toprule
+		Partition & & \multicolumn{4}{c}{$C$} & \\ \cline{3-6}
+		& Group & $C_1$ & $C_2$ & \dots & $C_r$ & Total \\
+		\midrule
+		\multirow{4}{*}{$D$} & $D_1$ & $t_{11}$ & $t_{12}$ & \dots & $t_{1r}$ & $t_{1.}$ \\
+		                     & $D_2$ & $t_{21}$ & $t_{22}$ & \dots & $t_{2r}$ & $t_{2.}$ \\
+				     & $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+		                     & $D_s$ & $t_{s1}$ & $t_{s2}$ & \dots & $t_{sr}$ & $t_{s.}$ \\
+				     \midrule
+		Total & &                      $t_{.1}$ & $t_{.2}$ & $\dots$&$t_{.r}$ & $t_{..} = N$ \\
+				     \bottomrule
+	\end{tabular}
+	\caption{Adjusted rand index contigency table, adapted from \citep{santos2009use}}
+	\label{tab:adjusted_rand}
+\end{table}
+
+\textit{Rand Index} is a measure of similarity between two clusters. \citep{santos2009use}
+Given a dataset $X = \{x_1, \dots, x_N\}$ partitioned into two clustering results
+$C = \{C_1, \dots, C_r\}$ and $D = \{D_1, \dots, D_s\}$ consisting of $r$ and $s$ clusters
+respectively, define:
+\begin{itemize}
+\item $a$ as the number of pairs in $X$ that are in the same cluster in $C$ and $D$,
+\item $b$ as the number of pairs in $X$ that are in different clusters in $C$ and $D$,
+\item $c$ as the number of pairs in $X$ that are in the same clusters in $C$ and in different clusters of $D$, and
+\item $d$ as the number of pairs in $X$ that are in different clusters in $C$ and in the same clusters in $D$. 
+\end{itemize}
+Rand index is then defined as:
+\begin{equation}\label{eq:rand_index}
+	R = \frac{a + b}{a + b + c + } = \frac{a + b}{\binom{n}{2}}
+\end{equation}
+where $a + b$ and $c + d$ reflects similarity and dissimilarity of two clusterings respectively.  
+$\binom{n}{2}$ reflect the chance that two clusterings will randomly agree on a chosen pair. 
+The Rand Index ($0 \leq R \leq 1$) value reflect how well two clusterings agree, with 
+$0$ indicating complete disagremeent and $1$ signaling exactly same clusterings. 
+\textit{Adjusted Rand Index} (ARI) is derived from Rand Index, but it is corrected for chance
+\citep{steinley2004properties}. To calculate ARI, a contigency table is usually built which, 
+given a dataset $X = \{x_1, \dots, x_N\}$ partitioned into two clustering
+results $C = \{C_1, \dots, C_r\}$ and $D = \{D_1, \dots, D_s\}$ consisting of
+$r$ and $s$ clusters, calculates the number of objects $n_{ij}$ common for every
+$C_i$ and $D_j$, $t_{ij} = |C_i \cap D_j|$. Then row and column sums are calculated 
+as shown in table~\ref{tab:adjusted_rand} using which ARI is calculated as:
+\begin{equation}\label{eq:adjusted_rand_index}
+	ARI = \frac{\sum_{ij} \binom{t_{ij}}{2}- \left[ \sum_i \binom{t_{i.}}{2} \sum_j \binom{t_{.j}}{2} \right] / \binom{N}{2}}
+	{\frac{1}{2} \left[ \sum_i \binom{t_{i.}}{2} + \sum_j \binom{t_{.j}}{2} \right] - 
+	\left[ \sum_i \binom{t_{i.}}{2} \sum_j \binom{t_{.j}}{2} \right] / \binom{N}{2}
+	}
+\end{equation}
+
+\textit{V-measure} is an external entropy-based cluster evaluation measure which measures
+how succesfully the criteria of homogeneity and completeness have been satisfied. 
+\citep{rosenberg2007v}
+It is computed as a harmonic mean of distinct homogeneity and completeness scores. 
+\textit{Homogeneity} examines how close a given clustering $C = \{c_1, \dots, c_n\}$ of 
+$N$ data points
+is to an ideal $K = \{k_1, \dots, k_m\}$ (members of a single
+class should be in a single cluster) clustering by calculating the 
+conditional entropy of the class distribution given the proposed clustering 
+$H(C | K)$:
+$$
+h = 1 - \frac{H(C | K)}{H(C)}
+$$
+where 
+\begin{align*} 
+	H(C | K) &= - \sum_{k=1}^{|K|}\sum_{c=1}^{|C|} \frac{t_{ck}}{N}\log \frac{t_{ck}}{\sum_{c=1}^{|C|} t_{ck}} \\
+	H(C) &= - \sum_{c=1}^{|C|} \frac{\sum_{k=1}^{K} t_{ck}}{n} \log \frac{\sum_{k=1}^{|K|} t_{ck}}{n}
+\end{align*}
+where $t_{ck}$ is a value in the contigency table between two clusterings as shown in table~
+\ref{tab:adjusted_rand}.
+To satisfy the \textit{completeness} criteria, a clustering must assign all 
+members of a single class to a single class, making it symetrical to 
+homogeneity, calculated through conditional entropy of the proposed clustering
+given the class of datapoints $H(K | C)$:
+$$
+c = 1 - \frac{H(K | C)}{H(K)}
+$$
+where
+\begin{align*}
+H(K | C) &= - \sum_{c=1}^{|C|}\sum_{k=1}^{|K|} \frac{t_{ck}}{N} \log \frac{t_{ck}}{\sum_{k=1}^{|K|} t_{ck}} \\
+H(K) &= - \sum_{k=1}^{|K|} \frac{\sum_{c=1}^{C} t_{ck}}{n} \log \frac{\sum_{c=1}^{|C|} t_{ck}}{n}
+\end{align*}
+where $t_{ck}$ is a value in the contigency table between two clusterings as shown in table~
+\ref{tab:adjusted_rand}.
+Now, through homogeneity $h$ and completeness $c$, we define V-measure as:
+\begin{equation}\label{eq:v-measure}
+	V = (1 + \beta) \cdot \frac{h \cdot c}{\beta \cdot h + c}
+\end{equation}
+
+% Adjusted Rand Index (ARI) (Hubertand Arabie, 1985) and the
+% information-theoretic V-measure (Rosenberg and Hirschberg, 2007
+
+% - (optional) joint modeling of sequence and classification \\
+% 
+% 
+% word representations \\
+% - count vectors (ngram) \\
+% - tf-idf (ngram) \\
+% - distributed representations (word2vec) \\
