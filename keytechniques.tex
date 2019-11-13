@@ -1,14 +1,15 @@
-\chapter{Natural Language Processing Techniques}
+\chapter{Methods and Tools for Argumentation Mining of Claims}
 
 - some intro \\
 
-- in the rest of the chapter we will mention machine learning
-approaches used to classify text into labels~\ref{sec:machine_learning}
+- three essential parts~\ref{sec:machine_learning} \\
+- natural language processing~\ref{sec:natural_language_processing} \\
+- formal knowledge representation~\ref{sec:knowledge_representation} \\
 
 %TODO divide section to sequence models and (non)-sequence models
 
 \section{Machine Learning}
-\label{sec:machine_learning}
+\label{sec:unstruc_machine_learning}
 
 - machine learning algorithms learn from data \\
 - two basic purposes: supervised and unsupervised algorithms \\
@@ -67,55 +68,6 @@ Typically, \textit{hinge loss} is used as the loss function $\xi_i(x_i, y_i) =
 various methods, such as quadratic programming \citep{wu2005svm} or stochastic
 optimization \citep{wang2012breaking}.
 
-\subsection{Viterbi algorithm}
-\label{sec:viterbi}
-
-The Viterbi algorithm is a recursive optimal solution to the problem of
-estimating the state sequence of a discrete finite-state Markov process
-\citep{howard1960dynamic} observed in memoryless noise
-\citep{forney1973viterbi}. A Markov process is a stochastic process
-whose future state values (time is discrete) are determined by
-recent ones. Such a process generates a sequence of $T$ states 
-$\textbf{x} = (x_0, \dots, x_T)$, where 
-$x_t \in \{1, 2, \dots, K\}$, $\forall t \in {1, \dots, T}$
-under the condition that :
-$$
-P(x_{t + 1} | x_0, x_1,\dots,x_t) = P(x_{t + 1} | x_t).
-$$
-Using the Viterbi algorithm it is then possible 
-to find the most likley sequence of states -- 
-the \textbf{Viterbi path}.
-
-More formally, if we observe a sequence of
-observations $\textbf{y} = (y_1, \dots, y_T)$ with output states
-$y_i \in O = \{o_1, \dots, o_N\}$ with an initial state probability
-probility array $\bm{\pi} = \{\pi_1,\dots, \pi_K\}$
-behaving under a transition matrix $A$ of size $K \times K$
-with element $A_ij$ storing the transition probability of
-$s_i$ to $s_j$, 
-and emission matrix $B$ of size $K \times N$ with 
-element $B_ij$ storing probability of observing $o_j$ from $s_i$,
-where $T$ is the number of steps, 
-$K$ the number of possible states, and $N$ is the number of 
-possible observations. We wish to find
-$\textbf{x} = (x_1, \dots, x_T)$
-as a sequence of states $x_i \in S = \{s_1, \dots, s_K\}$ 
-most likely to generate the observed outputs under the 
-conditions specified. 
-
-A forward pass is made, which populates two
-tables $T_1$ and $T_2$, both of size
-$K \times T$. An element $T_1[i, j]$ stores 
-probablities of the most likely path so far with 
-$x_j = s_i$ that generates $\textbf{y} = (y_1, \dots, y_j)$.
-$T_2[i, j]$ stores elements $x_{j - 1}$ of the most
-likely path $\bm{\hat{x}} = (\hat{x}_1, \dots, \hat{x}_j = s_j)$:
-\begin{align*}
-T_1[i, j] = \max_k (T_1[k, j - 1] \cdot A_{ki} \cdot B_{iy_j}) \\
-T_2[i, j] = \argmax_k (T_1[k, j - 1] \cdot A_{ki})
-\end{align*}
-calculated for each $k \in \{1, 2, \dots, K\}$, subsequence
-of length $\forall j, 2 \leq j \leq T$
 
 \subsection{Long short-term memory networks}
 \label{sec:lstm}
@@ -179,6 +131,212 @@ text classification
 to provide a strong baseline for 
 text-based problems. There exist many variations of LSTM networks, 
 one example being gated recurrent units (GRU) \citep{chung2014empirical}.
+
+% \subsection{Model Validation}
+% 
+% Machine learning models are evaluated on unseen data
+% to estimate their performance. Traning and testing on the same
+% data would lead to overfitting, meaning the model would
+% not be able to generalize on new data. 
+% To prevent that, 
+% data is organized such that 
+%  models aren't trained on data they are evaluated on
+% (section~\ref{sec:selection})
+% after which models are evaluated on unseen data by 
+% comparing model predictions versus correct (gold) data
+% through various metrics (section ~\ref{sec:metrics})
+
+\subsection{Model Selection}
+\label{sec:selection}
+
+The basic model selection method is \textit{holdout}. 
+In holdout, the dataset is randomly partitioned into three 
+samples: training set (used to train the model), 
+validation set (used to assses model performance during training),
+and test set (used to asses model performance after training). 
+
+\begin{figure}
+	\includegraphics[scale=0.7]{kfold.png}
+	\caption{
+		Illustration of partitioning a dataset using k-fold model 
+	selection using $k = 4$. In each case, $k - 1$ folds
+	are used for the training set (green), and the remaining fold is
+	the test set (blue). Adopted from \citep{pedregosa2015feature}}
+	\label{fig:kfold}
+\end{figure}
+
+Another technique to partition datasets into training and test datasets
+is cross validation \citep{arlot2010survey} (illustrated in~\ref{fig:kfold})
+The training dataset is then used to train the model, and the remaining
+test dataset is used to evaluate the resulted trained model. 
+\textit{K-fold} cross-validation is the most commonly used
+cross-validation technique in which the dataset is partitioned into 
+$k$ equally sized samples called folds. One of the $k$ folds is
+used as a test dataset, the rest comprise the training dataset. This
+procedure is repeated $k$ times (usually $k \in [4, 10] \cap k \in Z$).
+Using this method each dataset instance is in the test set 
+exactly once. 
+
+In addition to partitioning the data, model selection often involves finding
+the optimal hyperparameters of the model, which involves  training and
+evaluating the model with a different set of hyperparameters.  Exhaustively
+searching through all possible combinations of hyperparameters is called
+\textit{grid search} \citep{bergstra2012random}. There are some more advanced
+techniques such as \textit{Bayesian optimization}.  For an overview of
+hyperparameter optimization techniques see \citep{snoek2012practical}.
+
+\subsection{Evaluation Metrics}
+\label{sec:metrics}
+
+Machine learning models are evaluted using metrics to quantify
+performance. Supervised classification is more straightforward 
+to evaluate and is usually evaluated by calculating  
+precision, recall, and f-score. 
+
+In a binary classification setting, we compare bit vectors ($1$ represents the
+positive class) of predicted and gold labels. Element-wise comparison will
+always give one of four combinations in a confusion matrix (shown in
+table~\ref{tab:conf_mat}). Accuracy, precision, recall, and fscore between 
+a gold vector $\mathbf{a} = (a_0, a_1, \dots, a_n); \forall i a_i \in \{0, 1\}$ 
+and a predicted vector 
+$\mathbf{b} = (b_0, b_1, \dots, b_n); \forall i b_i \in \{0, 1\}$
+are then defined as:
+\begin{align*}
+	accuracy(\mathbf{a, b}) &= \frac{TP + TF}{TP + FP + FP + FN} \\
+	precision(\mathbf{a, b}) &= \frac{TP}{TP + FP} \\
+	recall(\mathbf{a, b}) &= \frac{TP}{TP + FN} \\
+	fscore_{\beta}(\mathbf{a, b}) &= (1 + \beta^2) 
+	\cdot \frac{precision(\mathbf{a, b}) \cdot recall(\mathbf{a, b})}
+	{\beta^2 \cdot precision(\mathbf{a, b}) + recall(\mathbf{a, b})}
+\end{align*}
+$F_1$ ($\beta = 1$) score, which evenly weighs between 
+precision and recall, is usually used.
+In the case of multiclass classification, listed metrics are first calculated 
+per class in a one vs. rest approach. Then, they are usually 
+aggregated by
+\textit{micro}, \textit{macro}, or \textit{weighted} averaging. Macro
+averaging is an average of per-class scores, micro
+averaging divides all positives with the total number of 
+samples, whereas weighted averaging is equivalent to macro averaging,
+but weighs each score with total number of samples for a class. 
+
+\begin{table}
+	\centering
+	\begin{tabular}{c c|c c}
+	\toprule
+	& & \multicolumn{2}{c}{Predicted} \\
+	\multirow{4}{*}{Gold} & & $1$ & $0$ \\ \hline
+	& $1$ & \textit{True positive (TP)} & \textit{False positive (FP)} \\
+		& $0$ & \textit{False negative (FN)} & \textit{True negative (TN)} \\
+	\bottomrule
+\end{tabular}
+	\caption{Confusion matrix}
+	\label{tab:conf_mat}
+\end{table}
+
+\section{Structured Prediction}
+\label{sec:struc_machine_learning}
+
+- what is structured prediction \\
+- techniques \\
+- differences from unstructured machine learning \\
+- list all subsections \\
+
+\subsection{Hidden Markov Model}
+\label{sec:hmm}
+
+Hidden Markov model (HMM) represent two stochastic 
+processes.  
+The first process has Markov properties (described in~\ref{sec:viterbi}) and
+is unobservable (hidden), but is observed
+through the second process that produces a sequence of
+observations \citep{rabiner1986introduction}.
+More formally, let 
+$X_n$ and $Y_n$ represent two discrete time stochastic processes
+$n \geq 1$. $(X_n, Y_n)$ are a HMM if 
+\begin{itemize}
+\item $X_n$ is not directly observable a Markov process and
+\item 
+$P(Y_n \in A | X_1 = x_1, \dots, X_n = x_n) = P(Y_n \in A | X_n = x_n)$
+		for every $n \geq 1$, and set of states $A$. 
+\end{itemize}
+Figure~\ref{fig:hmm} depicts an example processes $X_n$ and $Y_n$ of a
+Hidden Markov model. 
+
+\begin{figure}
+	\includegraphics[scale=0.3]{hmm_example.png}
+\caption{Visualization of a Hidden Markov Model. Upper circles represent hidden 
+	states ($X_n$). Lower (colored) circles represent emitted observable states ($Y_n$)
+	Adopted from \citep{hmm_figure}
+	}
+\label{fig:hmm}
+\end{figure}
+
+HMM is used to compute the likelyhood state sequences (often denoted
+as \textit{hidden states}) of $X_n$ based on the 
+observed sequence $Y_n$, conditional transition probability (often denoted
+\textit{emission probability}) $P(Y_n \in A | X_n = x_n)$.
+The Baum-Welch algorithm is used to fit the paramteres of the HMM based on the
+observed data \citep{baggenstoss2001modified}. The Viterbi algorithm (described
+in more detail in~\ref{sec:viterbi}) can be used to efficiently 
+find the most likely sequence of hidden states based on 
+the hidden state transition probabilities ($P(X_n | X_{n - 1})$,
+emission probabilities ($P(Y_n | X_n)$), and initial state information $(P(X_1)$. 
+
+HMM have been employed to model numerous tasks, such as 
+speech recognition \citep{schuller2003hidden},
+handwriting recognition, functional MRI brain mapping,  network anomaly
+detection \citep{yu2010hidden} and many more.
+
+\subsection{Viterbi algorithm}
+\label{sec:viterbi}
+
+The Viterbi algorithm is a recursive optimal solution to the problem of
+estimating the state sequence of a discrete finite-state Markov process
+\citep{howard1960dynamic} observed in memoryless noise
+\citep{forney1973viterbi}. A Markov process is a stochastic process
+whose future state values (time is discrete) are determined by
+recent ones. Such a process generates a sequence of $T$ states 
+$\textbf{x} = (x_0, \dots, x_T)$, where 
+$x_t \in \{1, 2, \dots, K\}$, $\forall t \in {1, \dots, T}$
+under the condition that :
+$$
+P(x_{t + 1} | x_0, x_1,\dots,x_t) = P(x_{t + 1} | x_t).
+$$
+Using the Viterbi algorithm it is then possible 
+to find the most likley sequence of states -- 
+the \textbf{Viterbi path}.
+
+More formally, if we observe a sequence of
+observations $\textbf{y} = (y_1, \dots, y_T)$ with output states
+$y_i \in O = \{o_1, \dots, o_N\}$ with an initial state probability
+probility array $\bm{\pi} = \{\pi_1,\dots, \pi_K\}$
+behaving under a transition matrix $A$ of size $K \times K$
+with element $A_ij$ storing the transition probability of
+$s_i$ to $s_j$, 
+and emission matrix $B$ of size $K \times N$ with 
+element $B_ij$ storing probability of observing $o_j$ from $s_i$,
+where $T$ is the number of steps, 
+$K$ the number of possible states, and $N$ is the number of 
+possible observations. We wish to find
+$\textbf{x} = (x_1, \dots, x_T)$
+as a sequence of states $x_i \in S = \{s_1, \dots, s_K\}$ 
+most likely to generate the observed outputs under the 
+conditions specified. 
+
+A forward pass is made, which populates two
+tables $T_1$ and $T_2$, both of size
+$K \times T$. An element $T_1[i, j]$ stores 
+probablities of the most likely path so far with 
+$x_j = s_i$ that generates $\textbf{y} = (y_1, \dots, y_j)$.
+$T_2[i, j]$ stores elements $x_{j - 1}$ of the most
+likely path $\bm{\hat{x}} = (\hat{x}_1, \dots, \hat{x}_j = s_j)$:
+\begin{align*}
+T_1[i, j] = \max_k (T_1[k, j - 1] \cdot A_{ki} \cdot B_{iy_j}) \\
+T_2[i, j] = \argmax_k (T_1[k, j - 1] \cdot A_{ki})
+\end{align*}
+calculated for each $k \in \{1, 2, \dots, K\}$, subsequence
+of length $\forall j, 2 \leq j \leq T$
 
 \subsection{Conditional Random Fields}
 \label{sec:crf}
@@ -318,53 +476,6 @@ sentiment analysis \citep{patra2014ju_cse} and many more.
 % \end{figure}
 
 
-
-\subsection{Hidden Markov Model}
-\label{sec:hmm}
-
-Hidden Markov model (HMM) represent two stochastic 
-processes.  
-The first process has Markov properties (described in~\ref{sec:viterbi}) and
-is unobservable (hidden), but is observed
-through the second process that produces a sequence of
-observations \citep{rabiner1986introduction}.
-More formally, let 
-$X_n$ and $Y_n$ represent two discrete time stochastic processes
-$n \geq 1$. $(X_n, Y_n)$ are a HMM if 
-\begin{itemize}
-\item $X_n$ is not directly observable a Markov process and
-\item 
-$P(Y_n \in A | X_1 = x_1, \dots, X_n = x_n) = P(Y_n \in A | X_n = x_n)$
-		for every $n \geq 1$, and set of states $A$. 
-\end{itemize}
-Figure~\ref{fig:hmm} depicts an example processes $X_n$ and $Y_n$ of a
-Hidden Markov model. 
-
-\begin{figure}
-	\includegraphics[scale=0.3]{hmm_example.png}
-\caption{Visualization of a Hidden Markov Model. Upper circles represent hidden 
-	states ($X_n$). Lower (colored) circles represent emitted observable states ($Y_n$)
-	Adopted from \citep{hmm_figure}
-	}
-\label{fig:hmm}
-\end{figure}
-
-HMM is used to compute the likelyhood state sequences (often denoted
-as \textit{hidden states}) of $X_n$ based on the 
-observed sequence $Y_n$, conditional transition probability (often denoted
-\textit{emission probability}) $P(Y_n \in A | X_n = x_n)$.
-The Baum-Welch algorithm is used to fit the paramteres of the HMM based on the
-observed data \citep{baggenstoss2001modified}. The Viterbi algorithm (described
-in more detail in~\ref{sec:viterbi}) can be used to efficiently 
-find the most likely sequence of hidden states based on 
-the hidden state transition probabilities ($P(X_n | X_{n - 1})$,
-emission probabilities ($P(Y_n | X_n)$), and initial state information $(P(X_1)$. 
-
-HMM have been employed to model numerous tasks, such as 
-speech recognition \citep{schuller2003hidden},
-handwriting recognition, functional MRI brain mapping,  network anomaly
-detection \citep{yu2010hidden} and many more.
-
 \subsection{LSTM-CRF Model for Sequence Tagging}
 
 \begin{figure}
@@ -408,109 +519,7 @@ Dynamic programming methods (such as Viterbi~\ref{sec:viterbi}) can be used
 to efficiently compute optimal tag sequences
 for inference. More details can be found in \citep{huang2015bidirectional}.
 
-\section{Machine learning model validation}
-
-Machine learning models are evaluated on unseen data
-to estimate their performance. Traning and testing on the same
-data would lead to overfitting, meaning the model would
-not be able to generalize on new data. 
-To prevent that, 
-data is organized such that 
- models aren't trained on data they are evaluated on
-(section~\ref{sec:selection})
-after which models are evaluated on unseen data by 
-comparing model predictions versus correct (gold) data
-through various metrics (section ~\ref{sec:metrics})
-
-\subsection{Model selection}
-\label{sec:selection}
-
-The basic model selection method is \textit{holdout}. 
-In holdout, the dataset is randomly partitioned into three 
-samples: training set (used to train the model), 
-validation set (used to assses model performance during training),
-and test set (used to asses model performance after training). 
-
-\begin{figure}
-	\includegraphics[scale=0.7]{kfold.png}
-	\caption{
-		Illustration of partitioning a dataset using k-fold model 
-	selection using $k = 4$. In each case, $k - 1$ folds
-	are used for the training set (green), and the remaining fold is
-	the test set (blue). Adopted from \citep{pedregosa2015feature}}
-	\label{fig:kfold}
-\end{figure}
-
-Another technique to partition datasets into training and test datasets
-is cross validation \citep{arlot2010survey} (illustrated in~\ref{fig:kfold})
-The training dataset is then used to train the model, and the remaining
-test dataset is used to evaluate the resulted trained model. 
-\textit{K-fold} cross-validation is the most commonly used
-cross-validation technique in which the dataset is partitioned into 
-$k$ equally sized samples called folds. One of the $k$ folds is
-used as a test dataset, the rest comprise the training dataset. This
-procedure is repeated $k$ times (usually $k \in [4, 10] \cap k \in Z$).
-Using this method each dataset instance is in the test set 
-exactly once. 
-
-In addition to partitioning the data, model selection often involves finding
-the optimal hyperparameters of the model, which involves  training and
-evaluating the model with a different set of hyperparameters.  Exhaustively
-searching through all possible combinations of hyperparameters is called
-\textit{grid search} \citep{bergstra2012random}. There are some more advanced
-techniques such as \textit{Bayesian optimization}.  For an overview of
-hyperparameter optimization techniques see \citep{snoek2012practical}.
-
-\subsection{Metrics}
-\label{sec:metrics}
-
-Machine learning models are evaluted using metrics to quantify
-performance. Supervised classification is more straightforward 
-to evaluate and is usually evaluated by calculating  
-precision, recall, and f-score. 
-
-In a binary classification setting, we compare bit vectors ($1$ represents the
-positive class) of predicted and gold labels. Element-wise comparison will
-always give one of four combinations in a confusion matrix (shown in
-table~\ref{tab:conf_mat}). Accuracy, precision, recall, and fscore between 
-a gold vector $\mathbf{a} = (a_0, a_1, \dots, a_n); \forall i a_i \in \{0, 1\}$ 
-and a predicted vector 
-$\mathbf{b} = (b_0, b_1, \dots, b_n); \forall i b_i \in \{0, 1\}$
-are then defined as:
-\begin{align*}
-	accuracy(\mathbf{a, b}) &= \frac{TP + TF}{TP + FP + FP + FN} \\
-	precision(\mathbf{a, b}) &= \frac{TP}{TP + FP} \\
-	recall(\mathbf{a, b}) &= \frac{TP}{TP + FN} \\
-	fscore_{\beta}(\mathbf{a, b}) &= (1 + \beta^2) 
-	\cdot \frac{precision(\mathbf{a, b}) \cdot recall(\mathbf{a, b})}
-	{\beta^2 \cdot precision(\mathbf{a, b}) + recall(\mathbf{a, b})}
-\end{align*}
-$F_1$ ($\beta = 1$) score, which evenly weighs between 
-precision and recall, is usually used.
-In the case of multiclass classification, listed metrics are first calculated 
-per class in a one vs. rest approach. Then, they are usually 
-aggregated by
-\textit{micro}, \textit{macro}, or \textit{weighted} averaging. Macro
-averaging is an average of per-class scores, micro
-averaging divides all positives with the total number of 
-samples, whereas weighted averaging is equivalent to macro averaging,
-but weighs each score with total number of samples for a class. 
-
-\begin{table}
-	\centering
-	\begin{tabular}{c c|c c}
-	\toprule
-	& & \multicolumn{2}{c}{Predicted} \\
-	\multirow{4}{*}{Gold} & & $1$ & $0$ \\ \hline
-	& $1$ & \textit{True positive (TP)} & \textit{False positive (FP)} \\
-		& $0$ & \textit{False negative (FN)} & \textit{True negative (TN)} \\
-	\bottomrule
-\end{tabular}
-	\caption{Confusion matrix}
-	\label{tab:conf_mat}
-\end{table}
-
-\section{Chain classification}
+\subsection{Chain classification}
 
 Multilabel classification is a classification problem where 
 a single instance may be assigned more than one class, making it 
@@ -611,8 +620,7 @@ subset of the dataset. Predictions of each  model $C_k, k \in \{1, \dots, m\}$
 are then summed so that each label receives a number of votes
 \citep{dimitriadou2001voting}.
 
-\section{Hierarchical clustering}
-\label{sec:hierarhical_clustering}
+\section{Unsupervised Machine Learning}
 
 As opposed to supervised machine learning (described in
 section~\ref{sec:machine_learning}), unsupervised machine learning
@@ -653,6 +661,9 @@ be performed in two ways \citep{xu2005survey}:
 	\label{fig:clustering}
 \end{figure}
 
+\subsection{Hierarchical clustering}
+\label{sec:hierarhical_clustering}
+
 Hierarchical clustering is further subdivided into:
 \begin{description}
 	\item[Agglomerative]: a ``bottom-up'' approach where each observation
@@ -690,7 +701,7 @@ using distance metric $d$ are:
 % \citep{kaufman2009finding}
 % \citep{reynolds2006clustering}
 
-\subsection{Clustering evaluation}
+\subsection{Evaluation Methods}
 
 One standard way to evaluate the result of clustering is by
 calculating the silhouette score \citep{reynolds2006clustering}. 
@@ -774,8 +785,7 @@ how succesfully the criteria of homogeneity and completeness have been satisfied
 \citep{rosenberg2007v}
 It is computed as a harmonic mean of distinct homogeneity and completeness scores. 
 \textit{Homogeneity} examines how close a given clustering $C = \{c_1, \dots, c_n\}$ of 
-$N$ data points
-is to an ideal $K = \{k_1, \dots, k_m\}$ (members of a single
+$N$ data points is to an ideal $K = \{k_1, \dots, k_m\}$ (members of a single
 class should be in a single cluster) clustering by calculating the 
 conditional entropy of the class distribution given the proposed clustering 
 $H(C | K)$:
@@ -811,10 +821,298 @@ Now, through homogeneity $h$ and completeness $c$, we define V-measure as:
 % Adjusted Rand Index (ARI) (Hubertand Arabie, 1985) and the
 % information-theoretic V-measure (Rosenberg and Hirschberg, 2007
 
+\section{Natural Language Processing}
+\label{sec:natural_language_processing}
+
+Natural Language Processing (NLP) is a subfield of lingustics, computer
+science, and artificial intelligence concerned with how to program computers to
+process and analyze natural language data, text.  Natural Language Processing
+techniques rely heavily on machine learning and statistical models which learn
+from large amounts of textual data.  There are many subareas of natural
+language processing, such as syntax, semantics, and discourse analysis.
+Each of the subareas attempts to solve a set of problems, sentiment analysis, named
+entity recognition, distributional semantics, recognizing textual entailment being
+some of the problems of semantics. Good, yet comprehensive introductions to NLP are available 
+in many books \citep{manning1999foundations} and review papers \citep{collobert2011natural}. 
+Argumentation
+mining is considered to closely related to natural language processing
+\citep{lippi2015argument}, as it uses commonly used natural language processing
+techniques to work on problems from social sciences to analyze arguments.
+In the rest of this section, we give a introduction on various word representations
+in subsection~\ref{sec:word_representations}, then we go into more detail on two 
+semantics-related NLP problems: textual entailment in subsection~\ref{sec:textual_entailment}
+and semantic textual similarity in subsection~\ref{sec:sts}.
+
+\subsection{Word representations}
+\label{sec:word_representations}
+
+%A document $d$ contains a list of terms $t$. 
+Information retrieval models documents through features in order to be able to efficiently 
+store (index) and search collections of documents. Commonly used features are 
+\textit{term frequency tf} and \textit{inverse document frequency idf}. Term frequency of a word
+is the number of occurences of that word in a given document:
+$$
+\mathit{tf}(t, d) = \frac{f(t, d)}{|d|}
+$$
+where $f(t, d)$ is the frequency of term $t$ in document $d$ and $|d|$ is the number
+of total terms in document $d$.
+Inverse document frequency is a measure of how much information a word provides (common or rare
+across a collection of documents) as is calculated as:
+
+$$
+\mathit{idf}(t, D) = \log \frac{N}{1 + |d \in D: t \in d|}
+$$
+where $N$ is the number of documents in the corpus $|D|$ and $|d \in D: t \in d|$ is the 
+number of documents in which term $t$ appears in. 
+These two features are often used together to represent a collection of documents 
+$d \in D$ each containing a list of terms $t$:
+$$
+\mathit{tfidf} (t, d, D) = \mathit{tf}(t, d) \cdot \mathit{idf}(t, D)
+$$
+The vector space model \citep{meadow1992text} treats text documents as vectors  
+in an $N$-dimensional space, where $N$ is the size of the vocabulary (total number of 
+possible words). Comparing two documents in the vector space model can then be taking the
+cosine similarity of the vectors features.
+
+Another word representation approach is represent each word using a fixed-size
+vector of real numbers.  A set of such approaches is called \textit{word
+embeddings}. These vector representations of words are generated through
+different methods, most popular two being neural networks and word co-occurence
+matrix dimensionality reduction.
+
+\begin{figure}
+	\includegraphics[scale=0.65]{skip_gram_cbow.png}
+	\caption{CBOW (left) and skip-gram (right) simplified model architectures. Adopted from 
+	\citep{suleiman2017deep}. }
+	\label{fig:skip_gram_cbow}
+\end{figure}
+
+Word2vec is a neural network-based approach to generate distributed
+representations of words \citep{mikolov2013distributed}.  It utilizes two
+neural network models: a continuous \textit{bag-of-words} (CBOW) and continuous
+\textit{skip-gram} approach.  The CBOW architecture is framed as a supervised
+learning problem, where the model predicts the current word from a window of
+surrounding context words. 
+The ordering of the context words is not taken into
+account (bag-of-words).  In the continuous skip-gram architecture, the model
+uses the current word to predict the surrounding window of context words.
+Architectures of both models are shown in figure~\ref{fig:skip_gram_cbow}. 
+Models are then trained on large corpora, such as the Google Books corpus 
+\citep{lin2012syntactic}. 
+More details on training the models is available in the original word2vec papers
+\citep{mikolov2013distributed, mikolov2013efficient}, as well as follow up papers
+\citep{goldberg2014word2vec, rong2014word2vec}.
+FastText is another word embedding procedure which is an extension on word2vec
+\citep{bojanowski2017enriching}. In fastText each word is represented as a
+n-gram of characters in order to capture the meaning of shorter words and allow
+for embeddings to understand prefixes and suffixes. After splitting words into
+subwords, similar procedures The biggest advantage of using fastText is working
+with rare words, which can be assigned a representation even if the word was
+never seen during the model training period. 
+
+\subsection{Textual Entailment}
+\label{sec:textual_entailment}
+
+\textit{Textual entailment} (TE) is defined as a directional relationship
+between pairs of text expressions, denoted by $T$ --- the entailing ``Text'',
+and $H$ --- the entailed ``Hypothesis''. We say that $T$ entails $H$ if,
+typically, a human reading $T$ would infer that $H$ is most likely true 
+\citep{dagan2005pascal}.  This definition assumes common human understanding of
+language as well as common background knowledge. Examples of textual entailment
+are in
+table~\ref{tab:te_examples}.  
+Recognizing textual entailment was established as
+a popular natural language processing problem with the start of the
+\textit{Recognising Textual Entailment} (RTE) challenge. The challenge involved
+teams producing models to solve the TE problem on multiple datasets. A dataset
+instance contained two sentences and a label whether entailment holds or not
+($\mathit{True}$ or $\mathit{False}$).
+Follow up challenges were organized \citep{bar2006second, giampiccolo2007third}.
+
+\begin{table}
+	\centering
+	\begin{tabular}{p{8cm} | p{5cm} | c}
+		Text & Hypothesis & TE \\
+		\toprule
+		\textit{
+		Norway’s most famous painting, ``TheScream'' by Edvard Munch, was recov-ered
+		Saturday, almost three months after it was stolen from an Oslo
+		museum.} & 
+		\textit{Edvard   Munch   painted ``The Scream''  }
+		& $\mathit{True}$ \\
+		\textit{Republic of Yemen is an Arab, Islamic and independent
+		sovereign statewhose integrity is inviolable,  and  no part
+		of which may be ceded.} & 
+		\textit{The national language of Yemen is Arabic.}
+		& $\mathit{True}$ \\
+		\textit{Regan attended a ceremony in Washington to commemorate the
+		landings in Normandy.} &
+		\textit{Washington is located in Normandy. } & $\mathit{False}$ \\
+		\bottomrule
+	\end{tabular}
+	\caption{Positive and negative examples of Textual Entailment (TE) 
+	Adopted from \citep{dagan2005pascal}}
+	\label{tab:te_examples}
+\end{table}
+
+Textual Entailment is closely related to the task of \textit{natural language inference} (NLI), 
+where each pair of sentences can be assigned one of three possible labels:
+\begin{enumerate*}
+	\item entailment, 
+	\item neutral, and
+	\item contradiction. 
+\end{enumerate*} 
+making it more general than the TE challenge. 
+The most used dataset of NLI is the Stanford Natural Language Inference dataset
+\citep{bowman2015large} which contains 570K pairs of labelled sentence pairs. 
+Examples of the dataset are available in table~\ref{tab:snli_examples}.
+
+\begin{table}
+	\centering
+	\begin{tabular}{p{8cm} | p{5cm} | c}
+		Text & Hypothesis & Relation \\
+		\toprule
+		\textit{
+		A man inspects the uniform of a figure in some East Asian country.
+		museum.} & 
+		\textit{The man is sleeping}
+		& $\mathit{Contradiction}$ \\
+		\textit{An older and younger man smilling} & 
+		\textit{Two men are smilling and laughing at the cats playing on the floor}
+		& $\mathit{Neutral}$ \\
+		\textit{A soccer game with multiple males playing} &
+		\textit{Some men are playing a sport} & $\mathit{Entailment}$ \\
+		\bottomrule
+	\end{tabular}
+	\caption{Positive and negative examples from the Standford Natural Language Inference dataset. 
+	Adopted from \citep{bowman2015large}}
+	\label{tab:snli_examples}
+\end{table}
+
+Some of the most successful attemps in solving NLI on the SNLI dataset have been
+an enhanced LSTM model \citep{chen2016enhanced} and 
+an attention based model \citep{parikh2016decomposable}. 
+The enchanced LSTM model (basic LSTM described in section~\ref{sec:lstm}) 
+uses an BiLSTM module to encode the text and hypothesis after which they calculate 
+soft alignment between hidden representations of the text and hypothesis to model the
+text--hypothesis interaction. Further, in parallel they use a Tree-LSTM to encode 
+the text and hypothesis syntax trees and also compute soft alignment between them. 
+Finally, they use a multilayer perceptron with $\mathit{tanh}$ activation and 
+$\mathit{softmax}$ output after the alignment layers training the model end-to-end. 
+At best, they achieve 88.6\% accuracy on the SNLI dataset. 
+The attention-based approach \citep{parikh2016decomposable} first encodes 
+text and hypothesis sentences as concatenations of word embeddings, upon which
+soft alignment is computed using
+neural attention. Then, the task is decomposed into separate problems (to optimize 
+for training time) in which each aligned subphrases are compared (between the text and 
+hypothesis). Finally, the computed subphrase alignments are aggregated in 
+a standard feedforward layer to compute the label. They achieve 
+86.8\% accuracy on the SNLI dataset. 
+
+\subsection{Semantic Textual Similarity}
+\label{sec:sts}
+
+\textit{Semantic  Textual  Similarity}  (STS)  measures the  degree  of  semantic
+equivalence  between two texts \citep{agirre2012semeval}. It is related to the problem
+of Textual Entailment (TE). It assumes symmetric graded equivalence between
+a pair of texts. STS is different from TE by incorporating the notion of 
+graded semantic similarity, hence it is not a binary yes/no decision. 
+STS is a unified framework built for 
+extrinsic evaluation of multiple semantic components that otherwise
+have tended to be evaluated in-dependently  and  without  broad
+characterization  of their impact on NLP applications. 
+Such components are word  sense  disambiguation, lexical  substitution,  semantic
+role  labeling,  multi-word  expression  detection, discourse analysis, and 
+many other. STS defines the similarity between two texts on a scale from 
+0.0 (minimum similarity) to 4.0 (maximum similarity).
+
+The most successful STS models from the SemEval-2012 relied on 
+one of three approaches. The first uses information retrieval's 
+vector space model \citep{meadow1992text} representing text in a 
+``bag-of-words'' manner and then computing cosine similarity between 
+resulting vectors. The second approach attempts to align words or expressions of
+the sentence pair by maximizing the summation of word similarity \citep{mihalcea2006corpus}.
+The third approach combines different measures and features which are then 
+used as input to machine learning models fitted on such data 
+\citep{vsaric2012takelab}. See \citep{han2013umbc_ebiquity}
+for a more detailed overview. 
+
+TakeLab's STS system by \citet{vsaric2012takelab} first preprocesses two input
+texts (removing stopwords, hypens, slashes, \dots), after which they calculate
+a set of syntactic, ngram overlap, and named entity features.  Finally, they
+frame the problem as a supervised regression problem and train a LIBSVM
+\citep{chang2011libsvm}, using grid search and cross-validation (described in
+subsection~\ref{sec:selection}) to obtain optimal hyperparameters.
+
+\section{Formal Knowledge Representation}
+\label{sec:knowledge_representation}
+
+Ontology defines a set of representational primitives with which to model 
+a domain of knowledge or discourse. The primitives are classes, attributes
+(or properties) and relationships (relations among class instances). 
+Definitions of the primitives include information about their
+meaning and constraints on their logically consistent application
+\citep{gruber2009ontology}.
+We discern between two basic types of ontologies: a domain ontology and an
+upper ontology. 
+Some core components of an ontology are:
+\begin{description}
+\item[Classes] sets, collections, concepts of kinds of things,
+\item[Attributes] aspects, properties, features, distinguishable characteristics that
+	individuals and classes can posses,
+\item[Individuals] instances, objects that usually belong to a class,
+\item[Relations] ways in which classes and individuals are related to each other,
+\item[Axioms] assertions in a logical form that define the ontology for the domain of application, and
+\item[Restrictions] formally stated descriptions that must be true for some assertion to be accepted. 
+\end{description}
+
+Domain ontology represents concepts which belong to a part of the world. 
+They are used to model domain-specific definitions of terms. A single term is
+unambiguous within a single domain ontology, but might be ambiguous across
+different domain ontologies. For example, the term ``band'' can refer to a
+medical band (like a bracelet used to track health-related metrics) in a
+medical domain ontology, music band (musical ensemble which performs music) in
+a composition domain ontology, or a rubber band (usually ring shaped loop of
+rubber) in a toy domain ontology. Ontologies frequently change over time
+when new requirements are added, the ontology is applied in different areas, different 
+perceptions of the domain are needed \dots
+
+\begin{figure}
+	\includegraphics{upper_domain_interaction.jpg}
+	\caption{An example of integrating a domain ontology
+	(EmotionsOnto) with a upper ontology (DOLCE)
+	Adopted from \citep{gil2015emotions}
+	}
+	\label{fig:upper_domain_integration}
+\end{figure}
+
+An upper ontology is a model of common relations and individuals that are generally
+applicable across a wide range of domain ontologies. They usually have
+a core glossary that contains terms and their decriptions of usage in various 
+domain ontologies. Some popular upper ontologies are Dublin Core \citep{weibel1998dublin}, 
+the suggested upper merged ontology SUMO \citep{pease2002suggested} and
+DOLCE \citep{gangemi2002sweetening}. 
+Upper ontologies are generally designed to be used with multiple domain ontologies. 
+An example of an upper ontology integrated with a domain ontology is in 
+figure~\ref{fig:upper_domain_integration}. 
+
+
+% \begin{figure}
+% 	\includegraphics[scale=0.8]{ontology_creation.png}
+% \end{figure}
+
+Ontologies are often constructed from natural language requirements, 
+such as ``a system can reserve seats in a specific train''. This sort of requirement can
+then mapped to an ontological element ``reserve'' in the domain of 
+reservation systems \citep{kaiya2006using}. 
+Constructing a domain ontology often involves lexical decomposition
+\citep{pustejovsky2013type} such that natural language requirements 
+can be interpreted with ontological elements which can be decomposed 
+into several unambiguous terms. The terms are often organized in a semantic structure,
+a thesaurus of classes. Relationships between terms, relations, define how 
+the terms are connected. 
+
+
 % - (optional) joint modeling of sequence and classification \\
 % 
 % 
-% word representations \\
-% - count vectors (ngram) \\
-% - tf-idf (ngram) \\
-% - distributed representations (word2vec) \\

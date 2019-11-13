@@ -1,3 +1,92 @@
 \chapter{Computational Argumentation}
 
+- how computational argumentation started \\
+- what stemmed from computational argumentation \\
+- from claims to argumentation schemes \\
+
 \chapter{Argumentation Mining}
+
+- Argument Mining is the automatic identification and extraction of the structure
+of inference and reasoning expressed as arguments presented in natural language
+\citep{lawrence2019argument} \\
+- applications of argumentation mining \\
+are found in \textit{decision support in medicine}, multi-agent systems, engineering, 
+policy decision making \citep{tremblay2016value, byron2019evaluating} \\
+
+\noindent - tasks of argumentation mining are 
+\begin{itemize}
+\item prominent claim identification,
+\item claim clustering,
+\item claim extraction,
+\item deriving implied claims.
+\end{itemize}
+
+\noindent - manual argument analysis \citep{lawrence2019argument}
+- manual analysis often involves using various tools to analyze arguments, 
+such as Araucaria \citep{reed2004araucaria}, OVA \citep{reed2014ova+}, or
+Carneades \citep{gordon2007carneades} \\
+- these tools require already extracted claims that the tool users can then 
+connect, determine their roles (premise, conclusion) and define 
+relationships (attack, support), and even form refined structured,
+such as argumentation schemes \citep{walton2008argumentation} \\
+Generally, steps to perform argument analysis are:
+\begin{itemize}
+\item text segmentation,
+\item argument / non-argument,
+\item simple structure,
+\item refined structure.
+\end{itemize}
+
+\section{Text segmentation}
+
+- text segmentation involves extraction of fragments of text that form
+constituent parts of a argument building block \\
+- there have been various definitions of argument building blocks \\
+- one strand of research defines them as \textit{Elementary Discourse Units} EDU \\
+- some define EDUs as clauses \citep{winter1982towards, givon1983topic}, 
+others as sentences \citep{polanyi1996linguistic}, some as prosodic units
+\citep{sacks1978simplest} \\
+- they all agree that they are non-overlapping atomic units \\
+- another strand of research 
+ define \textit{Argumentative Discourse Units} (ADU) 
+as minimal units of discourse \citep{peldszus2013argument} 
+which can be composed of multiple EDUs, also overlapping \\
+- as noted in \citep{lawrence2019argument}, there are multiple issues 
+with defining the rules to constituete an argument building block, 
+which arise particulary when dealing with reported speech \\
+- to overcome this, we therefore, define \textit{claims} to allow
+for overlapping and don't define them in terms of phoentics or sytnax, but
+state they should be semantically atomic \\ 
+- an example why we allow overlapping claims: \\
+\begin{mydef}
+The church stated that people should not perform abortion or 
+smoke marijuana. 
+\end{mydef} 
+- as text segments \textit{the church stated that people should not perform
+abortion} and \textit{the church stated that people should not smoke marijuana}
+both convey atomic thought, we feel it would be wrong to make this a single 
+claim \\
+- on the other hand, having it two claims, but omitting \textit{the church stated}
+in one claim, but not the other makes a claim completely different as
+context is lost \\
+- we also don't wish to rely on text containing subjects or predictes as 
+texts in online discusses are often times ungrammatical \\
+- this means that we consider that utterances
+\textit{Yes, definitely!} and \textit{Marijuana should definitely be allowed}
+can both claims of the same meaning, given the context they are made in. \\
+
+\section{Argumentative / Non-Argumentative}
+
+\section{Claim clustering}
+
+- Some claims are more prominent than others in terms of frequency.  \\
+- Those claims are usually used for claim analysis when trying to recognize 
+prominent claims \\
+Claim clustering attempts to determine prominent arguments  
+by clustering claims. \\
+
+\section{Prominent claim identification}
+
+- describe what prominent claim identification is and why is it useful \\
+- example which shows some prominent arguments \\
+- List all papers that do prominent claim identification \\

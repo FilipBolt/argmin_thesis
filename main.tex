@@ -31,13 +31,16 @@
 \usepackage{cmap}
 \usepackage[english]{babel}
 \usepackage{ae}
-\usepackage[unicode]{hyperref}
+\usepackage[unicode, hidelinks]{hyperref}
 \usepackage{mathptmx}
 \usepackage{amscd}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{algpseudocode}
+\usepackage{bookmark}
+% for making examples of comments
+\usepackage{comment}
 
 \newtheorem{mydef}{Example}[section]
 \usepackage{amsfonts}
@@ -95,7 +98,7 @@
 
 \usepackage[toc,page]{appendix}
 
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}  % to get unnumbered footnotes
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}  % to get unnumbered footnotes
 \renewcommand{\arraystretch}{1.5} % stretching row height
 
 \newcounter{rowcntr}[table]
@@ -155,6 +158,8 @@
 \AtBeginDocument{\addtocontents{lof}{\protect\thispagestyle{empty}}}
 \AtBeginDocument{\addtocontents{lot}{\protect\thispagestyle{empty}}}
 
+% references in words, chapter one opposed to chapter 1
+\usepackage{fmtcount,refcount}
 
 \begin{document}
 
@@ -191,91 +196,31 @@
 
 \include{keytechniques}
 
-\part{Unstructured argumentation mining of claims}
+\part{Unstructured approaches to argumentation mining of claims}
 
 \input{argrec.tex}
 
+\input{argclu.tex}
 
+\input{argpremises.tex}
 
-\part{Structured argumentation mining of claims}
+\part{Structured approaches to argumentation mining of claims}
+
+\input{claim_segmentation.tex}
+
+\input{microstructures.tex}
+
+\input{formalizations.tex}
+
+\input{struc_arg.tex}
+
+\bookmarksetup{startatroot}
+\addtocontents{toc}{\bigskip}% perhaps as well
+
+\input{conclusion.tex}
+
  
 % \include{datasets}
-
-%%%%%%%%%%%%%%%%%%%%%%%% APPROACH 1 -- GO WIDE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \chapter{Option 1}
-% 
-%  - computational argumentation (seminar pzuis) \\
-%   - what it is \\
-%   - how it started \\
-%   - where is it now \\ 
-% 
-% \noindent - argument mining \\
-%   - connection to computational argumentation \\
-%   - how it started \\
-%   - shortly introduce the tasks \\
-%   - for each task talk about datasets and models \\
-% 
-% \noindent - go task by task always compare 
-% structured vs. unstructed approach \\
-% \noindent - from text to arguments \\
-%   - structured vs. unstructured \\
-%   - unstructured --> argrec (is an argument inside a comment), generate implicit premises
-%   - structured --> break down comment into segments, then structure each segment
-% 
-% \noindent - argument processing \\
-% - what arguments imply \\
-%   - implicit premises paper \\
-%   - logical implications \\
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%% APPROACH 2 -- PAPER BY PAPER  %%%%%%%%%%%%%%%%%%%%%
-% 
-% \chapter{Option 2}
-% 
-% - argumentation mining \\
-%   - what it is \\
-%   - what are the tasks \\
-%   - which are the tasks interesting to us \\
-% 
-% \noindent - talk about the argrec paper \\
-% - talk about all other papers afterwards in order of appearance \\
-% 
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%% APPROACH 3 -- STRUCTURE VS. UNSTRUCTURED  %%%%%%%%%%
-% 
-% \chapter{Option 3}
-% - computational argumentation \\
-%   - approaches \\
-% 
-% \noindent - argumentation mining \\
-%   - what it is (relation to computational argumentation) \\
-%   - what are the tasks \\
-%   - what are the typical approaches \\
-% 
-% \noindent - dataset of posts and comments \\
-%   - my datasets \\
-%   - related datasets \\
-% 
-% \noindent - technical tools \\
-% 
-% \noindent - unstructured approaches \\
-%   - argrec \\
-%   - grouping arguments \\
-%   - implicit premises \\
-% 
-% \noindent - structured approaches \\
-%   - claim segmentation \\
-%   - paraphrasing \\
-%   - microstructures \\
-%   - ontology for structuring \\
-%   - building the ontology \\
-%   - formalizations \\
-
-% \part{Argument clustering}
-% 
-% \part{Structured argumentation}
-% \include{eg_chapter}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%% PRILOZI / APPENDIX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -285,13 +230,18 @@
 %\renewcommand{\thesection}{\Alph{section}}
 %\setcounter{section}{0}
 
-\begin{appendices}
+%\begin{appendices}
+
+\setcounter{chapter}{0}%
+\renewcommand{\thechapter}{\Alph{chapter}}%  Letters as 'counters'
+%\part{\appendixname}
+\part{Appendices}
 
 \input{90_datasets}
 
 \input{91_annotation_guidelines}
 
-\end{appendices}
+%\end{appendices}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \backmatter
@@ -309,20 +259,26 @@
 
 %%%%%%%%%%%%%%%%%%%%%%% POPIS OZNAKA / NOMENCLATURE %%%%%%%%%%%%%%%%%%%%%%%
 % notation and list of symbols if needed
-%\printnomenclature
+% \printnomenclature
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% KAZALO POJMOVA / INDEX %%%%%%%%%%%%%%%%%%%%%%%%
 % optional index
 %\printindex
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\addcontentsline{toc}{chapter}{List of figures}
+\listoffigures
+\cleardoublepage % start new page
+
 % insert optional list of figures
-% \listoffigures
-%\cleardoublepage % start new page
+% \cleardoublepage % start new page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % insert optional list of tables
-% \listoftables
-%\cleardoublepage % start new page
+
+\addcontentsline{toc}{chapter}{List of tables}
+\listoftables
+\cleardoublepage % start new page
 
 %%%%%%%%%%%%%%%%%%%%%%%%% ŽIVOTOPIS / BIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \include{zivotopis}

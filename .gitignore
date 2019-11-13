@@ -206,3 +206,6 @@ pythontex-files-*/
 
 # standalone packages
 *.sta
+
+# I want to ignore old papers that I downloaded for convienience
+my_papers/

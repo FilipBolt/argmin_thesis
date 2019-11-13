@@ -4,7 +4,7 @@
 - Whether it is a domestic discussion which color the bathroom should 
 be painted with, a political TV show debate on how will the latest tax increase 
 impact small businesses, or a discussion at work on which text editor makes
-code editing the fastest arguments are used to convince the other discussion 
+code editing the fastest, arguments are used to convince the other discussion 
 participant(s) to adhere to a single opinion. \\
 - More formally, a dialogue or a conversation is defined as a goal-directed
 conventional framework in which two partners reason 
@@ -12,25 +12,76 @@ together in an orderly way,
 according to the rules of politeness or normal exchange expectations
 of cooperative argumentation for the type of exchange they are
 engaged in \citep{walton1998new} \\
-- defining argumentation goes back to Aristotle \\
+- from a cooperative and productive argumentative discussion, 
+an informed, critically evaluated decision can be made \\
+- being able to make important decisions only further 
+underlines the importance of argumenation \\
+- understanding public opinion on controversial topics, such as 
+\textit{marijuana legalization}, \textit{gay marriage legalization}, 
+\textit{euthanazia legalization}, and many more is important for
+policy making \\
+- knowing merely stance (whether someone is pro or con on the topic)
+is only surface level information, as arguments behind that stance are
+crucial to understance where that stance comes from \\
+- analyzing argumentation boils down to understanding and logically connecting
+claims into arguments \\
+% TODO add claim definition from argonotlogy paper
+% - we wish to explore computational methods of 
+- we wish to computationally ease the process of analyzing arguments for a 
+specific discussion topic \\
 
-- definition of argumentation \\
-- interest in argumentation started with computational argumentation, 
-roughly with \citep{dung1995acceptability}
+%- defining argumentation goes back to Aristotle \\
+%- interest in argumentation started with computational argumentation, 
+%roughly with \citep{dung1995acceptability} \\
 
-- Argument Mining is the automatic identification and extraction of the structure
-of inference and reasoning expressed as arguments presented in natural language
-\citep{lawrence2019argument} \\
+\noindent - computational analysis of arguments started with formalizing arguments, more
+specifically, the area of computational argumentation \\
+- field of computational argumentation developed formal, logic-based 
+accounts of arguments \\
+- argumentation is formed in language and therefore related to the field
+of computational linguistics \\
+- argumentation research has mostly relied on knowledge and 
+logic-based solutions, whereas computational lingustics has adopted a 
+more , especially with the advent of machine learning \\
+- scalability issues limit the application reasoning, logic based
+approaches, whereas data-driven approaches often yield non-logical
+solutions \\
+- one argument towards logic-based approaches 
+is that a well-known problem such as POS tagging seems to have reached its
+apex with 97\% performance and that rule-based approaches may improve it 
+\citep{manning2011part} \\
+- we wish to combine logic, reasoning-basec approaches with data-driven ones \\
 
-- research interdisciplinarity \\
-- natural language processing \\
-- computational argumentation \\
-- machine learning \\
+\noindent - our goal is to allow for argument analysis from raw text \\
+- the text is expected to be from online discussions, more specifically internet 
+discussions, which carry have their own set of rules and conventions \\
+- we wish to work on problems to extract claims, group claims into arguments, and analyze 
+claims, potentially deriving new claims (premises) \\
+
+% - in this work we wish to balance between formalized and unformalized approaches \\
+% - we aim to use non-formalized approaches to identify and extract claims from text, then use
+% formalized and structured approaches to derive arguments from claims along with their
+% underlying premises of arguments \\
 
 \section{Argumentation Mining of Claims}
 
+- argument analysis is performed from many angles \\
+- computational argumentation starts with predefined claims and connects them 
+with (support or attack) relations to form arguments and networks of arguments \\
+- these argument networks (graphs) are then usually analyzed in terms of acceptability \\
+- however, this approach can be rather expensive, as no automatic methods currently exist
+to determine claims \\
+- argumentation mining relies on natural language processing techniques to
+extract claims from text, recognize relations between claims and then analyze them
+by means of clustering on deriving extra claims (or premises) from 
+extracted ones \\
+- we wish to walk the line between argumentation mining and computational argumentation 
+by extracting claims by means of natural language processing, after which we 
+experiment with both structured and unstructured approaches of claim analysis \\
+
 \section{Contributions}
 
+% TODO this is from the javni razgovor document
 The research aims to improve the state of
 the art in argumentation mining by means of claim structuring and the
 development of a computer system prototype for claim analysis, which would
@@ -49,3 +100,6 @@ structuring, and the analysis of claims.
 \end{enumerate}
 
 \section{Thesis structure}
+
+The thesis is structured as follows. Finally, chapter~\numberstringnum{\getrefnumber{chap:conclusion}}
+concludes the thesis and gives directions for future work. 
