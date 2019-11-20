@@ -1,3 +1,96 @@
 \chapter{Claim segmentation}
 
+% TODO give intro to motivate structure approach
+% outline steps of structured approach
 
+%TODO give intro to motivate segmenting claims in general
+
+\section{Data}
+
+\setlength{\tabcolsep}{4pt}
+
+\begin{table*}[t]
+\begin{center}
+{\footnotesize
+	\begin{tabular}{@{}p{0.2\linewidth} p{0.30\linewidth} p{0.30\linewidth} }
+\toprule
+\textbf{User post} & \textbf{Claim segment} & \textbf{Claim paraphrase}   \\
+\midrule
+\multirow{3}{*}{\parbox{3cm}{
+		\emph{Men should fall in love with women that's why they where created and women should 
+		get married to men because it makes everything easier. }
+}}
+&  
+\emph{Men should fall in love with women.}
+& \emph{People of opposite sex should fall in love.}
+\\
+\cmidrule{2-3}
+& \emph{that's why they where created} & \emph{Men and women are created to pair.}
+ \\
+\cmidrule{2-3}
+& \emph{women should get married to men because it makes everything easier.} & 
+ \emph{Heterosexual marriages make everything easier.}
+ \\
+ \bottomrule
+\end{tabular}}
+\end{center}
+\caption{An example of a user post segmented into three claim segments with their correspoding paraphrase.}
+\label{tab:claim_seg_post_segments}
+\end{table*}
+
+- we adopt the dataset of \citet{hasan2014you} which contains 
+user posts from online two-sided discussions on a number of issues \\
+- for reasons of feasiblity, we consider two topics: ``Gay rights'' and 
+``Marijuana'' \\
+- we sampled 100 posts (50 \textbf{pro} and 50 \textbf{con}) \\
+- first, annotators segment out claims from user posts 
+% TODO consider where to put paraphrasing, maybe to go with structuring
+- second, after segmenting out a claim, the annotators provide a paraphrased
+version of the claim \\
+- we assumed that paraphrasing helps understanding of claims \\
+- our work is similar to \citep{wyner2016working} who use a controlled language 
+for paraphrasing claims \\
+
+- claim segmenting separates argumenative from non-argumentative content \\
+- there are many ways a post can be segmented into claims \\
+- there is a number of ways to paraphrase a claim \\
+- the ambiguity can be reduced by doing these two tasks jointly \\
+- the end result paraphrased should be \emph{simplyfing paraphrases} \\
+- paraphrases that provide the essence of claims devoid of 
+superflous words and phrases \\
+- we adopt nine paraphrasing principles: 
+\begin{enumdescript}
+\item[Argumentativeness] --- Only argumentative text should paraphrased;
+\item[Atomicity] --- A claim should convey a single thought; 
+\item[Authority] --- Experts in claims from expert opinion should be made explicit in the
+paraphrase; 
+\item[Brevity] --- Paraphrases should keep only the relevant argumentative content; 
+\item[Canonicity] --- Canonical terms and phrases are preffered over idiomatic language; 
+\item[Contextuality] --- Claims should be paraphrased by considering their local and topical
+context as well as their context; 
+\item[Declarativity] --- paraphrases should be in declarative form; 
+\item[Dereferencing] --- Pronouns and nominal references should be resolved; and
+\item[Explicitness] --- Only explicitly stated information should be paraphrased, and not
+whatever might be implied by the claim 
+\end{enumdescript}
+- we allow for overlapping and discontiguous segments \\
+- full annotation guidelines are in appendix~\ref{sec:argseg_annotation} \\
+- the annotation for ``Gay Rights'' was carried out by one trained annotator and took 25 hours\\
+- the annotation for ``Marijuana'' was carried out by three annotators \\
+% TODO add stats time for marijuana 
+- the 100 user posts yield 920 claim segments for ``Gay rights'' \\
+- table~\ref{tab:claim_seg_post_segments} gives an example \\
+- for the ``Gay Rights'' topic, the segments covered 79.6\% of the text, while the remaining
+20.4\% may be considered non-argumentative \\
+%TODO add stats for the Marijuana topic
+
+\section{Models}
+
+\subsection{Na\"ive Heuristic}
+
+\subsection{Supervised Classification}
+
+\subsection{BiLSTM + CRF Model }
+
+
+\section{Discussion and Conclusion}

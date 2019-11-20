@@ -70,6 +70,10 @@
 
 \newcommand{\ComArg}{\mbox{\textsc{ComArg}}\xspace}
 
+% for tables in clustering section
+\newcommand{\str}[1]{{\scriptsize\emph{#1}}}
+
+
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{setspace} 
 \linespread{1.3}
@@ -158,6 +162,21 @@
 \AtBeginDocument{\addtocontents{lof}{\protect\thispagestyle{empty}}}
 \AtBeginDocument{\addtocontents{lot}{\protect\thispagestyle{empty}}}
 
+% enumerated description: 
+% https://tex.stackexchange.com/questions/30029/enumerated-description-list
+\newcounter{descriptcount}
+\newlist{enumdescript}{description}{2}
+\setlist[enumdescript,1]{%
+  before={\setcounter{descriptcount}{0}%
+	  \renewcommand*\thedescriptcount{(\arabic{descriptcount})}}
+  ,font=\bfseries\stepcounter{descriptcount}\thedescriptcount~
+}
+% \setlist[enumdescript,2]{%
+%   before={\setcounter{descriptcount}{0}%
+%           \renewcommand*\thedescriptcount{\roman{descriptcount}}}
+%   ,font=\bfseries\stepcounter{descriptcount}\thedescriptcount~
+% }
+
 % references in words, chapter one opposed to chapter 1
 \usepackage{fmtcount,refcount}
 
@@ -196,22 +215,26 @@
 
 \include{keytechniques}
 
-\part{Unstructured approaches to argumentation mining of claims}
-
-\input{argrec.tex}
+\part{Unstructured argumentation mining of claims}
 
 \input{argclu.tex}
 
+\input{argrec.tex}
+
 \input{argpremises.tex}
 
-\part{Structured approaches to argumentation mining of claims}
+\part{Structured argumentation mining of claims}
 
 \input{claim_segmentation.tex}
 
 \input{microstructures.tex}
 
+% microstructure vs. ontologies
 \input{formalizations.tex}
 
+\input{claim_structuring.tex}
+
+% analysis 
 \input{struc_arg.tex}
 
 \bookmarksetup{startatroot}

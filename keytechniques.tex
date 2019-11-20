@@ -21,6 +21,7 @@ whereas learning to fit continuous values ($y \in \mathbb{R}$)
 is denoted regression \\
 
 \subsection{Support Vector Machines}
+\label{sec:svm}
 
 Support Vector Machines (SVM) \citep{cortes1995support} is one of the most
 popular machine learning algorithms. The algorithm has proven useful for many
@@ -621,6 +622,7 @@ are then summed so that each label receives a number of votes
 \citep{dimitriadou2001voting}.
 
 \section{Unsupervised Machine Learning}
+\label{sec:unsupervised_machine_learning}
 
 As opposed to supervised machine learning (described in
 section~\ref{sec:machine_learning}), unsupervised machine learning
@@ -702,6 +704,7 @@ using distance metric $d$ are:
 % \citep{reynolds2006clustering}
 
 \subsection{Evaluation Methods}
+\label{sec:clus_evaluation}
 
 One standard way to evaluate the result of clustering is by
 calculating the silhouette score \citep{reynolds2006clustering}. 
@@ -851,6 +854,7 @@ Information retrieval models documents through features in order to be able to e
 store (index) and search collections of documents. Commonly used features are 
 \textit{term frequency tf} and \textit{inverse document frequency idf}. Term frequency of a word
 is the number of occurences of that word in a given document:
+
 $$
 \mathit{tf}(t, d) = \frac{f(t, d)}{|d|}
 $$
@@ -859,9 +863,10 @@ of total terms in document $d$.
 Inverse document frequency is a measure of how much information a word provides (common or rare
 across a collection of documents) as is calculated as:
 
-$$
+\begin{equation}
+	\label{eq:idf}
 \mathit{idf}(t, D) = \log \frac{N}{1 + |d \in D: t \in d|}
-$$
+\end{equation}
 where $N$ is the number of documents in the corpus $|D|$ and $|d \in D: t \in d|$ is the 
 number of documents in which term $t$ appears in. 
 These two features are often used together to represent a collection of documents 
