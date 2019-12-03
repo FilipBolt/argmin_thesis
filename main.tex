@@ -15,6 +15,10 @@
 \usepackage{rotating}
 \usepackage{epsfig}
 \usepackage{epstopdf}
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
 
 % required for printing index
 % use \index{name} in text
@@ -44,7 +48,6 @@
 
 \newtheorem{mydef}{Example}[section]
 \usepackage{amsfonts}
-\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
 \usepackage{booktabs}
 
 \usepackage[inline]{enumitem}
@@ -69,6 +72,8 @@
 
 
 \newcommand{\ComArg}{\mbox{\textsc{ComArg}}\xspace}
+
+\colorlet{orangegreen}{green!10!orange!90!}
 
 % for tables in clustering section
 \newcommand{\str}[1]{{\scriptsize\emph{#1}}}

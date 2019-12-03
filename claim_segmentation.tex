@@ -84,13 +84,343 @@ whatever might be implied by the claim
 20.4\% may be considered non-argumentative \\
 %TODO add stats for the Marijuana topic
 
+%TODO 
+\noindent - dataset statistics \\
+- how many examples are overlapping \\
+
 \section{Models}
+
+- similarly to \citep{ajjour2017unit}, we follow existing approaches to tackle
+claim segmentation as a token-level classification task \\
+- we observe the claim segmentation problem in two lights \\ 
+- first, as a multilabel classification problem, since each token can belong to zero or more
+segments \\
+- second, we simplify the problem by discarding overlapping and discontiguous segments \\
+- we compare three basic approaches \\
+- first approach is based on most argumentation mining approaches where 
+- in the second approach we use an SVM classifier to use word level and context features \\
+- in the third approach, we combine deep learning and 
+structured prediction \\
 
 \subsection{Na\"ive Heuristic}
 
+\begin{figure}
+\begin{algorithmic}[1]
+\Function{is\_punctuation}{ch}
+\If{$ch = ``." \cup ch = ``?" \cup ch = ``!"$}
+\State
+\Return $\mathit{True}$
+\Else
+\State
+\Return $\mathit{False}$
+\EndIf
+%\Return $out$
+\EndFunction
+
+\State
+\State 
+
+\State \textbf{INPUT} $\mathit{text}$
+\State $\mathit{seg\_id} \gets 1$
+\State $Y[\mathit{seg\_id}] \gets \emptyset$
+\ForAll{$i \in |\mathit{text}|$}
+	\State $token \gets text[i]$
+	\State $Y[\mathit{seg\_id}] \gets Y[\mathit{seg\_id}] \cup \mathit{token}$
+	\State
+	\If{$\mathit{IS\_PUNCTUATION}(\mathit{token}) \cap i \neq 0$}
+	\State $\mathit{seg\_id} \gets \mathit{seg\_id} + 1$
+	\EndIf
+\EndFor
+\State
+\Return $Y$
+\end{algorithmic}
+\caption{Claim segmentation punctuation based heuristic. 
+Input is a list of tokens, outputs a nested list of lists, where 
+each list corresponds to a segment. 
+None of the tokens is declared as non argumentative.
+The \texttt{IS\_PUNCTUATION}
+	function has been simplified for readability purposes. 
+	}
+\label{alg:heuristic_claimseg}
+\end{figure}
+
+\begin{table}[h]
+\begin{tabular}{@{}p{0.5\linewidth} p{0.50\linewidth}}
+\toprule
+\multirow{7}{*}{
+\parbox{7cm}{
+\textit{if we legalize pot there wil be a sharp increase in 
+demand and consumption over a period of time
+then............it will start to decline....slowly at first until
+smoking pot becomes drinking wine.......only on special
+occasions........... that's why we should continue the war
+it's not like weed is damn near impossible to obtain ...... in my
+opinion there is no war ....... there never was ...}
+}}
+		& \emph{if we legalize pot there wil be a sharp increase in 
+demand and consumption over a period of time
+	then ............} \\ \cline{2-2}
+		& \emph{it will start to decline .... } \\ \cline{2-2}
+		& \emph{slowly at first until
+	smoking pot becomes drinking wine .......} \\  \cline{2-2} 
+	& \emph{
+only on special
+occasions
+...........
+		} \\  \cline{2-2}
+	& \emph{
+that's why we should continue the war
+it's not like weed is damn near impossible to obtain ......
+		} \\\cline{2-2}
+	& \emph{
+in my
+opinion there is no war .......
+} \\\cline{2-2}
+	& \emph{
+there never was ...
+} \\
+\bottomrule
+	\caption{Example of heuristic algorithm output. }
+\label{tab:heuristic_example}
+\end{tabular}
+\end{table}
+
+\noindent As a strong baseline, we extract claims as most papers assume claim 
+segmentation has already been performed, some assume a single sentence is a claim
+\citep{rooney2012applying, stab2014identifying}. \\
+- We adopt a similar approach, where we simply assume punctuation is a strong
+indication a new claim starts. \\
+- For each post (comment), we simply iterate through all tokens
+and start a new claim when a token equals a punctuation mark \\
+- this is essentially similar to sentence segmentation \citep{palmer2000tokenisation} \\
+- If the current token is a punctuation symbol, the next claim starts \\
+The heuristic is outlined in algorithm~\ref{alg:heuristic_claimseg} \\
+- An example of how the algorithm works for a post is shown in~\ref{tab:heuristic_example} \\
+
 \subsection{Supervised Classification}
 
-\subsection{BiLSTM + CRF Model }
+\subsection{BiLSTM + CRF Model}
+
+\section{Problem Formulation}
+\begin{table}
+\centering
+\begin{tabular}{c| c c}
+ i & $x_i$ & $Y_i$ \\
+\midrule
+ 1& marijuana & $\{1 \}$ \\
+ 2&  is & $\{ 1 \}$ \\
+ 3&  believed &  $\{ 1 \}$ \\
+ 4&  to& $\{ 1 \}$ \\
+ 5& be& $\{ 1 \}$ \\
+ 6& a& $\{ 1 \}$ \\
+7 & stepping& $\{ 1 \}$ \\
+8 & -& $\{ 1 \}$
+\end{tabular}
+\hfill
+\begin{tabular}{c | c c}
+ i & $x_i$ & $Y_i$ \\
+\midrule
+9 &  stone& $\{ 1 \}$ \\
+10&  drug& $\{ 1 \} $ \\
+11&  that& $\{2, 3, 4\}$ \\
+12&  can& $\{2, 3, 4\}$ \\
+13&  eventually& $\{2, 3, 4\}$ \\
+14&  lead& $\{2, 3, 4\}$ \\
+15&  to& $\{2, 3, 4\}$ \\
+16 & addiction& $\{2, 3, 4\}$ \\
+\end{tabular}
+\hfill
+\begin{tabular}{c| c c}
+ i & $x_i$ & $Y_i$ \\
+\midrule
+17 & to& $\{2, 3, 4\}$ \\
+18 & heroin & $\{ 2 \}$ \\
+19 & , & $\{2\}$ \\
+20 & cocaine& $\{3 \}$ \\
+21 & and& $\{ \}$ \\
+22 & other& $\{ 4 \} $\\
+23 & harder& $\{ 4 \} $\\
+24 & drugs& $\{ 4 \} $\\
+\end{tabular}
+\caption{Marijuana example}
+\label{tab:multilabel_segment_example}
+\end{table}
+
+
+\begin{figure}
+\scriptsize
+\begin{tabular}{l | ccccccc cccccccc ccc ccccc}
+	& Nothing& can& bring& peace& to& this& world 
+&Its& a& great& idea& to& try& and& push& 
+for& world& peace 
+	& but & it & will & never & happen \\
+	\midrule
+	\texttt{BIO} & \texttt{B} & \texttt{I} & \texttt{I} &
+	\texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} & \texttt{B}&
+	\texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} &
+	\texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} &
+	\texttt{B} & \texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} \\
+	\midrule
+	\multirow{3}{*}{ML} & 1 & 1 & 1 & 1 & 1 & 1 & 1 
+	& 0& 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 
+	& 0 & 0 & 0 & 0 & 0 \\
+
+	& 0 & 0 & 0 & 0 & 0 & 0 & 0 
+	& 1& 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 
+	& 0 & 0 & 0 & 0 & 0 \\
+
+	& 0 & 0 & 0 & 0 & 0 & 0 & 0 
+	& 0& 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 
+	& 1 & 1 & 1 & 1 & 1 \\
+
+\end{tabular}
+	\caption{Multilabel (ML) and \texttt{BIO} labelling of post with three segments: 
+	``\textit{Nothing can bring peace to this world}'', 
+	``\textit{Its a great idea to try and push for world peace}'', and
+	``\textit{but it will never happen}''. 
+}
+\label{fig:segment_example_bio_multilabel}
+\end{figure}
+
+\noindent - let $\mathbf{x} = (x_1, \dots, x_N)$ represent a sentence of size $N$ as a vector
+of tokens where
+the index represents the position of the word in the sentence.  \\
+- then $\mathbf{Y} = (Y_1, \dots, Y_N)$ is a vector where each element represents a
+set of labels \\
+- each $Y_i, i \in \{1, \dots, N\}$ is a set of labels denoting which segment the the token belongs
+to \\
+- as an example, the post(comment) 
+``\textit{
+Marijuana is believed to be a stepping-stone drug that can eventually lead to
+addiction to heroin, cocaine and other harder
+% TODO actually is 25 tokens
+drugs.}'' is tokenized into 24 tokens with respective $X$ and $Y$ shown in table
+~\ref{tab:multilabel_segment_example} \\	
+- this problem can now be framed as multilabel classification 
+(multilabel classification described in section \ref{sec:chain_classification}) \\
+in the binary relevance setup \\
+- but framing multilabel classification
+as binary relevance has an exponential number of possible solutions, making it expensive to 
+efficiently search \\
+- figure~\ref{fig:segment_example_bio_multilabel} shows how a multilabel labeling would be 
+on a post from the ``Marijuana'' topic \\
+
+\noindent - as an alternative to multilabel classification, a number of approaches have been
+tried \\
+- in previous work, sequence extraction problems have arisen in various 
+information extraction problems \\
+- most notably shallow parsing and named entity recognition \\
+- \citet{sha2003shallow} employed \texttt{BIO} encoding for shallow parsing and used conditional
+random fields as one of the first structured prediction approaches to information extraction \\
+- \texttt{BIO} labels indicate whether the word is outside a segment (\texttt{O}), 
+starts a segment (\texttt{B}) or continues a segment (\texttt{I}) \\ 
+- nonoverlapping and contigious sequences can be simply labelled using the \texttt{BIO} labeling, 
+an example of a post from the ``Marijuana'' topic is figure~\ref{fig:segment_example_bio_multilabel} \\
+- using \texttt{BIO} labels instead of using multilabel approach greatly simplifies the problem by
+having to predict only a single sequence of labels by training only a single classifier  \\
+
+\noindent - however, when the segments are discontiguous or overlapping \texttt{BIO} cannot
+bijectively encode segments of labels \\
+- to tackle those cases a number of approaches have been proposed, mostly 
+in the area of named entity recognition on the analysis of clinical texts, 
+on datasets such as BioInfer \citep{pyysalo2007bioinfer} \\
+- to tackle non-overlapping contigious entities \citep{byrne2007nested} proposes
+to use tag n-grams instead of words, whereas 
+multiple-layer tagging was proposed by \citep{alex2007recognising} \\
+- \citet{finkel2009nested} treat named entity recognition as a parsing task \\
+- most recently, this becase an interesting problem
+as part of the SemEval-2014 analysis of clinical texts competition 
+\citep{pradhan2014semeval} \\
+- one of the competition tasks was extraction of all medical named entities, which could have been
+discontiguous and overlapping \\
+- two systems in the competition produces solutions that could handle both 
+discontiguous and overlapping entities \\
+- first, in \citep{pathak2014ezdi} they use a standard \texttt{BIO} tagging pipelined 
+with SVMs to combine resulting spans \\
+- the second system, described in \citep{zhang2014uth_ccb} expands 
+on the regular \texttt{BIO} tagset \\
+- they propose to tag each token with one of \texttt{B}, \texttt{I},
+\texttt{O}, \texttt{BD}, \texttt{ID}, \texttt{BH}, and
+\texttt{IH} which denote \texttt{B}eggining of entity, \texttt{I}nside entity, \texttt{O}utside
+of entity, \texttt{B}eginning of 
+\texttt{D}iscontigious entity, \texttt{I}nside of \texttt{D}iscontigious entity,
+\texttt{B}eginning of \texttt{H}ead, and
+\texttt{I}nside of \texttt{H}ead.  \\
+
+- In \citet{muis2018learning} they propose
+how to deal with both discontiguous and overlapping named entities \\
+
+- this clinical named entity extraction problem is equivalent to the claim
+segmentation problem \\ 
+
+\noindent - most recently, \citet{dai2018recognizing} names the problem as complex 
+entity mention recognition, summarizes research so far and provides
+future work guidelines \\
+- multilabel encoding as the most efficient one, as it 
+doesn't lose any information 
+the most efficient encoding \\
+- we explore we two encodings, the multilabel encoding \\
+- we also explore the BIO encoding \\
+- BIO encoding is shown in figure~\ref{fig:segment_example_bio} \\
+
+\begin{figure}
+\scriptsize
+\begin{tikzpicture}[node distance=1mm]
+\node (s1) {Marijuana is believed to be a stepping-stone drug};
+\node (s234) [right=of s1]{that can eventually lead to additiction to};
+\node (s2) [right=of s234]{heroin};
+\node (s3) [right=of s2]{cocaine};
+\node (o) [right=of s3] {and};
+\node (s4) [right=of o] {other harder drugs.};
+
+\node (s1lab) [below=of s1] {\textcolor{red}{Segment 1}};
+\node (s2lab) [below=of s2, xshift=-2cm, yshift=-2.5mm] {\textcolor{blue}{Segment 2}};
+\node (s3lab) [below left=1cm of s3, xshift=1mm, yshift=-1mm] {\textcolor{green}{Segment 3}};
+\node (s4lab1) [below=of s234, xshift=-0.7cm, yshift=1mm] {\textcolor{orangegreen}{Segment 4}};
+\node (s4lab2) [below=of s4] {\textcolor{orangegreen}{Segment 4}};
+\draw [-]
+($(s1.east) - (0.5mm, 0)$)
+-- ++(0, -.2)
+-| ($(s1.west) $);
+
+% S4 segment
+\draw [-]
+($(s234.east) $)
+-- ++(0, -0.2)
+-| ($(s234.west) - (0, 0) $);
+
+% S2 segment
+\draw [-]
+($(s234.west) - (0.5mm, 0)$)
+-- ++(0, -0.6)
+-| ($(s2.east) $);
+
+% S3 segment
+\draw [-]
+($(s234.west) - (1mm, 0)$)
+-- ++(0, -1.0)
+-| ($(s3.east) $);
+
+% other S4 segment
+\draw [-]
+($(s4.west) $)
+-- ++(0, -.2)
+-| ($(s4.east) $);
+\end{tikzpicture}
+	\caption{An example of post made in the ``Marijuana'' topic. 
+	\textcolor{red}{Segment 1} is a regular segment. 
+	\textcolor{blue}{Segment 2} and \textcolor{green}{Segment 3} are mutually overlapping.
+	\textcolor{orangegreen}{Segment 4} is both overlapping and discontiguous.}
+	\label{fig:segment_example_range}
+\end{figure}
+
+%'<S1>Marijuana is believed to be a stepping-stone drug
+%</S1><S2><S3><S4>that can eventually lead to addiction to
+%</S3></S4>heroin,</S2><S3> cocaine</S3> and<S4> other harder
+%drugs.</S4>'
+
+% <S1>Nothing can bring peace to this earth.</S1> <S2>Its a great idea to try and
+% push for world peace</S2> <S3>but it will never happen...</S3>'
 
 
 \section{Discussion and Conclusion}
