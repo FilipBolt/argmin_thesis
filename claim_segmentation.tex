@@ -1,4 +1,5 @@
 \chapter{Claim segmentation}
+\label{chap:claim_segmentation}
 
 % TODO give intro to motivate structure approach
 % outline steps of structured approach
@@ -87,119 +88,6 @@ whatever might be implied by the claim
 %TODO 
 \noindent - dataset statistics \\
 - how many examples are overlapping \\
-
-\section{Models}
-
-- similarly to \citep{ajjour2017unit}, we follow existing approaches to tackle
-claim segmentation as a token-level classification task \\
-- we observe the claim segmentation problem in two lights \\ 
-- first, as a multilabel classification problem, since each token can belong to zero or more
-segments \\
-- second, we simplify the problem by discarding overlapping and discontiguous segments \\
-- we compare three basic approaches \\
-- first approach is based on most argumentation mining approaches where 
-- in the second approach we use an SVM classifier to use word level and context features \\
-- in the third approach, we combine deep learning and 
-structured prediction \\
-
-\subsection{Na\"ive Heuristic}
-
-\begin{figure}
-\begin{algorithmic}[1]
-\Function{is\_punctuation}{ch}
-\If{$ch = ``." \cup ch = ``?" \cup ch = ``!"$}
-\State
-\Return $\mathit{True}$
-\Else
-\State
-\Return $\mathit{False}$
-\EndIf
-%\Return $out$
-\EndFunction
-
-\State
-\State 
-
-\State \textbf{INPUT} $\mathit{text}$
-\State $\mathit{seg\_id} \gets 1$
-\State $Y[\mathit{seg\_id}] \gets \emptyset$
-\ForAll{$i \in |\mathit{text}|$}
-	\State $token \gets text[i]$
-	\State $Y[\mathit{seg\_id}] \gets Y[\mathit{seg\_id}] \cup \mathit{token}$
-	\State
-	\If{$\mathit{IS\_PUNCTUATION}(\mathit{token}) \cap i \neq 0$}
-	\State $\mathit{seg\_id} \gets \mathit{seg\_id} + 1$
-	\EndIf
-\EndFor
-\State
-\Return $Y$
-\end{algorithmic}
-\caption{Claim segmentation punctuation based heuristic. 
-Input is a list of tokens, outputs a nested list of lists, where 
-each list corresponds to a segment. 
-None of the tokens is declared as non argumentative.
-The \texttt{IS\_PUNCTUATION}
-	function has been simplified for readability purposes. 
-	}
-\label{alg:heuristic_claimseg}
-\end{figure}
-
-\begin{table}[h]
-\begin{tabular}{@{}p{0.5\linewidth} p{0.50\linewidth}}
-\toprule
-\multirow{7}{*}{
-\parbox{7cm}{
-\textit{if we legalize pot there wil be a sharp increase in 
-demand and consumption over a period of time
-then............it will start to decline....slowly at first until
-smoking pot becomes drinking wine.......only on special
-occasions........... that's why we should continue the war
-it's not like weed is damn near impossible to obtain ...... in my
-opinion there is no war ....... there never was ...}
-}}
-		& \emph{if we legalize pot there wil be a sharp increase in 
-demand and consumption over a period of time
-	then ............} \\ \cline{2-2}
-		& \emph{it will start to decline .... } \\ \cline{2-2}
-		& \emph{slowly at first until
-	smoking pot becomes drinking wine .......} \\  \cline{2-2} 
-	& \emph{
-only on special
-occasions
-...........
-		} \\  \cline{2-2}
-	& \emph{
-that's why we should continue the war
-it's not like weed is damn near impossible to obtain ......
-		} \\\cline{2-2}
-	& \emph{
-in my
-opinion there is no war .......
-} \\\cline{2-2}
-	& \emph{
-there never was ...
-} \\
-\bottomrule
-	\caption{Example of heuristic algorithm output. }
-\label{tab:heuristic_example}
-\end{tabular}
-\end{table}
-
-\noindent As a strong baseline, we extract claims as most papers assume claim 
-segmentation has already been performed, some assume a single sentence is a claim
-\citep{rooney2012applying, stab2014identifying}. \\
-- We adopt a similar approach, where we simply assume punctuation is a strong
-indication a new claim starts. \\
-- For each post (comment), we simply iterate through all tokens
-and start a new claim when a token equals a punctuation mark \\
-- this is essentially similar to sentence segmentation \citep{palmer2000tokenisation} \\
-- If the current token is a punctuation symbol, the next claim starts \\
-The heuristic is outlined in algorithm~\ref{alg:heuristic_claimseg} \\
-- An example of how the algorithm works for a post is shown in~\ref{tab:heuristic_example} \\
-
-\subsection{Supervised Classification}
-
-\subsection{BiLSTM + CRF Model}
 
 \section{Problem Formulation}
 \begin{table}
@@ -346,38 +234,43 @@ of entity, \texttt{B}eginning of
 \texttt{D}iscontigious entity, \texttt{I}nside of \texttt{D}iscontigious entity,
 \texttt{B}eginning of \texttt{H}ead, and
 \texttt{I}nside of \texttt{H}ead.  \\
-
-- In \citet{muis2018learning} they propose
-how to deal with both discontiguous and overlapping named entities \\
-
-- this clinical named entity extraction problem is equivalent to the claim
-segmentation problem \\ 
-
-\noindent - most recently, \citet{dai2018recognizing} names the problem as complex 
+- but, this encoding is lossy, which makes decoding ambigous in some cases \\
+- further, this encoding may produce invalid sequences \\
+- this encoding is used in \citet{muis2018learning} where they propose
+a hypergraph-based model \\
+- most recently, \citet{dai2018recognizing} names the problem as complex 
 entity mention recognition, summarizes research so far and provides
 future work guidelines \\
-- multilabel encoding as the most efficient one, as it 
-doesn't lose any information 
-the most efficient encoding \\
-- we explore we two encodings, the multilabel encoding \\
-- we also explore the BIO encoding \\
-- BIO encoding is shown in figure~\ref{fig:segment_example_bio} \\
+- they mention 
+multilabel encoding as the most efficient one, as it 
+doesn't lose any information \\
+
+\noindent - the clinical named entity extraction problem and semantic parsing are
+equivalent to the claim segmentation problem \\ 
+- we will then try two approaches: multilabel and \texttt{BIO} approach since both
+are nonambigous \\
+- the multilabel approach will attempt to handle discontiguous and overlapping
+entities, whereas in the \texttt{BIO} we will try to predict only segments
+which aren't discontiguous or overlapping \\
+- a comparison of \texttt{BIO} and multilabel encoding for a segment are shown in 
+figure~\ref{fig:segment_example_bio_multilabel} \\
 
 \begin{figure}
 \scriptsize
 \begin{tikzpicture}[node distance=1mm]
 \node (s1) {Marijuana is believed to be a stepping-stone drug};
 \node (s234) [right=of s1]{that can eventually lead to additiction to};
-\node (s2) [right=of s234]{heroin};
-\node (s3) [right=of s2]{cocaine};
-\node (o) [right=of s3] {and};
-\node (s4) [right=of o] {other harder drugs.};
+	\node (s2) [right=of s234]{heroin\textcolor{white}{y}};
+	\node (s3) [right=of s2.east]{cocaine\textcolor{white}{y}};
+	\node (o) [right=of s3] {and\textcolor{white}{y}};
+	\node (s4) [right=of o] {other\textcolor{white}{y}harder drugs.};
 
 \node (s1lab) [below=of s1] {\textcolor{red}{Segment 1}};
-\node (s2lab) [below=of s2, xshift=-2cm, yshift=-2.5mm] {\textcolor{blue}{Segment 2}};
+\node (s2lab) [below=of s2, xshift=-1.7cm, yshift=-2.5mm] {\textcolor{blue}{Segment 2}};
 \node (s3lab) [below left=1cm of s3, xshift=1mm, yshift=-1mm] {\textcolor{green}{Segment 3}};
-\node (s4lab1) [below=of s234, xshift=-0.7cm, yshift=1mm] {\textcolor{orangegreen}{Segment 4}};
+\node (s4lab1) [below=of s234, xshift=-0.6cm, yshift=1mm] {\textcolor{orangegreen}{Segment 4}};
 \node (s4lab2) [below=of s4] {\textcolor{orangegreen}{Segment 4}};
+
 \draw [-]
 ($(s1.east) - (0.5mm, 0)$)
 -- ++(0, -.2)
@@ -393,7 +286,7 @@ the most efficient encoding \\
 \draw [-]
 ($(s234.west) - (0.5mm, 0)$)
 -- ++(0, -0.6)
--| ($(s2.east) $);
+	-| ($(s2.east) - (0.5mm, 0) $);
 
 % S3 segment
 \draw [-]
@@ -422,5 +315,185 @@ the most efficient encoding \\
 % <S1>Nothing can bring peace to this earth.</S1> <S2>Its a great idea to try and
 % push for world peace</S2> <S3>but it will never happen...</S3>'
 
+\subsection{Models}
 
-\section{Discussion and Conclusion}
+\subsubsection{Na\"ive Heuristic}
+
+\begin{figure}
+\begin{algorithmic}[1]
+\Function{is\_punctuation}{ch}
+\If{$ch = ``." \cup ch = ``?" \cup ch = ``!"$}
+\State
+\Return $\mathit{True}$
+\Else
+\State
+\Return $\mathit{False}$
+\EndIf
+%\Return $out$
+\EndFunction
+
+\State
+\State 
+
+\State \textbf{INPUT} $\mathit{text}$
+\State $\mathit{seg\_id} \gets 1$
+\State $Y[\mathit{seg\_id}] \gets \emptyset$
+\ForAll{$i \in |\mathit{text}|$}
+	\State $token \gets text[i]$
+	\State $Y[\mathit{seg\_id}] \gets Y[\mathit{seg\_id}] \cup \mathit{token}$
+	\State
+	\If{$\mathit{IS\_PUNCTUATION}(\mathit{token}) \cap i \neq 0$}
+	\State $\mathit{seg\_id} \gets \mathit{seg\_id} + 1$
+	\EndIf
+\EndFor
+\State
+\Return $Y$
+\end{algorithmic}
+\caption{Claim segmentation punctuation based heuristic. 
+Input is a list of tokens, outputs a nested list of lists, where 
+each list corresponds to a segment. 
+None of the tokens is declared as non argumentative.
+The \texttt{IS\_PUNCTUATION}
+	function has been simplified for readability purposes. 
+	}
+\label{alg:heuristic_claimseg}
+\end{figure}
+
+- similarly to \citep{ajjour2017unit}, we follow existing approaches to tackle
+claim segmentation as a token-level classification task \\
+- we observe the claim segmentation problem in two lights \\ 
+- first, as a multilabel classification problem, since each token can belong to zero or more
+segments \\
+- second, we simplify the problem by discarding overlapping and discontiguous segments \\
+- we compare three basic approaches \\
+- first approach is based on most argumentation mining approaches where 
+- in the second approach we use an SVM classifier to use word level and context features \\
+- in the third approach, we combine deep learning and 
+structured prediction \\
+
+\noindent As a strong baseline, we extract claims as most papers assume claim 
+segmentation has already been performed, some assume a single sentence is a claim
+\citep{rooney2012applying, stab2014identifying}. \\
+- We adopt a similar approach, where we simply assume punctuation is a strong
+indication a new claim starts. \\
+- For each post (comment), we simply iterate through all tokens
+and start a new claim when a token equals a punctuation mark \\
+- this is essentially similar to sentence segmentation \citep{palmer2000tokenisation} \\
+- If the current token is a punctuation symbol, the next claim starts \\
+The heuristic is outlined in algorithm~\ref{alg:heuristic_claimseg} \\
+- An example of how the algorithm works for a post is shown in~\ref{tab:heuristic_example} \\
+
+\begin{table}[h]
+\begin{tabular}{@{}p{0.5\linewidth} p{0.50\linewidth}}
+\toprule
+\multirow{7}{*}{
+\parbox{7cm}{
+\textit{if we legalize pot there wil be a sharp increase in 
+demand and consumption over a period of time
+then............it will start to decline....slowly at first until
+smoking pot becomes drinking wine.......only on special
+occasions........... that's why we should continue the war
+it's not like weed is damn near impossible to obtain ...... in my
+opinion there is no war ....... there never was ...}
+}}
+		& \emph{if we legalize pot there wil be a sharp increase in 
+demand and consumption over a period of time
+	then ............} \\ \cline{2-2}
+		& \emph{it will start to decline .... } \\ \cline{2-2}
+		& \emph{slowly at first until
+	smoking pot becomes drinking wine .......} \\  \cline{2-2} 
+	& \emph{
+only on special
+occasions
+...........
+		} \\  \cline{2-2}
+	& \emph{
+that's why we should continue the war
+it's not like weed is damn near impossible to obtain ......
+		} \\\cline{2-2}
+	& \emph{
+in my
+opinion there is no war .......
+} \\\cline{2-2}
+	& \emph{
+there never was ...
+} \\
+\bottomrule
+	\caption{Example of heuristic algorithm output. }
+\label{tab:heuristic_example}
+\end{tabular}
+\end{table}
+
+\subsubsection{SVM}
+
+- We employ Support Vector Machines \\
+- we use a weighted svm where weights are calculated to compensate for the class
+disbalance by weighing less prominent class examples with the ratio of number of 
+dominant class vs. recesive class examples in the training set \\
+- use $5 \times 3$ nested-cross validation \\
+- in the multilabel approach, we create training examples by taking a word with a
+configurable context window (of surrounding words) \\
+
+predicting each label  \\
+- we experiment with tf-idf features and 
+distributed word representations (fast text and word2vec pretrained vectors) 
+
+
+\subsubsection{BiLSTM + CRF Model}
+
+
+\section{Experiments and Discussion}
+
+\begin{figure}
+\begin{algorithmic}[1]
+\State \textbf{INPUT} $\mathit{predicted}, \mathit{true}, \mathit{offset}$
+\State $\mathit{found} \gets \{\}$
+\State
+\ForAll{$i \in |\mathit{true}|$}
+  \ForAll{$j \in |\mathit{predicted}|$}
+	\State $\mathit{common} \gets $\texttt{LCS\_LENGTH}$(\mathit{true}[i], \mathit{predicted}[j])$
+	\State
+	\State $\mathit{is\_smaller\_than\_offset} \gets |\mathit{predicted}[j]| > \mathit{offset}$
+	\State $\mathit{is\_common\_enough} \gets $ $|\mathit{predicted}[j]| -
+	\mathit{common} \leq \mathit{offset}$
+	\State $\mathit{has\_small\_size\_diff} \gets |\mathit{predicted}[j]| -
+	|\mathit{true}[i]| \leq \mathit{offset}$
+	\State
+	\If{$\mathit{is\_smaller\_than\_offset} \cap 
+	\mathit{is\_common\_enough} \cap \mathit{has\_small\_size\_diff}$}
+	  \State $\mathit{found} \gets \mathit{found} \cup \mathit{true}[i]$
+	  \State \textbf{break}
+	\EndIf
+  \EndFor
+\EndFor
+\State 
+\State $\mathit{precision} \gets \frac{|found|}{|true|}$
+\end{algorithmic}
+\caption{Algorithm to calculate precision with arbitrary offset between 
+	two sets of segments, each segment being a list of tokens.
+	\texttt{LCS\_LENGTH} calculates the length of the 
+	longest common subsequence of two sequences.  
+	We use a solution presented in
+	\citep{hunt1977fast}.
+	Recall is equivalently calculated, but with different inputs. 
+	}
+\label{alg:precision_offset}
+\end{figure}
+
+- we evaluate in two ways \\
+- we measure precision, recall and f1-score of the retrieved segments \\
+- also, since we're dealing with sequences, we measure standard measures with 
+offset, where we allow for mistakes of arbitrary length \\
+- we report results with allowed offset of two \\
+- the measure indicates when the extracted segment is close to the desired one, since
+having exact segments might not always be important, for example: 
+the post 
+``\emph{Nothing can bring peace to this earth. Its a great idea to try and
+push for world peace, but it will never happen...}''
+contains three segments, one of them being
+``\emph{but it will never happen...}'', but if the output is 
+``\textit{world peace but it will never happen...}
+this would even provide additional context 
+\\
+- the offset precision calculation is outlined in 
+figure~\ref{alg:precision_offset} \\

@@ -19,7 +19,10 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 \usetikzlibrary{calc}
-
+\usetikzlibrary{shapes.geometric, arrows, arrows.meta}
+\usetikzlibrary{shadows,trees, mindmap}
+\usetikzlibrary{matrix}
+\usetikzlibrary{fit}
 % required for printing index
 % use \index{name} in text
 %\usepackage{makeidx}
@@ -46,6 +49,11 @@
 % for making examples of comments
 \usepackage{comment}
 
+\usepackage{color,soul}
+\definecolor{light-gray}{gray}{0.95} 
+\DeclareRobustCommand{\hlcyan}[1]{{\sethlcolor{cyan}\hl{#1}}}
+\DeclareRobustCommand{\hlgreen}[1]{{\sethlcolor{green}\hl{#1}}}
+
 \newtheorem{mydef}{Example}[section]
 \usepackage{amsfonts}
 \usepackage{booktabs}
@@ -60,7 +68,6 @@
     \phantomsection\label{#1}\endgroup
 }
 
-\makeatother
 % editing a cell 
 % https://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell/19678
 \usepackage{makecell}
@@ -74,9 +81,11 @@
 \newcommand{\ComArg}{\mbox{\textsc{ComArg}}\xspace}
 
 \colorlet{orangegreen}{green!10!orange!90!}
+\definecolor{darkgreen}{rgb}{0, 0.5, 0} 
 
 % for tables in clustering section
 \newcommand{\str}[1]{{\scriptsize\emph{#1}}}
+
 
 
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
@@ -229,6 +238,7 @@
 \input{argpremises.tex}
 
 \part{Structured argumentation mining of claims}
+\label{part:struc}
 
 \input{claim_segmentation.tex}
 
