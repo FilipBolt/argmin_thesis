@@ -1,16 +1,15 @@
 %TODO think about the naming
 \chapter{Prominent Claim Identification}
 
-- prominent claim identification aims to determine 
-which claims are predominately used to express and base
-users' stance on \\
-- also named as \textit{argument-based opinion mining} \citep{boltuzic2014back}, 
-reason classification by \citep{hasan2014you}, argument tagging 
-\citep{sobhani2015argumentation} \\
-- the idea is to determine whether the relationship between a comment and a set
-of well-established prominent claims \\
-- an example is to consider the discussion on the topic ``Should gay marriage be legal?''
-and the following comment:
+Prominent claim identification aims to determine which claims are predominately
+used to express and base users' stance on. The task of prominent claim
+identification has also been reffered to as \textit{argument-based opinion mining}
+\citep{boltuzic2014back}, reason classification \citep{hasan2014you}, and
+argument tagging \citep{sobhani2015argumentation}. 
+The problem of prominent claim identification involves determining
+the relationship between a comment a set of well-established prominent claims. 
+Consider a discussion on the topic ``\emph{Should gay marriage be legal}''
+and a following comment: 
 \begin{quote}
 \emph{
 Gay marriages must be legal in all 50 states. A marriage is covenant
@@ -19,30 +18,32 @@ gay marriage is unconstitutional and biased. Tolerance,education and
 social justice make our world a better place.
 }
 \end{quote}
-- This comment supports the claim ``
-\textit{It is discrim-inatory to refuse gay couples
-the right to marry}''
-and denies the claim ``\textit{Marriage should be between a man
-and a woman}''. \\
-- The technical challenge here lies in the fact that, unlike in
-debates or other more formal argumentation sources, claims provided by 
-users are usually less formal, ambiguous, vague, implicit, or often
-simply poorly worded. \\
-- the task of \textbf{prominent claim identification} is defined
-as identifying what claims, from  a  predefined  set  of  prominent claims, have
-been used in users' comments, and how \\
-- a topic-dependent set of arguments is assumed to exist \\
-- users' comments typically contain more than one claim, but in 
-their own wording and with varying degree of explicitness \\
-- the task of prominent claim identification amounts to 
-matching users' claims to predefined prominent claims, which 
-can be either attacked or supported by the comment \\
-- the users comment may be a single prominent claim
-(and it often is), but it is reffered to as a \textit{comment}
-to emphasize the fact that in general it may contain several claims, 
-as well as non-argumentative text. \\
-%TODO add chapter structure
-- in this chapter, we do this and that \\
+This comment supports the claim ``\emph{It is discriminatory to refuse
+gay couples the right to marry}'' and attacks the claim
+``\emph{Marriage should be between a man and a woman}''. 
+The technical challenge here lies in the fact that, unlike
+in debates or other more formal, argumentation sources, 
+claims provided by users are usually less formal, ambiguous, vague, 
+implicit, or often simply poorly worded. 
+The task of \textbf{prominent claim identification} is defined 
+as identifying what prominent claims, from a predefined set of prominent claims, 
+have been used in users' comments, and how. 
+A topic-dependent set of prominent claims is assumed to exist. 
+Users' comments typically contain more than one claim, but in their 
+own wording and with varying degree of explicitness. 
+The task of prominent claim identification amounts to matching
+users' comments to prominent claims, which can be either attack or 
+supported by the comment. 
+The user comment may be a single prominent claim (and it often is), but it 
+is reffered to as a \textit{comment} to emphasize the fact that in general 
+it may contain several claims, as well as non-argumentative text. 
+
+In this chapter, we first introduce the \ComArg corpus in section~\ref{sec:comarg}
+which contains labelled pairs of comments with prominent claims. Next, 
+we build a model for prominent claim identification as described in 
+section~\ref{sec:argrec_model}. The model is evaluated in 
+section~\ref{sec:argrec_experiments}. Finally, we conclude in 
+section~\ref{sec:argrec_conclusion}.
 
 \begin{table}
 \centering
@@ -436,6 +437,7 @@ of marriage.
 
 
 \section{Model}
+\label{sec:argrec_model}
 
 - we cast the prominent claim identification problem as a multiclass problem
 (multiclass problems described in section~\ref{sec:unstruc_machine_learning}) \\
@@ -500,6 +502,8 @@ decisions than explicitly supported prominent claims \\
 section~\ref{sec:sts} \\
 
 
-
-
 \section{Experimental Evaluation}
+\label{sec:argrec_experiments}
+
+\section{Conclusion}
+\label{sec:argrec_conclusion}
