@@ -1,4 +1,520 @@
-
 \chapter{Claim Clustering}
+\label{chap:argclu}
 
-Clustering
+- The first sensible step to do argumentation mining is to find 
+prominent claims on the topic \\
+- these claims are then foundations of arguments \\
+- arguments can lead to more complex schemes using argumentation schemes
+\citep{walton2008argumentation}, diagrams
+or something else \\
+- claims are expressed by users to back up their opinion \\
+
+- the challenges is mostly due to user online discussion text being noisy,
+vague, and implicit \\
+- two main points of the chapter: first, an investigation is made on what are
+prominent claims, considering the variability on how they can be expressed, and
+second, we investigate the possibility of acquiring prominent claims from an
+online discussion by means of clustering, setting a baseline for unsupervised
+prominent claim identification \\
+
+\section{Data and Model}
+
+\subsection{Data}
+
+- we conduct our study on the dataset of users' posts compiled by \citet{hasan2014you} \\
+- the dataset is acquired from two-side online debate forums on four topics: 
+``Obama'', ``Marijuana'', ``Gay rights'', and ``Abortion''. \\
+- each post is assigned a stance label (\textit{pro} or \textit{con}), provided
+by the author of the post \\
+- furthermore, each post is split up into sentences and each sentence is manually labelled
+with one prominent claim from a predefined set of prominent claims 
+(different for each topic) \\
+- all sentences are argumentative, non-argumentative sentences were removed from the 
+dataset (ratio of argumentative sentences topically varies from  20\% to 43.7\%) \\
+- \citet{hasan2014you} report high levels of inter-annotator agreement (between
+0.61 and 0.67 $\kappa$) \\
+- additionally, sentences with rarely occuring prominent claims ($<2\%$) were removed \\
+- in the end, the dataset contains 3104 sentences (``Abortion'' 814, ``Gay rights'' 824, 
+``Marijuana'' 836, and ``Obama'' 630) and 47 different prominent claims 
+(25 \textit{pro} and 22 \textit{con}, an average of 12 prominent claims per topic) \\
+- majority of sentences 2028 is labelled with \textit{pro} prominent claims \\
+- average sentence length is 14 words \\ 
+
+\subsection{Model}
+
+- We use two approaches to measuring similarity of claims \\
+- \textit{Vector space similarity}: we represent sentences as vectors in a semantic space  \\
+- we use two represetations \begin{enumerate*} \item a bag-of-word (BoW) vector, weighted
+by inverse sentence frequency, and \item a distributed representation based on the
+skip-gram model \citep{mikolov2013distributed} \\
+\end{enumerate*}
+- these representations are explained in more detail in 
+section~\ref{sec:word_representations} \\
+- we use BoW as it has been shown to be a powerful baseline for semantic similarity 
+\citep{ramage2009random} \\
+- using weighing by inverse sentence frequency is similar to the motivation 
+of inverse-document frequency in tf-idf (described in section~\ref{sec:word_representations} and
+equation~\ref{eq:idf}), which is that more frequently used words are less
+specific to a prominent claim, thus contributing less to similarity  \\
+- distributed representations were chosen since they represent individual words 
+very well (as shown in \citep{mikolov2013efficient, mikolov2013distributed}) \\
+- to build a sentence vector, we simply sum up the distributed vector representations 
+of words\footnote{we use pretrained vectors from \url{https://code.google.com/archive/p/word2vec/}} \\
+- for both representations , we remove stopwords before building vectors \\
+- similarity between sentences is computed as cosine similarity between 
+respective sentence vectors \\
+- as described in section~\ref{sec:sts} we use TakeLab's STS, which we feed our pairs
+of claims to acquire a similarity score \\
+
+- for clustering we se the hierarchical agglomerative clustering (HAC) algorithm
+(described in section~\ref{sec:hierarhical_clustering}) \\
+- three reasons to use HAC: HAC allows us to work directly with similarities
+coming from the STS systems, instead of requiring explicit vector-space representations \\
+- second, it produces hierarhical structures, allowing to investigate
+granularity of claims \\
+- third, it's a deterministic algorithm, making the results more stable \\
+- HAC works with a distance matrix computed for all pairs of instances \\
+- we compute this matrix for all pairs of sentences $s_1$ and $s_2$ and 
+compute vector-space similarity with: 
+$$
+\mathit{vs_{sim}} = 1 - \cos(v_1, v_2)
+$$ 
+where $v_1$ and $v_1$ are vectors for sentences $s_1$ and $s_2$ respectively.
+STS similarity is computed as:
+$$
+\mathit{sts_{sim}} = \frac{1}{1 + \mathit{sim}(s_1, s_2)}
+$$
+where $\mathit{sim}(s_1, s_2)$ is a method that returns the STS similarity
+between sentences $s_1$ and $s_2$ \\
+- as for linkage, we use complete linkage and Ward's method \citep{ward1963hierarchical} \\
+- we do not cluster \textit{pro} and \textit{con} sentences separately \\
+- this allows us to investigate to which extent stance can be captured by 
+semantic similarity (and is also more realistic) \\
+
+\section{Claim Cluster Analysis}
+
+- We perform two analysis \\
+- first, we analyze different clustering models \\
+- second, we analyze clustering quality \\
+
+\begin{table*}[t]
+\begin{center}
+{\footnotesize
+\setlength{\tabcolsep}{0.5em}
+\begin{tabular}{@{}l cccc cccc cccc cccc@{}}
+\toprule
+& \multicolumn{4}{c}{``Obama''} & \multicolumn{4}{c}{``Marijuana''} & \multicolumn{4}{c}{``Gay rights''} & \multicolumn{4}{c}{``Abortion''} \\
+\cmidrule(lr){2-5}
+\cmidrule(lr){6-9}
+\cmidrule(lr){10-13}
+\cmidrule(lr){14-17}
+Model (linkage) &
+$h$ & $c$ & $V$ & ARI &
+$h$ & $c$ & $V$ & ARI &
+$h$ & $c$ & $V$ & ARI &
+$h$ & $c$ & $V$ & ARI \\
+\midrule
+BoW (Complete) &
+.15 & .15 & .15 & .03 & 
+.04 & .04 & .04 & .00 & 
+.04 & .04 & .04 & .01 & 
+.05 & .04 & .04 & .01\\
+%.153 & .150 & .152 & .025 & 
+%.040 & .036 & .038 & .002 & 
+%.039 & .036 & .038 & .007 & 
+%.045 & .041 & .043 & .005\\
+BoW (Ward's) & 
+.22 & \textbf{.34} & .27 & .04 & 
+.15 & .20 & .17 & .02 & 
+.13 & \textbf{.17} & \textbf{.15} & .04 & 
+.22 & \textbf{.27} & \textbf{.24} & .07 \\
+%.218 & .342 & .266 & .042 & 
+%.145 & .197 & .167 & .016 & 
+%.127 & .169 & .145 & .038 & 
+%.223 & .266 & .243 & .072 \\
+Skip-gram (Complete) & 
+.18 & .26 & .21 & .04 & 
+.09 & .22 & .13 & .02 & 
+.09 & .10 & .10 & .04 & 
+.17 & .24 & .20 & .03  \\
+%.177 & .261 & .211 & .041 & 
+%.094 & .216 & .131 & .021 & 
+%.089 & .104 & .096 & .043 & 
+%.167 & .242 & .198 & .026  \\
+Skip-gram (Ward's) & 
+\textbf{.30} & .29 & \textbf{.30} & \textbf{.10} & 
+\textbf{.25} & \textbf{.24} & \textbf{.25} & \textbf{.19} & 
+\textbf{.16} & .15 & \textbf{.15} & \textbf{.07} & 
+\textbf{.24} & .22 & .23 & \textbf{.08} \\
+%.300 & .294 & .297 & .102 & 
+%.250 & .242 & .246 & .186 & 
+%.156 & .152 & .154 & .072 & 
+%.235 & .217 & .226 & .078 \\
+STS (Complete) & .11 & .11 & .11 & .02 & .05 & .05 & .05 & .03	& .05 & .05 & .05 & .01 & .06 & .06 & .06 & .02
+
+ \\
+\bottomrule
+\end{tabular}}
+\caption{External evaluation of clustering models on the four topics}
+\label{tab:external-eval}
+\end{center}
+\end{table*}
+
+\noindent - to evaluate, we adopt the external evaluation approach, which compares the 
+hypothesized clusters against target clusters \\
+- we use argument labels from \citet{hasan2014you} as target clusters \\
+- to measure, we use two measures: adjusted rand index (ARI) 
+\citep{steinley2004properties}, and V-measure \citep{rosenberg2007v}
+(methods described in section~\ref{sec:clus_evaluation}, more specifically by equations
+~\ref{eq:adjusted_rand_index} and~\ref{eq:v-measure})
+\\
+
+\noindent \textbf{Analysis 1} - we cluster sentences from four topics separately \\
+- we use the gold number of clusters for each topic \\
+- results are shown in table~\ref{tab:external-eval} \\
+- overall, the best model is skip-gram with Ward's linkage 
+outperforming in both ARI and V-measure \\
+- it also produces best clusters in terms of homogeneity and 
+completeness \\
+- Ward's linkage seems to work better than complete for both BoW and skip-gram
+- STS behaves comparable to baseline results \\
+- the reason in poor performance might lie in the fact that STS was trained 
+on different domains, and does not model the claim similarity we seek here 
+% TODO (not sure  if I should put this given the next chapter)
+- there is a lot of variance across different topics \\
+- claims from ``Gay rights'' seem most difficult to cluster, whereas 
+``Marijuana'' seems to be the easiest \\
+- in subsequent experiments, we focus on the skip-gram model 
+with Ward's linkage and the ``Marijuana'' topic \\
+
+\begin{table*}
+\setlength{\tabcolsep}{0.4em}
+{\scriptsize
+\begin{center}
+\begin{tabular}{lp{3.8em}p{33.0em}|lp{3.8em}p{10em}}
+\toprule
+\multicolumn{3}{c}{Hypothesized clustering} & \multicolumn{3}{c}{Gold classes}\\
+\cmidrule(lr){1-3}\cmidrule(lr){4-6}
+Id & Classes & Cluster medoid & Id & Clusters & Gold argument \\
+\midrule
+1 &  \textbf{10 (54\%)}  \newline  2 (12\%)  \newline  6 (10\%)  &
+
+\str{%
+Tobacco and alcohol are both legal and widely used in the US, (...) If the abuse of marijuana is harmful, isn't the abuse of tobacco or alcohol equally life threatening? (...)
+} &
+
+1  &  5 (23\%) \newline 9 (19\%) \newline 10 (18\%) 
+&
+\str{%
+%I would argue that marijuana should be illegal as long as all other drugs are illegal, but then again, marijuana has actually treated people with anorexia and helped other people with loss of appetite.
+Used as a medicine for its positive effects
+}
+\\
+\midrule
+2 & \textbf{4 (92\%) } \newline  9 (8\%) &
+\str{%
+The biggest effect would be an end to brutal mandatory sentencing of long jail times that has ruined so many young peoples lives.
+} 
+& 
+2  &  1 (33\%) \newline 9 (28\%) \newline 3 (15\%) 
+&
+\str{%
+%(...) I think it ridiculous that people want to legalise something that has four - seven times the amount of tar (the cancer causing agent) in one cone than in one cigarette (...)
+Responsible for brain damage
+}
+
+\\
+\midrule
+3 &  \textbf{9 (44\%)}  \newline  4 (25\%)  \newline 7 (8\%) &
+\str{%
+Legalizing pot alone would not end the war on drugs. It would help (...) my personal opinion would be the only way to completely end the war on drugs would be to legalize everything. 
+} 
+& 3  &  9 (41\%) \newline 3 (23\%) \newline 10 (23\%) 
+&
+\str{%
+%Worst case scenario, half the population would go out and buy it, get high and wreak havoc on America. Productivity would go down :) and some people would simply do reckless things.
+Causes crime
+}
+
+\\
+\midrule
+4 &  \textbf{8 (37\%)}  \newline  1 (22\%)  \newline  10 (17\%)   & 
+\str{%
+What all these effects have in common is that they result from changes in the brain's control centers (...) So, when marijuana disturbs functions centered in the deep control centers, disorienting changes in the mind occur (...)
+} &
+4  &  9 (40\%) \newline 3 (26\%) \newline 10 (12\%)  
+&
+\str{%
+%it is not the governments place to control personal aspects of my life that would have no affect on anyone else.
+Prohibition violates human rights
+}
+\\
+\midrule
+5 &  \textbf{1 (45\%)}  \newline  6 (18\%)  \newline  8 (10\%)  & 
+\str{%
+People with pre-existing mental disorders also tend to abuse alcohol and tobacco. (...) the link between marijuana use and mental illness may be an instance when correlation does not equal causation. 
+} 
+&
+5  &  6 (25\%) \newline 7 (25\%) \newline 4 (18\%) 
+&
+\str{%
+%you also have to consider that continuous usage of LSD can cause severe mental illnesses in people. There hasn't ever been a case of this happening from using marijuana.
+Does not cause any damage to our bodies
+}
+\\
+\midrule
+6 &  \textbf{5 (63\%)}  \newline  10 (31\%)  \newline  1 (6\%) & 
+\str{%
+There are thousands of deaths every year from tobacco and alcohol, yet there has never been a recorded death due to marijuana.
+} &
+6  &  9 (29\%) \newline 1 (19\%) \newline 7 (16\%) 
+&
+\str{%
+%There have been many deaths directly linked to marijuana use. Car crashes are a common way in which people under the influence of marijuana harm themselves, and others.
+Damages our bodies
+}
+\\
+\midrule
+7 &  \textbf{10 (48\%)}  \newline  5 (13\%)  \newline  6 (12\%)    &
+\str{%
+as far as it goes for medicinal purposes, marijuana does not cure anything (...) It is for the sole purpose of numbing the pain in cancer patients (...) and also making patients hungry so they eat more and gain weight on their sick bodies 
+} &
+7  &  9 (39\%) \newline 3 (30\%) \newline 1 (9\%) 
+&
+\str{%
+%The last thing we need is more people doing it. More people making it a problem for themselves, more people ending up in rehab at the governments expense.
+Highly addictive
+}
+\\
+\midrule
+8 &  \textbf{9 (92\%)} &
+\str{%
+the economy would get billions of dollars in a new industry if it were legalized (...) no longer would this revenue go directly into the black market.
+} 
+&
+8  &  4 (44\%) \newline 7 (16\%) \newline 9 (16\%) 
+&
+\str{%
+%If we legalize something that makes people stop caring about their lives and only want to get "high" then we are pretty much setting a course for our downfall as a civilization.
+If legalized, people will use marijuana and other drugs more
+}
+\\
+\midrule
+9 &  \textbf{4 (30\%)}  \newline  9 (13\%)  \newline  10 (11\%)   &
+\str{%
+(...) I think it ridiculous that people want to legalise something that has four - seven times the amount of tar (the cancer causing agent) in one cone than in one cigarette (...)
+} &
+9  &  8 (53\%) \newline 3 (25\%) \newline 9 (10\%) 
+&
+\str{%
+%Not only would it be better for the economy, but look at Amsterdam - weed is legal over there and you never hear anything out of them. They've been onto something for a long time now.
+Legalized marijuana can be controlled and regulated by the government
+}
+\\
+\midrule
+10 &  \textbf{10 (30\%)}  \newline  9 (19\%)  \newline  4 (15\%)   &
+\str{%
+But I'm not gonna tell anyone they can't smoke pot or do meth because I don't like it.
+} &
+10  &  1 (36\%) \newline 7 (21\%) \newline 10 (18\%) 
+& 
+\str{%
+%I don't personally use it, or have any real want to, but I don't think it's any worse than alcohol or cigarettes.
+Not addictive
+}
+ \\
+\bottomrule
+\end{tabular}
+\caption{Manual cluster-class matching for the ``Marijuana'' topic and the gold number of clusters}
+\label{tab:cluster-class}
+\end{center}}
+\end{table*}
+
+\begin{table*}
+\setlength{\tabcolsep}{0.4em}
+{\scriptsize
+\begin{center}
+\begin{tabular}{@{}lp{19em} p{16em} p{16em}@{}}
+\toprule
+Id & Statement & Hypothesized clustering argument & Gold argument \\
+\midrule
+\#knowledge  & 
+\str{%
+Pot is also one of the most high priced exports of Central American Countries and the Carribean}
+& 
+\str{%
+Not addictive
+}
+& 
+\str{%
+Legalized marijuana can be controlled and regulated by the government} 
+\\
+\midrule
+\#colloquial & 
+\str{%
+If I want to use pot, that is my business!}
+& 
+\str{%
+Legalized marijuana can be controlled and regulated by the government} &
+\str{%
+Prohibition violates human rights}
+\\
+\midrule
+\#opposing & 
+\str{%
+(...) immediately following the legalization of the drug would cause widespread pandemonium. (...)
+} 
+& 
+\str{%
+Legalized marijuana can be controlled and regulated by the government
+} & 
+\str{%
+If legalized, people will use marijuana and other drugs more }
+\\
+\midrule
+\#general & 
+\str{%
+The user's psychomotor coordination becomes impaired (...), narrow attention span, "depersonalization, euphoria or depression (...)
+}
+& 
+\str{%
+Damages our bodies
+}
+& 
+\str{%
+Responsible for brain damage
+} 
+\\
+%3 & 
+%\str{%
+%You're right that not many people ask where their stuff is from but even the dealer has a duty to the buyer to expose a heavy additive
+%}
+% & 
+%\str{%
+%Prohibition violates human rights
+%} &
+%\str{%
+% Highly addictive} 
+%  \\
+%\#specific & 
+%\str{%
+%People who are already obese would get the munchies and that would make matters worse.
+%} &
+%\str{%
+%If legalized, people will use marijuana and other drugs more.
+%} &
+%\str{%
+%Highly addictive
+%}
+%\\
+%10  & 
+%\str{%
+%Sure it makes you sleepy and hungry but it also makes you happy!} & 
+%\str{%
+%Used as a medicine for its positive effects}
+%& \str{%
+%Does not cause any damage to our bodies}
+%\\
+%\#rhetorical & 
+%\str{%
+%Who are you to tell me what I ingest?   If I want to snort cocaine, why can't I?} &
+%\str{%
+%Legalized marijuana can be controlled and regulated by the government
+% }
+% & 
+% \str{%
+% Prohibition violates human rights
+% }
+% \\
+\bottomrule
+\end{tabular}
+\caption{Error analysis examples for the ``Marijuana'' topic}
+\label{tab:err-analysis}
+\end{center}}
+\end{table*}
+
+\noindent \textbf{Analysis 2} - cluster-class matching \\
+- we manually attempt to match resulting clusters from 
+the skip-gram model with Ward's linkage for the ``Marijuana'' topic \\
+- there is 10 gold clusters 
+we do matching on the majority basis, which matches 6 gold classes \\
+- results are shown in table~\ref{tab:cluster-class} \\
+- we list top three gold classes (and the percentage of sentences in the dataset) 
+in each predicted cluster and top three
+(and the percentage of sentences) in each of the gold classes \\
+- two gold classes  ($\#4$ and $\#9$) frequently co-occur, indicating 
+that they are similar \\
+- we characterize each cluster by its medoid (the sentence closest to cluster centroid)
+\\
+
+\noindent \textbf{Error analysis} \\
+- grouping statements into coherent clusters is challenging \\
+- we notice that the main problems are related to \begin{enumerate*}
+\item need for background knowledge, 
+\item use of idiomatic language, 
+\item grammatical errors, 
+\item opposing claims, and 
+\item too fine/coarse gold claims.
+\end{enumerate*} \\
+- we show sample errors in table~\ref{tab:err-analysis} \\
+- Ex \#knowledge demonstrates the need for background knowledge 
+(exports are government regulared) \\
+- a colloquial expression (pot) is used in example \#colloquial \\
+- in \#oppose, the statement is assigned to cluster of the opposite-stance
+claim \\
+- in ex. \#general our model predicts are more coarse claim \\
+
+\begin{figure}
+\begin{center}
+\includegraphics{dendrogram.png}
+\end{center}
+\caption{Dendrogram for applying HAC (last 15 steps) on the ``Marijuana'' topic.
+The dashed line shows the 10-clusters cut, which is number of gold prominent
+claims. \\
+CM denotes a merger of clusters that consist mostly of two prominent claims: 
+\textit{Damages our bodies} and \textit{Responsible for brain damage}.  \\
+In CD there is a split between clusters represented by medoids with: 
+item \textit{the economy would get billions of dollars (...) no longerwould this revenue
+go directly into the black market} and 
+\textit{If the tax on cigarettes can
+be \$5.00/pack imagine what we could tax pot for!}
+}
+\label{fig:dendrogram}
+\end{figure}
+
+\noindent - in the previous analysis we used the gold number of prominent claims to compare
+against \\
+- however, we note that claim granularity is something arbitrary \\
+- we exemplify this with example~\ref{fig:dendrogram} where the last 15 HAC steps \\
+- In CD there is a split between clusters represented by medoids with: 
+\begin{enumerate*}[label=\arabic*)]
+\item \textit{the economy would get billions of dollars (...) no longerwould this revenue
+go directly into the black market} and 
+\item \textit{If the tax on cigarettes can
+be \$5.00/pack imagine what we could tax pot for!}
+\end{enumerate*}\\
+- these could be treated as separate prominent claims about economy and tax \\
+- On the other hand,  CM denotes a merger of clusters that consist mostly of two prominent claims: 
+\begin{enumerate*}[label=\arabic*)]
+\item \textit{Damages our bodies} and 
+\item \textit{Responsible for brain damage}.
+\end{enumerate*}  \\
+- these could be represented as a single prominent claim which would state: 
+\textit{Damaging our entire bodies} \\
+- the dendrogram also suggests that having 10 prominent claims might not be optimal 
+for the ``Marijuana'' topic and the similarity measure used \\
+
+\section{Conclusion}
+
+- this work is about unsupervised identification of prominent claims in online 
+discussions \\
+- hierarchical clustering (HAC) is used to cluster semantically similar sentences from 
+discussions \\
+- best performing model achieved 0.15 to 0.30 V-measure \\
+- there seem to be differences that basic textual similarity can't measure, as it might be
+too surface level \\
+- identifying prominent claims from text might be an extremely difficult problem using 
+such methodologies \\
+- we will revisit this and suggest different approaches in 
+%TODO add future reference of revisiting this problem altogether 
+- now a transition to do argument recognition \\

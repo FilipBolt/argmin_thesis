@@ -1,5 +1,52 @@
 \section{ArgPremises annotation}
 \label{sec:argpremises_annotation}
 
-This produced the argpremises dataset (\ref{item:argpremises}).
+%This produced the argpremises dataset similarities in the (\ref{item:argpremises}).
 
+IMPORTANT: This is essentially a reading comprehension task. While we
+appreciate your opinion on this topic, this task is about analyzing OTHER
+PEOPLE'S OPINIONS, not expressing your own. This is not an online survey.
+
+\noindent There is an online discussion on marijuana legalization. The topic is: ``SHOULD
+MARIJUANA BE LEGALIZED?''. You have to be familiar with of the issue: You can
+get basic information about the topic on: 
+\begin{itemize}
+\item \url{http://medicalmarijuana.procon.org/}
+\item \url{http://idebate.org/debatabase/debates/health/addiction/house-believes-cannabis-should-be-legalised}
+\end{itemize}
+Your goal is to identify whether the two sentences offered are talking about
+the same thing. Please rate the SIMILARITY LEVEL for each pair of sentences:
+\begin{itemize}
+\item 6: very similar
+\item 5 or 4: somewhat similar
+\item 3 or 2: somewhat dissimilar
+\item 1: not similar
+\end{itemize}
+
+\noindent Example one: \\
+\begin{tabular}{|@{\ }r@{\ \  }p{0.72\columnwidth}|}
+\hline
+\textbf{Sentence 1:} & \emph{Marijuana does not cause any damage to our bodies}\\
+\textbf{Sentence 2:} & \emph{Consuming pot never hurt anyone}\\
+\textbf{Similarity level} & 6 \\
+\hline
+\end{tabular}
+%\caption{User claim, the matching main claim, and the implicit premises filling the gap.}
+
+\noindent Example two: \\
+\begin{tabular}{|@{\ }r@{\ \  }p{0.72\columnwidth}|}
+\hline
+\textbf{Sentence 1:} & \emph{If legalized, people will use marijuana and other drugs more}\\
+\textbf{Sentence 2:} & \emph{Marijuana can be used as medicine because it showed positive effects}\\
+\textbf{Similarity level} & 1 \\
+\hline
+\end{tabular}
+
+\noindent Example three: \\
+\begin{tabular}{|@{\ }r@{\ \  }p{0.72\columnwidth}|}
+\hline
+\textbf{Sentence 1:} & \emph{A large portion of modern music an art has been inspired by marijuana}\\
+\textbf{Sentence 2:} & \emph{Used as a medicine for its positive effects}\\
+\textbf{Similarity level} & 4 \\
+\hline
+\end{tabular}

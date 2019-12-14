@@ -1,5 +1,6 @@
 %TODO think about the naming
 \chapter{Prominent Claim Identification}
+\label{chap:argrec}
 
 Prominent claim identification aims to determine which claims are predominately
 used to express and base users' stance on. The task of prominent claim
@@ -492,6 +493,13 @@ pro prominent claims have a higher ratio of positive entailment decisions than c
 - also vaguely supported prominent claims have a lower rate of entailment
 decisions than explicitly supported prominent claims \\
 
+\begin{figure}
+\includegraphics{similarity.pdf}
+\caption{Average similarity score  on sentence and comment level across
+labels, scaled to a $[0,1]$ interval}
+\label{fig:sts_comarg}
+\end{figure}
+
 % semantic textual similarity
 - the prominent claim should either be entailed or not entailed from the comment \\
 - the former case includes a paraphrase \\
@@ -499,11 +507,195 @@ decisions than explicitly supported prominent claims \\
 - these relations can be hard to detect, especially from vaguely stated comments \\
 - to account for this, we use a feature based on semantic textual similarity (STS) \\
 - we use TakeLab's STS \citep{vsaric2012takelab} which works as described in
-section~\ref{sec:sts} \\
-
+section~\ref{sec:sts} to get a similarity score between 
+a comment and a prominent claim, as well as the similarity score between 
+each sentence of the comment and the prominent claim \\
+- thus we have a vector of similarities (one global, one for each sentence) of size
+29 (which is the max number of sentences in \ComArg )  \\
+- we also use the mean of sentence-level similarities, ending up with a total of 31 STS features \\
+- figure~\ref{fig:sts_comarg} shows the average comment- and sentence-level similarity scores
+across labels on \ComArg scaled to a $[0, 1]$ interval. \\
+- interistingly, attacked prominent claims receive a larger score than supported arguments \\
 
 \section{Experimental Evaluation}
 \label{sec:argrec_experiments}
 
+- we consider three formulations of the prominent claim identification task \\
+- first setting (\textbf{A-a-N-s-S}), we consider classification of a comment-prominent claim
+into one of the five labels, i.e. wish to determine whether a prominent claim was used, 
+its polarity and degree of explicitness \\
+- second setting (\textbf{Aa-N-sS}), we conflate two labels of equal polarity only considering
+whether a prominent claim has been used and with which polarity \\
+- third setting (\textbf{A-N-S}) only considers comment-prominent claim pairs in which prominent claims
+are either not used or used explicitly (including this setup for purposes of comparison) \\
+
+\begin{table}
+%\setlength{\tabcolsep}{4.3pt}
+\centering
+{\small
+\begin{tabular}{@{}l cc cc cc @{}}
+\toprule
+& 
+\multicolumn{2}{c}{\textbf{A-a-N-s-S}} &
+\multicolumn{2}{c}{\textbf{Aa-N-sS}} &
+\multicolumn{2}{c}{\textbf{A-N-S}} \\
+%\multicolumn{2}{c}{A-N-S} &
+%\multicolumn{2}{c}{AS-N} \\
+\cmidrule(lr){2-3}
+\cmidrule(lr){4-5}
+\cmidrule(lr){6-7}
+%\cmidrule(lr){8-9}
+%\cmidrule(lr){10-11}
+Model & UGIP & GM & UGIP & GM & UGIP & GM \\ 
+\midrule
+MCC baseline  & 68.2 & 69.4 & 68.2 & 69.4  & 79.5 & 76.6        \\
+BoWO baseline & 68.2 & 69.4 & 67.8 & 69.5 & 79.6 & 76.9        \\[1ex]
+TE            & 69.1 & \textbf{81.1} & 69.6 & 72.3 & 80.1 & 73.4        \\
+STS           & 67.8 & 68.7 & 67.3 & 69.9 & 79.2 & 75.8        \\
+SA            & 68.2 & 69.4 & 68.2 & 69.4 & 79.5 & 76.6        \\[1ex]
+STS+SA        & 68.2 & 69.5 & 67.5 & 68.7 & 79.6 & 76.1         \\
+TE+SA         & 68.9 & 72.4 & \textbf{71.0} & \textbf{73.7} & \textbf{81.8} & \textbf{80.3}    \\[1ex]
+%TE+STS+SA     & 25.6 & 16.6 &  37.7 & 27.6 & 42.6 & 28.7           \\
+TE+STS+SA   & \textbf{70.5} & 72.5 & 68.9 & 73.4 & 81.4 & 79.7        \\
+%TE+STS+SA   & 23.1 & 23.8 & \textbf{42.0} & \textbf{44.5} & \textbf{44.4} & 42.4        \\ %WAS: TE+STS+SA-3
+\bottomrule
+\end{tabular}}
+\caption{Prominent claim indentification F1-score (separate models for UGIP and GM topics)}
+\label{tab:claim_identification_results}
+\end{table}
+
+- we compare to two baselines: \begin{enumerate*}
+\item a majority class classifier (MCC), which assigns label $N$ to every instance, and a 
+\item bag-of-words overlap classifier (BoWO), which uses word overlap between the comment and prominent claim as the only feature 
+\end{enumerate*}
+- for classification, we use the SVM algorithm (described in section~\ref{sec:svm}) with a 
+Radial Basis Function Kernel \\
+- we train and evaluate the model using nested $5 \times 3$ cross-validation
+(described in section~\ref{sec:selection}) optimizing hyperparameters $C$ and $\gamma$ using
+grid-search \\
+- we use the LibSVM implementation \citep{chang2011libsvm} \\
+- micro-averaged results are shown in table~\ref{tab:claim_identification_results}
+for the three problem formulations \\
+- models are trained separately on UGIP on GM topics \\
+- models that use only the SA or STS features are close to the baseline \\
+- the TE model outperforms baselines in all but one setting on both topics: 
+the difference ranges from 0.6 to 11.7 percentage points \\
+- the STS model does benefit from SA, while the TE does in some setups 
+(\textbf{Aa-N-sS} and \textbf{A-N-S}) in which the average scores increases 3 percentage points \\
+- this might be explained by figure~\ref{fig:entailment_ratio} which shows that 
+entailment decisions in attacks (\textbf{A} and \textbf{a}) are sometimes positive \\
+- in such cases the SA feature helps distinguish between entailment (supported prominent claim) 
+and contradiction (attacked prominent claim) \\
+- combining all three gives the best results for the \textbf{A-a-N-s-S} setting and the UGIP topic \\
+
+\begin{table}
+%\setlength{\tabcolsep}{3.5pt}
+\centering
+{\small
+\begin{tabular}{@{}l ccc ccc@{}}
+\toprule
+& \multicolumn{2}{c}{UGIP $\to$ GM} & \multicolumn{2}{c}{GM $\to$ UGIP}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Model & \textbf{A-a-N-s-S} & \textbf{Aa-N-sS}
+      & \textbf{A-a-N-s-S} & \textbf{Aa-N-sS} \\
+\midrule
+STS+SA & 69.4 & 69.4 & 68.2 & 68.2   \\
+TE+SA & \textbf{72.6 }& \textbf{73.5} & \textbf{70.2} & \textbf{71.2}  \\
+STS+TE+SA  & 71.5 & 72.2 & 68.2 & 69.6  \\
+\bottomrule
+\end{tabular}}
+\caption{Prominent claim identification F1-score on UGIP and GM topics (cross-topic
+setting)}
+\label{tab:claim_identification_crosstopic}
+\end{table}
+
+- we also wish to test how well we can train models to perform cross topic \\
+- therefore, we trained each model on one topic and evaluated on the other \\
+- results are shown in table~\ref{tab:claim_identification_crosstopic} \\
+- the difference in performance is small (0.7 on average) \\
+- the best performing model (TE + SA) does not suffer a performance decrease \\
+- this suggests the models are domain independent, but a more detailed study is needed \\
+
+\begin{table*}
+\setlength{\tabcolsep}{5pt}
+\centering
+{\small
+\begin{tabular}{l cccc cccc cccc}
+\toprule
+& \multicolumn{4}{c}{\textbf{A-a-N-s-S}} & \multicolumn{4}{c}{\textbf{Aa-N-sS}} & 
+\multicolumn{4}{c}{\textbf{A-N-S}}\\
+\cmidrule(lr){2-5}
+\cmidrule(lr){6-9}
+\cmidrule(lr){10-13}
+Model
+& P & R & F1 & micro-F1 & P & R & F1 & micro-F1 & P & R & F1 & micro-F1 \\
+\midrule
+MCC baseline & 13.8 & 20.0 & 16.3 & 68.9 & 23.0 & 33.3 & 27.2 & 68.9 & 26.0 & 33.3 & 29.2 & 77.9\\
+TE+SA & \textbf{47.6} & 26.6 & 27.9 & 71.1 & \textbf{68.8} & \textbf{46.6} & \textbf{49.4} & \textbf{73.3} & \textbf{66.1} & \textbf{47.3} & \textbf{51.1} & \textbf{81.6} \\
+%TE+SA (CS) & \textbf{58.3} & 27.8 & 30.0 & \textbf{71.8} & 66.5 & 42.1 & 44.7 & \textbf{79.2} & 57.6 & 46.1 & 48.8 & 78.8 \\
+STS+TE+SA & 46.3 & \textbf{27.2} & \textbf{28.6} & \textbf{71.6} & 61.6 & 43.5 & 45.5 & 71.4  & 63.7 & 44.9 & 48.2 & 80.4 \\
+%STS+TE+SA (CS) & 56.9 & \textbf{28.6} & \textbf{31.3} & \textbf{71.8} & 55.3 & 27.4 & 29.3 & 69.4 & \textbf{67.1} & 42.6 & 45.0 & 77.3 \\
+\bottomrule
+\end{tabular}}
+\caption{Prominent claim identification F1-score for TE+SA and STS+TE+SA models on UGIP+GM topics}
+\label{tab:claim_identification_best}
+\end{table*}
+
+- finally, we trained and tested the TE+SA and STS+TE+SA models on the complete 
+\ComArg dataset \\
+- the results are shown in table~\ref{tab:claim_identification_best} \\
+- we report macro-averaged precision, recall, F1-score, and 
+micro-averaged F1-score (metrics described in section~\ref{sec:metrics}) \\
+- generally, models perform less well on smaller classes (\textbf{A},
+\textbf{a}, \textbf{s}, and \textbf{S}) hence macro-averaged scores and much lower than
+micro-averaged ones \\
+- recall is lower than precision, the false negatives are mostly due to our models
+wrongly classifying comment-prominent claim pairs as \textbf{N} \\
+- the STS+TE+SA model slightly outperforms the TE+SA model on the \textbf{A-a-N-s-S} problem,
+while on the other problems TE+SA performs best \\
+
+% error analysis
+- the vague/implicit prominent claims posed the greatest challenge for the models \\
+- case in point is the comment-prominent claim pair 2.23.4 from table~\ref{tab:comarg}  stating 
+``\textit{All these arguments on my left are and have always been FALSE. Marriage is
+between a MAN and a WOMAN by divine definition. Sorry but, end of story.}''
+\\
+- solely from the comment text it is unclear what the user actually meant \\
+- perhaps the user attacks the prominent claim of 
+\textit{ It is discriminatory to refuse gay couples the right to marry.} \\
+but there are certain additional assumptions that need to be met for the prominent claim 
+to be entailed \\
+- the second major problem is distinguishing between prominent claims that are mentioned 
+and those that are not \\
+- consider the comment-prominent claim pairs 2.111.4 and 2.114.2 from table~\ref{tab:comarg} \\
+- in the former case , classifier predicts \textbf{S} instead of \textbf{s} \\
+- this is likely due to the low difference in the comment-prominent claim similarities for these
+two classes \\
+- in the latter example, classifier predicts that the prominent claim is used in the comment, but
+it is not \\
+- the TE model in the majority of cases outperforms the STS model \\
+- in the case of the comment-prominent claim pair 2.157.2 from table~\ref{tab:comarg}, the STS-based
+model outperforms the TE model \\
+- in this case word overlap is quite high, although they are semantically different \\
+- conversely comment-prominent claim pair 2.101.2 is a good example when entailment was correctly recognized, 
+but the STS model failed \\
+
+% conclusion 
+
 \section{Conclusion}
 \label{sec:argrec_conclusion}
+
+- this chapter has presented the prominent claim identification task \\
+- it has presented the \ComArg corpus, which consists of manually annotated
+comment-prominent claim pairs \\
+- on this corpus, a supervised model for three prominent claim identification 
+setups of varying difficulty has been trained  \\
+- the model used textual entailment and semantic textual similarity features \\
+- the inter-annotator agreement  and experiments showed prominent claim identification
+is a difficult task \\
+- the best models outperformed baselines \\
+- the models achieved between 70.5\% and 81.8\% micro-averaged F1-score \\
+- outputs of the textual entailment systems combined with stance alignment proved
+to be the best features \\
+- the model performance is marginally affected when applied to unseen topics \\
+% future work guidelines and connector to the next chapter 
