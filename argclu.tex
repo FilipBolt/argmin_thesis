@@ -111,9 +111,18 @@ semantic similarity (and is also more realistic).
 \section{Claim Cluster Analysis}
 \label{sec:argclu_analysis}
 
-- We perform two analysis \\
-- first, we analyze different clustering models \\
-- second, we analyze clustering quality \\
+Using data from online discussions presented in the previous section, 
+we wish to cluster posts and analyze the subsequent results. 
+We perform two kinds of analysis. First, we analyze different clustering models. 
+Second, we analyze clustering quality from one the clustering models chosen. 
+To evaluate clustering results, we adopt the external evaluation approach, which compares the 
+hypothesized clusters against target clusters. 
+We use argument labels from \citet{hasan2014you} as target clusters. 
+As a metric of measurement, we use two metrics: 
+adjusted rand index (ARI) 
+\citep{steinley2004properties}, and V-measure \citep{rosenberg2007v}
+(methods described in section~\ref{sec:clus_evaluation}, more specifically by equations
+~\ref{eq:adjusted_rand_index} and~\ref{eq:v-measure}). 
 
 \begin{table*}[t]
 \begin{center}
@@ -121,7 +130,9 @@ semantic similarity (and is also more realistic).
 \setlength{\tabcolsep}{0.5em}
 \begin{tabular}{@{}l cccc cccc cccc cccc@{}}
 \toprule
-& \multicolumn{4}{c}{``Obama''} & \multicolumn{4}{c}{``Marijuana''} & \multicolumn{4}{c}{``Gay rights''} & \multicolumn{4}{c}{``Abortion''} \\
+& \multicolumn{4}{c}{``Obama''} & \multicolumn{4}{c}{``Marijuana''} &
+	\multicolumn{4}{c}{``Gay rights''} & \multicolumn{4}{c}{``Abortion''}
+	\\
 \cmidrule(lr){2-5}
 \cmidrule(lr){6-9}
 \cmidrule(lr){10-13}
@@ -173,39 +184,34 @@ STS (Complete) & .11 & .11 & .11 & .02 & .05 & .05 & .05 & .03	& .05 & .05 & .05
  \\
 \bottomrule
 \end{tabular}}
-\caption{External evaluation of clustering models on the four topics}
+\caption{External evaluation of clustering models on the four topics using 
+	homogeneity ($h$), completeness ($c$), V-measure ($V$), and adjusted
+	Rand index (ARI) }
 \label{tab:external-eval}
 \end{center}
 \end{table*}
 
-\noindent - to evaluate, we adopt the external evaluation approach, which compares the 
-hypothesized clusters against target clusters \\
-- we use argument labels from \citet{hasan2014you} as target clusters \\
-- to measure, we use two measures: adjusted rand index (ARI) 
-\citep{steinley2004properties}, and V-measure \citep{rosenberg2007v}
-(methods described in section~\ref{sec:clus_evaluation}, more specifically by equations
-~\ref{eq:adjusted_rand_index} and~\ref{eq:v-measure})
-\\
+\paragraph{Analysis \rom{1}} 
+For the first analysis, we cluster sentences from four topics separately. 
+and use the gold number of clusters for each topic. 
+Results are shown in table~\ref{tab:external-eval}. 
+Overall, the best model is skip-gram with Ward's linkage 
+outperforming in both ARI and V-measure. 
+That model also produces best clusters in terms of homogeneity and 
+completeness. 
+Ward's linkage seems to work better than complete for both BoW and skip-gram models, whereas
+the model using STS behaves comparable to baseline results. 
+The reason for poor performance of the STS model might lie in the
+the fact that STS was trained 
+on different domains, and does not model the claim similarity we seek here.  
+Furthermore, there is a lot of variance across different topics. 
+This is supported by the fact that claims from ``Gay rights'' seem most
+difficult to cluster, whereas claims from the 
+``Marijuana'' topic seem to be the easiest to cluster with significant ($>50\%$) differences 
+In subsequent experiments, we focus on the skip-gram model 
+with Ward's linkage and the ``Marijuana'' topic. 
 
-\noindent \textbf{Analysis 1} - we cluster sentences from four topics separately \\
-- we use the gold number of clusters for each topic \\
-- results are shown in table~\ref{tab:external-eval} \\
-- overall, the best model is skip-gram with Ward's linkage 
-outperforming in both ARI and V-measure \\
-- it also produces best clusters in terms of homogeneity and 
-completeness \\
-- Ward's linkage seems to work better than complete for both BoW and skip-gram
-- STS behaves comparable to baseline results \\
-- the reason in poor performance might lie in the fact that STS was trained 
-on different domains, and does not model the claim similarity we seek here 
-% TODO (not sure  if I should put this given the next chapter)
-- there is a lot of variance across different topics \\
-- claims from ``Gay rights'' seem most difficult to cluster, whereas 
-``Marijuana'' seems to be the easiest \\
-- in subsequent experiments, we focus on the skip-gram model 
-with Ward's linkage and the ``Marijuana'' topic \\
-
-\begin{table*}
+\begin{table*}[ht]
 \setlength{\tabcolsep}{0.4em}
 {\scriptsize
 \begin{center}
@@ -213,7 +219,7 @@ with Ward's linkage and the ``Marijuana'' topic \\
 \toprule
 \multicolumn{3}{c}{Hypothesized clustering} & \multicolumn{3}{c}{Gold classes}\\
 \cmidrule(lr){1-3}\cmidrule(lr){4-6}
-Id & Classes & Cluster medoid & Id & Clusters & Gold argument \\
+Id & Classes & Cluster medoid & Id & Clusters & Gold prominent claim \\
 \midrule
 1 &  \textbf{10 (54\%)}  \newline  2 (12\%)  \newline  6 (10\%)  &
 
@@ -343,7 +349,8 @@ Not addictive
  \\
 \bottomrule
 \end{tabular}
-\caption{Manual cluster-class matching for the ``Marijuana'' topic and the gold number of clusters}
+\caption{Manual cluster-class matching for the ``Marijuana'' topic and the gold
+number of clusters}
 \label{tab:cluster-class}
 \end{center}}
 \end{table*}
@@ -451,44 +458,45 @@ Responsible for brain damage
 \end{center}}
 \end{table*}
 
-\noindent \textbf{Analysis 2} - cluster-class matching \\
-- we manually attempt to match resulting clusters from 
-the skip-gram model with Ward's linkage for the ``Marijuana'' topic \\
-- there is 10 gold clusters 
-we do matching on the majority basis, which matches 6 gold classes \\
-- results are shown in table~\ref{tab:cluster-class} \\
-- we list top three gold classes (and the percentage of sentences in the dataset) 
+\paragraph{Analysis \rom{2}.} 
+Now, we focus on analyzing how well the clusters match to gold 
+prominent claims. 
+We manually attempt to match resulting clusters from 
+the skip-gram model with Ward's linkage for the ``Marijuana'' topic configured
+to produce 10 clusters (which is the number of gold prominent claims). 
+We do matching on the majority basis, which matches 6 gold classes. 
+Results are shown in table~\ref{tab:cluster-class}. 
+We list top three gold classes (and the percentage of sentences in the dataset) 
 in each predicted cluster and top three
-(and the percentage of sentences) in each of the gold classes \\
-- two gold classes  ($\#4$ and $\#9$) frequently co-occur, indicating 
-that they are similar \\
-- we characterize each cluster by its medoid (the sentence closest to cluster centroid)
-\\
+(and the percentage of sentences) in each of the gold classes. 
+Two gold classes  ($\#4$ and $\#9$) frequently co-occur, indicating 
+that they are similar. 
+We characterize each cluster by its medoid (the sentence closest to cluster centroid)
 
-\noindent \textbf{Error analysis} \\
-- grouping statements into coherent clusters is challenging \\
-- we notice that the main problems are related to \begin{enumerate*}
-\item need for background knowledge, 
+\paragraph{Error analysis.}
+Grouping statements into coherent clusters is challenging. 
+While analyzing the errors, We notice that the main problems are related to \begin{enumerate*}
+\item the need for background knowledge, 
 \item use of idiomatic language, 
 \item grammatical errors, 
 \item opposing claims, and 
 \item too fine/coarse gold claims.
-\end{enumerate*} \\
-- we show sample errors in table~\ref{tab:err-analysis} \\
-- Ex \#knowledge demonstrates the need for background knowledge 
-(exports are government regulared) \\
-- a colloquial expression (pot) is used in example \#colloquial \\
-- in \#oppose, the statement is assigned to cluster of the opposite-stance
-claim \\
-- in ex. \#general our model predicts are more coarse claim \\
+\end{enumerate*}
+Table~\ref{tab:err-analysis} shows a sample of errors. 
+Example \#knowledge demonstrates the need for background knowledge 
+(exports are government regulated). 
+A colloquial expression (\emph{pot}) is used in example \#colloquial. 
+In example \#oppose, the statement is assigned to cluster of the opposite-stance
+claim. 
+And finally, in example \#general our model predicts are a more coarse claim. 
 
-\begin{figure}
+\begin{figure}[h]
 \begin{center}
 \includegraphics{dendrogram.png}
 \end{center}
 \caption{Dendrogram for applying HAC (last 15 steps) on the ``Marijuana'' topic.
 The dashed line shows the 10-clusters cut, which is number of gold prominent
-claims. \\
+claims.
 CM denotes a merger of clusters that consist mostly of two prominent claims: 
 \textit{Damages our bodies} and \textit{Responsible for brain damage}.  \\
 In CD there is a split between clusters represented by medoids with: 
@@ -500,40 +508,49 @@ be \$5.00/pack imagine what we could tax pot for!}
 \label{fig:dendrogram}
 \end{figure}
 
-\noindent - in the previous analysis we used the gold number of prominent claims to compare
-against \\
-- however, we note that claim granularity is something arbitrary \\
-- we exemplify this with example~\ref{fig:dendrogram} where the last 15 HAC steps \\
-- In CD there is a split between clusters represented by medoids with: 
+In the previous analysis we used the gold number of prominent claims to compare
+against. However, we note that claim granularity is something arbitrary. 
+We exemplify this with example~\ref{fig:dendrogram} where the last 15 steps of
+hierarchical agglomerative clustering. 
+Looking at the dendrogram point CD there is a split between clusters represented by medoids with: 
 \begin{enumerate*}[label=\arabic*)]
 \item \textit{the economy would get billions of dollars (...) no longerwould this revenue
 go directly into the black market} and 
 \item \textit{If the tax on cigarettes can
 be \$5.00/pack imagine what we could tax pot for!}
-\end{enumerate*}\\
-- these could be treated as separate prominent claims about economy and tax \\
-- On the other hand,  CM denotes a merger of clusters that consist mostly of two prominent claims: 
+\end{enumerate*}
+These clusters could have been treated as separate prominent claims about
+economy and tax. 
+On the other hand, dendrogram point CM denotes a merger of clusters that
+consist mostly of two prominent claims: 
 \begin{enumerate*}[label=\arabic*)]
 \item \textit{Damages our bodies} and 
 \item \textit{Responsible for brain damage}.
-\end{enumerate*}  \\
-- these could be represented as a single prominent claim which would state: 
-\textit{Damaging our entire bodies} \\
-- the dendrogram also suggests that having 10 prominent claims might not be optimal 
-for the ``Marijuana'' topic and the similarity measure used \\
+\end{enumerate*}
+These could have been represented as a single prominent claim which would state: 
+\textit{Damaging our entire bodies}. 
+The dendrogram also suggests that having 10 prominent claims might not be optimal 
+for the ``Marijuana'' topic and the similarity measure. 
 
 \section{Conclusion}
 \label{sec:argclu_conclusion}
 
-- this work is about unsupervised identification of prominent claims in online 
-discussions \\
-- hierarchical clustering (HAC) is used to cluster semantically similar sentences from 
-discussions \\
-- best performing model achieved 0.15 to 0.30 V-measure \\
-- there seem to be differences that basic textual similarity can't measure, as it might be
-too surface level \\
-- identifying prominent claims from text might be an extremely difficult problem using 
-such methodologies \\
-- we will revisit this and suggest different approaches in 
-%TODO add future reference of revisiting this problem altogether 
-- now a transition to do argument recognition \\
+In this chapter, we explored one of the first steps to performing argumentation
+mining of claims: clustering claims to determine prominent claim candidates.
+More specifically, we used hierarchical agglomerative clustering (HAC) to
+claims in online discussions by clustering semantically similar sentences.  The
+best performing clustering models achieved 0.15 to 0.30 V-measure. 
+We noticed that  there seem to be differences that basic textual similarity
+can't measure, as textual similarity might be too much on the surface level. 
+
+Claim clustering is one possible, unstructured, approach to 
+detect prominent claims from text  
+It is unstructured, as we do not know anything, but the final result of
+prominent claims. In part~\ref{part:struc} of the thesis, we will provide an
+alternative perspective on clustering claims to derive prominent claims: a
+structured approach involving formalizations and reasoning. This unstructured
+approach does not allow for describing relationships between resulting
+prominent claims. Thus, we move on the next chapter, where we will 
+explore determining the relationships between claims through the 
+prominent claim identification task. 
+

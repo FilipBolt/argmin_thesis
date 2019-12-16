@@ -119,6 +119,9 @@
 %\renewcommand{\thefootnote}{\fnsymbol{footnote}}  % to get unnumbered footnotes
 \renewcommand{\arraystretch}{1.5} % stretching row height
 
+% roman numbers
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+
 \newcounter{rowcntr}[table]
 \renewcommand{\therowcntr}{\thetable.\arabic{rowcntr}}
 
