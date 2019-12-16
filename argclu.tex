@@ -1,78 +1,97 @@
 \chapter{Claim Clustering}
 \label{chap:argclu}
 
-- The first sensible step to do argumentation mining is to find 
-prominent claims on the topic \\
-- these claims are then foundations of arguments \\
-- arguments can lead to more complex schemes using argumentation schemes
-\citep{walton2008argumentation}, diagrams
-or something else \\
-- claims are expressed by users to back up their opinion \\
+% TODO think about having an example with equivalent claims 
+%expressed differently
 
-- the challenges is mostly due to user online discussion text being noisy,
-vague, and implicit \\
-- two main points of the chapter: first, an investigation is made on what are
-prominent claims, considering the variability on how they can be expressed, and
-second, we investigate the possibility of acquiring prominent claims from an
-online discussion by means of clustering, setting a baseline for unsupervised
-prominent claim identification \\
+We will start analyzing discussions by trying to find most prominent 
+claims made in the discussion.
+Users express claims to back up their opinion on a topic. 
+Recongizing claims in text is a challenge in online discussions due to 
+dealing with noisy, vague and implicit text. 
+Found claims may represent the basis of
+forming arguments. Arguments can then lead to more complex 
+argumentation structures, such as argumentation schemes \citep{walton2008argumentation}. 
+But, connecting claims and going beyond the claim level is
+out of scope of this thesis. 
+
+In this chapter, we will first investigate on how to find candidates of 
+prominent claims from text, considering the variability on how 
+claims can be expressed. Second, we investigate the possibility of 
+acquiring prominent claims from an online discussion by means of clustering, 
+setting a baseline for unsupervised prominent claim identification. 
+We will start by introducing the dataset used to study clustering of
+user comments to determine prominent claims in section~\ref{sec:argclu_data}.
+Next, we will introduce an unsupervised
+model for claim clustering in section~\ref{sec:argclu_model}.
+The results of the model will be analyzed in section~\ref{sec:argclu_analysis}.
+Finally, we will conclude in section~\ref{sec:argclu_conclusion}. 
 
 \section{Data}
+\label{sec:argclu_data}
 
-- we conduct our study on the dataset of users' posts compiled by \citet{hasan2014you} \\
-- the dataset is acquired from two-side online debate forums on four topics: 
-``Obama'', ``Marijuana'', ``Gay rights'', and ``Abortion''. \\
-- each post is assigned a stance label (\textit{pro} or \textit{con}), provided
-by the author of the post \\
-- furthermore, each post is split up into sentences and each sentence is manually labelled
+We conduct our study on the dataset of users' posts compiled by \citet{hasan2014you}. 
+The dataset is acquired from two-side online debate forums on four topics: 
+``Obama'', ``Marijuana'', ``Gay rights'', and ``Abortion''.
+Each post is assigned a stance label (\textit{pro} or \textit{con}), provided
+by the author of the post. 
+Furthermore, each post is split up into sentences and each sentence is manually labelled
 with one prominent claim from a predefined set of prominent claims 
-(different for each topic) \\
-- all sentences are argumentative, non-argumentative sentences were removed from the 
-dataset (ratio of argumentative sentences topically varies from  20\% to 43.7\%) \\
-- \citet{hasan2014you} report high levels of inter-annotator agreement (between
-0.61 and 0.67 $\kappa$) \\
-- additionally, sentences with rarely occuring prominent claims ($<2\%$) were removed \\
-- in the end, the dataset contains 3104 sentences (``Abortion'' 814, ``Gay rights'' 824, 
-``Marijuana'' 836, and ``Obama'' 630) and 47 different prominent claims 
-(25 \textit{pro} and 22 \textit{con}, an average of 12 prominent claims per topic) \\
-- majority of sentences 2028 is labelled with \textit{pro} prominent claims \\
-- average sentence length is 14 words \\ 
+(different for each topic). 
+All sentences are argumentative, non-argumentative sentences were removed from the 
+dataset (ratio of argumentative sentences topically varies from  20\% to 43.7\%). 
+\citet{hasan2014you} report high levels of inter-annotator agreement (between
+0.61 and 0.67 $\kappa$). 
+Additionally, sentences with rarely occuring prominent claims ($<2\%$) were removed. 
+In the end, the dataset contains 3104 sentences (``Abortion'' 814, ``Gay rights'' 824, 
+``Marijuana'' 836, and ``Obama'' 630) and 47 different prominent claims
+(25 \textit{pro} and 22 \textit{con}, an average of 12 prominent claims per topic). 
+Majority of sentences 2028 is labelled with \textit{pro} prominent claims. 
+The average sentence length is 14 words. 
 
 \section{Model}
+\label{sec:argclu_model}
 
-- We use two approaches to measuring similarity of claims \\
-- \textit{Vector space similarity}: we represent sentences as vectors in a semantic space  \\
-- we use two represetations \begin{enumerate*} \item a bag-of-word (BoW) vector, weighted
-by inverse sentence frequency, and \item a distributed representation based on the
-skip-gram model \citep{mikolov2013distributed} \\
-\end{enumerate*}
-- these representations are explained in more detail in 
-section~\ref{sec:word_representations} \\
-- we use BoW as it has been shown to be a powerful baseline for semantic similarity 
-\citep{ramage2009random} \\
-- using weighing by inverse sentence frequency is similar to the motivation 
+We use two approaches to measuring similarity of claims. 
+%\paragraph{Vector space similarity. } 
+We represent sentences as vectors in a semantic space. 
+We use two represetations 
+\begin{enumerate} 
+\item a bag-of-word (BoW) vector, weighted
+by inverse sentence frequency, and 
+\item a distributed representation based on the skip-gram model
+	\citep{mikolov2013distributed}. 
+\end{enumerate}
+These methods of representing sentences are explained in more detail in 
+section~\ref{sec:word_representations}. 
+We use BoW as it has been shown to be a powerful baseline for semantic similarity 
+\citep{ramage2009random}. 
+Using weighing by inverse sentence frequency is similar to the motivation 
 of inverse-document frequency in tf-idf (described in section~\ref{sec:word_representations} and
 equation~\ref{eq:idf}), which is that more frequently used words are less
-specific to a prominent claim, thus contributing less to similarity  \\
-- distributed representations were chosen since they represent individual words 
-very well (as shown in \citep{mikolov2013efficient, mikolov2013distributed}) \\
-- to build a sentence vector, we simply sum up the distributed vector representations 
-of words\footnote{we use pretrained vectors from \url{https://code.google.com/archive/p/word2vec/}} \\
-- for both representations , we remove stopwords before building vectors \\
-- similarity between sentences is computed as cosine similarity between 
-respective sentence vectors \\
-- as described in section~\ref{sec:sts} we use TakeLab's STS, which we feed our pairs
-of claims to acquire a similarity score \\
+specific to a prominent claim, thus contributing less to similarity. 
+Distributed representations were chosen since they represent individual words 
+very well (as shown in \citep{mikolov2013efficient, mikolov2013distributed}).
+To build a sentence vector, we simply sum up the distributed vector representations 
+of words\footnote{we use pretrained vectors from \url{https://code.google.com/archive/p/word2vec/}}
+For both representations, we remove stopwords before building vectors. 
+Similarity between sentences is computed as cosine similarity between 
+respective sentence vectors. 
+As described in section~\ref{sec:sts} we use TakeLab's STS, which we feed our pairs
+of claims to acquire a similarity score. 
 
-- for clustering we se the hierarchical agglomerative clustering (HAC) algorithm
-(described in section~\ref{sec:hierarhical_clustering}) \\
-- three reasons to use HAC: HAC allows us to work directly with similarities
-coming from the STS systems, instead of requiring explicit vector-space representations \\
-- second, it produces hierarhical structures, allowing to investigate
-granularity of claims \\
-- third, it's a deterministic algorithm, making the results more stable \\
-- HAC works with a distance matrix computed for all pairs of instances \\
-- we compute this matrix for all pairs of sentences $s_1$ and $s_2$ and 
+For clustering we use the hierarchical agglomerative clustering (HAC) algorithm
+(described in section~\ref{sec:hierarhical_clustering}). 
+There are three main reasons to use HAC: 
+\begin{enumerate*}
+\item HAC allows us to work directly with similarities
+coming from the STS systems, instead of requiring explicit vector-space representations, 
+\item HAC produces hierarhical structures, allowing to investigate
+granularity of claims, and
+\item HAC is a deterministic algorithm, making the results more stable.
+\end{enumerate*}
+HAC works with a distance matrix computed for all pairs of instances. 
+We compute this matrix for all pairs of sentences $s_1$ and $s_2$ and 
 compute vector-space similarity with: 
 $$
 \mathit{vs_{sim}} = 1 - \cos(v_1, v_2)
@@ -83,13 +102,14 @@ $$
 \mathit{sts_{sim}} = \frac{1}{1 + \mathit{sim}(s_1, s_2)}
 $$
 where $\mathit{sim}(s_1, s_2)$ is a method that returns the STS similarity
-between sentences $s_1$ and $s_2$ \\
-- as for linkage, we use complete linkage and Ward's method \citep{ward1963hierarchical} \\
-- we do not cluster \textit{pro} and \textit{con} sentences separately \\
-- this allows us to investigate to which extent stance can be captured by 
-semantic similarity (and is also more realistic) \\
+between sentences $s_1$ and $s_2$. 
+As for linkage, we use complete linkage and Ward's method \citep{ward1963hierarchical}. 
+We do not cluster \textit{pro} and \textit{con} sentences separately. 
+This allows us to investigate to which extent stance can be captured by 
+semantic similarity (and is also more realistic). 
 
 \section{Claim Cluster Analysis}
+\label{sec:argclu_analysis}
 
 - We perform two analysis \\
 - first, we analyze different clustering models \\
@@ -503,6 +523,7 @@ be \$5.00/pack imagine what we could tax pot for!}
 for the ``Marijuana'' topic and the similarity measure used \\
 
 \section{Conclusion}
+\label{sec:argclu_conclusion}
 
 - this work is about unsupervised identification of prominent claims in online 
 discussions \\
