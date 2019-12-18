@@ -1,10 +1,36 @@
 \chapter{Claim segmentation}
 \label{chap:claim_segmentation}
 
+Instead of dealing with entire posts as done in chapters~\ref{chap:argclu} and
+~\ref{chap:argrec}, here we wish to first segment posts into \emph{atomic units
+that convey a single thought} -- \textbf{claims}.
+The term claim is used to refer to an \emph{elementary argumentative component}, 
+which are a generalization of elementary discourse units
+\citep{winter1982towards, givon1983topic, polanyi1996linguistic}
+(argumentative units are 
+explained in subsection~\ref{subsec:arg_comp_ext}).  Claims as
+defined here are not to be confused with claims from Toulmin or Freeman's
+argumentation model. Splitting text into argumentative claims is important
+because of two main reasons. 
+First, non-argumentative content is discarded as it does not 
+make statements relevant to the topic
+only (even though sometimes that can prove useful as shown by 
+\citep{madnani2012identifying}).
+Second, the process of claim segmentation results in claims, which are the
+basis of subsequent analysis. Extracted claims can then be related to each
+other (i.e. \emph{support} or \emph{attack} relations), further specialized to
+fit an argument model (i.e. claims are classified into warrants, rebuttals,
+etc. stemming from the Toulmin model), directly analyzed (i.e. clustered as
+done in chapter~\ref{chap:argclu}), or structured (i.e. to microstructures or
+ontological formalizations as explained in chapter~\ref{chap:formalization}).
+
+%The \textbf{claim segmentation task} corresponds to the task of argumentative component
+%extraction, more specifically argumentative boundary detection, which is
+%explained in subsection~\ref{subsec:arg_comp_ext}. 
+
 % TODO give intro to motivate structure approach
 % outline steps of structured approach
 
-%TODO give intro to motivate segmenting claims in general
 
 \section{Data}
 
@@ -18,8 +44,9 @@
 \textbf{User post} & \textbf{Claim segment} & \textbf{Claim paraphrase}   \\
 \midrule
 \multirow{3}{*}{\parbox{3cm}{
-		\emph{Men should fall in love with women that's why they where created and women should 
-		get married to men because it makes everything easier. }
+		\emph{Men should fall in love with women that's why they where
+		created and women should get married to men because it makes
+		everything easier. }
 }}
 &  
 \emph{Men should fall in love with women.}
@@ -35,59 +62,65 @@
  \bottomrule
 \end{tabular}}
 \end{center}
-\caption{An example of a user post segmented into three claim segments with their correspoding paraphrase.}
+\caption{An example of a user post segmented into three claim segments with
+	their correspoding paraphrase.}
 \label{tab:claim_seg_post_segments}
 \end{table*}
 
-- we adopt the dataset of \citet{hasan2014you} which contains 
-user posts from online two-sided discussions on a number of issues \\
-- for reasons of feasiblity, we consider two topics: ``Gay rights'' and 
-``Marijuana'' \\
-- we sampled 100 posts (50 \textbf{pro} and 50 \textbf{con}) \\
-- first, annotators segment out claims from user posts 
-% TODO consider where to put paraphrasing, maybe to go with structuring
-- second, after segmenting out a claim, the annotators provide a paraphrased
-version of the claim \\
-- we assumed that paraphrasing helps understanding of claims \\
-- our work is similar to \citep{wyner2016working} who use a controlled language 
-for paraphrasing claims \\
+We adopt the dataset of \citet{hasan2014you} which contains 
+user posts from online two-sided discussions on a number of issues. 
+We consider two topics: ``Gay Rights'' and 
+``Marijuana'' and 
+sample 100 posts (50 \textbf{pro} and 50 \textbf{con}) from each topic. 
+For both topics, we used trained annotators.
+First, annotators segment out claims from user posts 
+Second, after segmenting out a claim, the annotators provide a paraphrased
+version of the claim.
+We assume that paraphrasing helps understanding of claims.
+% TODO think how to incorpore wyner 
+% Our work is similar to \citep{wyner2016working} who use a controlled language 
+% for paraphrasing claims. 
 
-- claim segmenting separates argumenative from non-argumentative content \\
-- there are many ways a post can be segmented into claims \\
-- there is a number of ways to paraphrase a claim \\
-- the ambiguity can be reduced by doing these two tasks jointly \\
-- the end result paraphrased should be \emph{simplyfing paraphrases} \\
-- paraphrases that provide the essence of claims devoid of 
-superflous words and phrases \\
-- we adopt nine paraphrasing principles: 
+Claim segmenting separates argumenative from non-argumentative content. 
+There are many ways a post can be segmented into claims in addition to being
+a number of ways to paraphrase a claim. 
+The ambiguity can be reduced by doing these two tasks jointly. 
+The end result paraphrased should be \emph{simplyfing claim paraphrases}: 
+paraphrases that provide the essence of claims devoid of 
+superflous words and phrases. 
+To that end, we adopt nine paraphrasing principles: 
 \begin{enumdescript}
 \item[Argumentativeness] --- Only argumentative text should paraphrased;
 \item[Atomicity] --- A claim should convey a single thought; 
-\item[Authority] --- Experts in claims from expert opinion should be made explicit in the
-paraphrase; 
-\item[Brevity] --- Paraphrases should keep only the relevant argumentative content; 
-\item[Canonicity] --- Canonical terms and phrases are preffered over idiomatic language; 
-\item[Contextuality] --- Claims should be paraphrased by considering their local and topical
-context as well as their context; 
+\item[Authority] --- Experts in claims from expert opinion should be made
+	explicit in the paraphrase; 
+\item[Brevity] --- Paraphrases should keep only the relevant argumentative
+	content; 
+\item[Canonicity] --- Canonical terms and phrases are preffered over idiomatic
+	language; 
+\item[Contextuality] --- Claims should be paraphrased by considering their
+	local and topical context as well as their context; 
 \item[Declarativity] --- paraphrases should be in declarative form; 
 \item[Dereferencing] --- Pronouns and nominal references should be resolved; and
-\item[Explicitness] --- Only explicitly stated information should be paraphrased, and not
-whatever might be implied by the claim 
+\item[Explicitness] --- Only explicitly stated information should be
+	paraphrased, and not whatever might be implied by the claim 
 \end{enumdescript}
-- we allow for overlapping and discontiguous segments \\
-- full annotation guidelines are in appendix~\ref{sec:argseg_annotation} \\
-- the annotation for ``Gay Rights'' was carried out by one trained annotator and took 25 hours\\
-- the annotation for ``Marijuana'' was carried out by three annotators \\
-% TODO add stats time for marijuana 
-- the 100 user posts yield 920 claim segments for ``Gay rights'' \\
-- table~\ref{tab:claim_seg_post_segments} gives an example \\
-- for the ``Gay Rights'' topic, the segments covered 79.6\% of the text, while the remaining
-20.4\% may be considered non-argumentative \\
-%TODO add stats for the Marijuana topic
+Unlike most previous approaches to argumentative component boundaries, we allow
+for both overlapping and discontiguous segments.  Full annotation guidelines
+are in appendix~\ref{sec:argseg_annotation}. The annotation for ``Gay Rights''
+was carried out by one trained annotator and took 25 hours.
+The annotation for ``Marijuana'' was carried out by three annotators. 
+The 100 user posts yield 920 claim segments for ``Gay rights'', as did the 100 
+user posts in ``Marijuana''. 
+Table~\ref{tab:claim_seg_post_segments} gives an example of a post from
+an online discussion split into segmented and paraphrased claims. 
+For the ``Gay Rights'' topic, the segments covered 79.6\% of the text, while the remaining
+20.4\% may be considered non-argumentative. The ``Marijuana'' topic contained 
+more argumentative text, as 88.98\% of text is covered by argumentative 
+segments, while 11.02\% was annotated as non-argumentative. 
 
-%TODO 
-\noindent - dataset statistics \\
-- how many examples are overlapping \\
+% \noindent - dataset statistics \\
+% - how many examples are overlapping \\
 
 \section{Problem Formulation}
 \begin{table}
@@ -96,9 +129,9 @@ whatever might be implied by the claim
  i & $x_i$ & $Y_i$ \\
 \midrule
  1& marijuana & $\{1 \}$ \\
- 2&  is & $\{ 1 \}$ \\
- 3&  believed &  $\{ 1 \}$ \\
- 4&  to& $\{ 1 \}$ \\
+ 2& is & $\{ 1 \}$ \\
+ 3& believed &  $\{ 1 \}$ \\
+ 4& to& $\{ 1 \}$ \\
  5& be& $\{ 1 \}$ \\
  6& a& $\{ 1 \}$ \\
 7 & stepping& $\{ 1 \}$ \\
@@ -108,14 +141,14 @@ whatever might be implied by the claim
 \begin{tabular}{c | c c}
  i & $x_i$ & $Y_i$ \\
 \midrule
-9 &  stone& $\{ 1 \}$ \\
-10&  drug& $\{ 1 \} $ \\
-11&  that& $\{2, 3, 4\}$ \\
-12&  can& $\{2, 3, 4\}$ \\
-13&  eventually& $\{2, 3, 4\}$ \\
-14&  lead& $\{2, 3, 4\}$ \\
-15&  to& $\{2, 3, 4\}$ \\
-16 & addiction& $\{2, 3, 4\}$ \\
+9 & stone& $\{ 1 \}$ \\
+10& drug& $\{ 1 \} $ \\
+11& that& $\{2, 3, 4\}$ \\
+12& can& $\{2, 3, 4\}$ \\
+13& eventually& $\{2, 3, 4\}$ \\
+14& lead& $\{2, 3, 4\}$ \\
+15& to& $\{2, 3, 4\}$ \\
+16& addiction& $\{2, 3, 4\}$ \\
 \end{tabular}
 \hfill
 \begin{tabular}{c| c c}
@@ -170,55 +203,67 @@ for& world& peace
 \label{fig:segment_example_bio_multilabel}
 \end{figure}
 
-\noindent - let $\mathbf{x} = (x_1, \dots, x_N)$ represent a sentence of size $N$ as a vector
-of tokens where
-the index represents the position of the word in the sentence.  \\
-- then $\mathbf{Y} = (Y_1, \dots, Y_N)$ is a vector where each element represents a
-set of labels \\
-- each $Y_i, i \in \{1, \dots, N\}$ is a set of labels denoting which segment the the token belongs
-to \\
-- as an example, the post(comment) 
-``\textit{
-Marijuana is believed to be a stepping-stone drug that can eventually lead to
-addiction to heroin, cocaine and other harder
+Now, since the dataset is defined, we will mathematically formalize this
+problem.  Let $\mathbf{x} = (x_1, \dots, x_N)$ represent a sentence of size $N$
+as a vector of tokens where the index represents the position of the word in
+the sentence.  Then $\mathbf{Y} = (Y_1, \dots, Y_N)$ is a vector where each
+element represents a set of labels.  Each $Y_i, i \in \{1, \dots, N\}$ is a set
+of labels denoting which segment the the token belongs to.  As an example, the
+post(comment) ``\textit{ Marijuana is believed to be a stepping-stone drug that
+can eventually lead to addiction to heroin, cocaine and other harder
 % TODO actually is 25 tokens
-drugs.}'' is tokenized into 24 tokens with respective $X$ and $Y$ shown in table
-~\ref{tab:multilabel_segment_example} \\	
-- this problem can now be framed as multilabel classification 
-(multilabel classification described in section \ref{sec:chain_classification}) \\
-in the binary relevance setup \\
-- but framing multilabel classification
-as binary relevance has an exponential number of possible solutions, making it expensive to 
-efficiently search \\
-- figure~\ref{fig:segment_example_bio_multilabel} shows how a multilabel labeling would be 
-on a post from the ``Marijuana'' topic \\
+drugs.}'' is tokenized into 24 tokens with respective $X$ and $Y$ shown in
+table ~\ref{tab:multilabel_segment_example}. 
+Mapping $x$ to $Y$ can be framed as multilabel classification since
+each $y \in Y$ can contain up to $N$ labels, yielding a total of $2^{N}$ 
+possible combinations per element. 
+This problem can now be framed as multilabel classification 
+(multilabel classification described in section \ref{sec:chain_classification}). 
+If it is framed using the binary relevance setup there is
+an exponential number of possible solutions, which makes efficient search 
+of possible solutions expensive. 
+The third row of figure~\ref{fig:segment_example_bio_multilabel} shows how a
+multilabel labeling of segments would be on a post from the ``Marijuana''
+topic. 
 
-\noindent - as an alternative to multilabel classification, a number of approaches have been
-tried \\
-- in previous work, sequence extraction problems have arisen in various 
-information extraction problems \\
-- most notably shallow parsing and named entity recognition \\
-- \citet{sha2003shallow} employed \texttt{BIO} encoding for shallow parsing and used conditional
-random fields as one of the first structured prediction approaches to information extraction \\
-- \texttt{BIO} labels indicate whether the word is outside a segment (\texttt{O}), 
-starts a segment (\texttt{B}) or continues a segment (\texttt{I}) \\ 
-- nonoverlapping and contigious sequences can be simply labelled using the \texttt{BIO} labeling, 
-an example of a post from the ``Marijuana'' topic is figure~\ref{fig:segment_example_bio_multilabel} \\
-- using \texttt{BIO} labels instead of using multilabel approach greatly simplifies the problem by
-having to predict only a single sequence of labels by training only a single classifier  \\
+Alternatively to multilabel classification, a number of approaches have been
+explored. Looking at sequence extraction in other areas of information
+extraction, problems of shallow parsing \citep{sha2003shallow} and named entity
+recognition \citep{nadeau2007survey} stand out.  \citet{sha2003shallow}
+employed \texttt{BIO} encoding for shallow parsing and used conditional random
+fields as one of the first structured prediction approaches to information
+extraction.  \texttt{BIO} labels indicate whether the word is outside a segment
+(\texttt{O}), starts a segment (\texttt{B}) or continues a segment
+(\texttt{I}).  In order to apply \texttt{BIO} labeling, the final segments
+\emph{must} be non-overlapping and contigious. 
+Row 2 of figure ~\ref{fig:segment_example_bio_multilabel} shows a
+post from the ``Marijuana'' topic 
+containing three segments labeled with \texttt{BIO} tags. 
+Using \texttt{BIO} tags instead of applying the multilabel approach
+simplifies solving the sequence extraction by 
+having to predict only a single label per token, which makes the number of solutions 
+for each $x$ go down from $2^{N}$ to $|\{B, I, O\}|$. 
 
-\noindent - however, when the segments are discontiguous or overlapping \texttt{BIO} cannot
-bijectively encode segments of labels \\
-- to tackle those cases a number of approaches have been proposed, mostly 
+But, when the segments are overlapping or discontiguous using \texttt{BIO} tags
+can't be used to bijectively encode segments of labels. 
+To tackle overlapping and/or discontiguous segments a number of approaches have been
+proposed, mostly
 in the area of named entity recognition on the analysis of clinical texts, 
-on datasets such as BioInfer \citep{pyysalo2007bioinfer} \\
-- to tackle non-overlapping contigious entities \citep{byrne2007nested} proposes
-to use tag n-grams instead of words, whereas 
-multiple-layer tagging was proposed by \citep{alex2007recognising} \\
+on datasets such as BioInfer \citep{pyysalo2007bioinfer}. 
+\citet{byrne2007nested} proposed a solution for 
+extracting non-overlapping contigious entities which uses
+tag n-grams instead of words. Working to also solve 
+non-overlapping contigious entities 
+\citep{alex2007recognising} propose using multiple-layer tagging. 
+
+% TODO, tu sam stao
+More recently, as part of the SemEval-2014 analysis of clinical texts competition,
+extracting overlapping and contigious entities from text was explored
+\citep{pradhan2014semeval}.
+
 - \citet{finkel2009nested} treat named entity recognition as a parsing task \\
 - most recently, this becase an interesting problem
 as part of the SemEval-2014 analysis of clinical texts competition 
-\citep{pradhan2014semeval} \\
 - one of the competition tasks was extraction of all medical named entities, which could have been
 discontiguous and overlapping \\
 - two systems in the competition produces solutions that could handle both 
