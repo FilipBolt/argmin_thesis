@@ -360,9 +360,6 @@ figure~\ref{fig:segment_example_bio_multilabel} \\
 % <S1>Nothing can bring peace to this earth.</S1> <S2>Its a great idea to try and
 % push for world peace</S2> <S3>but it will never happen...</S3>'
 
-\subsection{Models}
-
-\subsubsection{Na\"ive Heuristic}
 
 \begin{figure}
 \begin{algorithmic}[1]
@@ -394,41 +391,47 @@ figure~\ref{fig:segment_example_bio_multilabel} \\
 \State
 \Return $Y$
 \end{algorithmic}
-\caption{Claim segmentation punctuation based heuristic. 
+\caption{Claim segmentation punctuation based heuristic.
 Input is a list of tokens, outputs a nested list of lists, where 
 each list corresponds to a segment. 
-None of the tokens is declared as non argumentative.
-The \texttt{IS\_PUNCTUATION}
-	function has been simplified for readability purposes. 
+None of the tokens is declared as non-argumentative.
+The \texttt{IS\_PUNCTUATION} function has been simplified for readability
+purposes. 
 	}
 \label{alg:heuristic_claimseg}
 \end{figure}
 
-- similarly to \citep{ajjour2017unit}, we follow existing approaches to tackle
-claim segmentation as a token-level classification task \\
-- we observe the claim segmentation problem in two lights \\ 
-- first, as a multilabel classification problem, since each token can belong to zero or more
-segments \\
-- second, we simplify the problem by discarding overlapping and discontiguous segments \\
-- we compare three basic approaches \\
-- first approach is based on most argumentation mining approaches where 
-- in the second approach we use an SVM classifier to use word level and context features \\
-- in the third approach, we combine deep learning and 
-structured prediction \\
+\subsection{Models}
 
-\noindent As a strong baseline, we extract claims as most papers assume claim 
-segmentation has already been performed, some assume a single sentence is a claim
-\citep{rooney2012applying, stab2014identifying}. \\
-- We adopt a similar approach, where we simply assume punctuation is a strong
-indication a new claim starts. \\
-- For each post (comment), we simply iterate through all tokens
-and start a new claim when a token equals a punctuation mark \\
-- this is essentially similar to sentence segmentation \citep{palmer2000tokenisation} \\
-- If the current token is a punctuation symbol, the next claim starts \\
-The heuristic is outlined in algorithm~\ref{alg:heuristic_claimseg} \\
-- An example of how the algorithm works for a post is shown in~\ref{tab:heuristic_example} \\
+We frame the claim segmentation problem as a supervised learning token-level 
+classification \citep{ajjour2017unit}. 
+To label tokens, we use one of two 
+token-level tagging solutions. 
+First, we adopt the multilabel classification (\texttt{ML}) approach, where
+each token can belong to zero or more segments. For the second (\texttt{BIO}) approach, 
+we discard overlapping and non-contigious segments and then apply
+standard \texttt{BIO} labels. 
+After applying the tagging to data, we propose three models to 
+solve the claim segmentation problems. First, we apply a classic approach 
+from argumentation mining literature where each sentence is treated as a segment. 
+Second, we use n-gram features as input to a SVM. 
+Finally, we combine deep learning and structured prediction.
 
-\begin{table}[h]
+\paragraph{Na\"ive Heuristic. } 
+Our baseline model is extremely similar to most approaches in argumentation mining: 
+each sentence is a claim segment \citep{rooney2012applying, stab2014identifying}.
+We adopt a similar approach, where we simply assume punctuation is a strong
+indication a new claim starts. However, unlike 
+other work we  make each sentence argumentative (which we deem reasonable
+assumption given that a large portion of the dataset is argumentative)
+For each post (comment), we simply iterate through all tokens
+and start a new claim when a token equals a punctuation mark. 
+This is essentially similar to sentence segmentation \citep{palmer2000tokenisation}. 
+The heuristic is outlined in algorithm~\ref{alg:heuristic_claimseg}. 
+An example of how the algorithm works for a post is shown in
+table~\ref{tab:heuristic_example}. 
+
+\begin{table}[t]
 \begin{tabular}{@{}p{0.5\linewidth} p{0.50\linewidth}}
 \toprule
 \multirow{7}{*}{
@@ -469,22 +472,30 @@ there never was ...
 \end{tabular}
 \end{table}
 
-\subsubsection{SVM}
+\paragraph{SVM. } We use a weighted SVM for the second approach. Weights are 
+calculated to compensate for the class disbalance 
+by weighing less prominent class examples with the ratio of number of 
+dominant class vs. recesive class examples in the training set. 
+To train the model, we use $5 \times 3$ nested-cross validation
+When trying the multilabel approach, features  
+training examples by taking a word with a
+configurable context window (of surrounding words). 
+For features, we use calculate tf-idf and 
+distributed word representations 
+(fasttext\footnote{https://fasttext.cc/})
+and word2vec\footnote{https://code.google.com/archive/p/word2vec/}
+pretrained vectors).
 
-- We employ Support Vector Machines \\
-- we use a weighted svm where weights are calculated to compensate for the class
-disbalance by weighing less prominent class examples with the ratio of number of 
-dominant class vs. recesive class examples in the training set \\
-- use $5 \times 3$ nested-cross validation \\
-- in the multilabel approach, we create training examples by taking a word with a
-configurable context window (of surrounding words) \\
-
-predicting each label  \\
-- we experiment with tf-idf features and 
-distributed word representations (fast text and word2vec pretrained vectors) 
-
-
-\subsubsection{BiLSTM + CRF Model}
+\paragraph{BiLSTM + CRF Model. }
+Our final approach uses combined deep learning (BiLSTM) and structured
+prediction (CRF). The model consists of two stages. In the first stage, a
+BiLSTM is used to encode a sequence of tokens. The BiLSTM produces pairs of
+hidden states and outputs. 
+In the second stage, the model 
+As for features of the model, we consider both using pretrained word embeddings
+and training embeddings from scratch.  Furthermore, we experiment by enabling
+and disabling fine-tunning of input embeddings when using pretrained
+word embeddings. 
 
 
 \section{Experiments and Discussion}
