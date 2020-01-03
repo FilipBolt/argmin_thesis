@@ -1,10 +1,20 @@
 \chapter{Formalizing claims}
 \label{chap:formalization}
 
-This chapter is about formalizing claims. \\
-this should contain the microstructure approach and the ontology approach \\
+In the previous chapter we have explored idenifying claims in text. 
+Now, we wish to lay the ground work for the next step: structuring those claims. 
+To do so, we first need a model according to which the claims will be structured. 
+Unlike most approaches in argumentation mining and computational argumentation that
+assume a claim is atomic, we wish to work on the sub-claim level in an attempt to 
+derive a logical representation of claims. 
+
+This chapter is divided into two main parts. 
+In the first part, the microstructure formalism is introduced 
+(section~\ref{sec:for_microstructures}). 
+In the second part a formalization based on ontologies is introduced.
 
 \section{Microstructures}
+\label{sec:for_microstructures}
 
 \begin{figure}
 	\begin{center}
@@ -14,52 +24,51 @@ this should contain the microstructure approach and the ontology approach \\
   \label{fig:structures_flowchart}
 \end{figure}
 
-- microstructures are structures expressing relations between the domain-specific
+Microstructures are structures expressing relations between the domain-specific
 concepts, reflecting beliefs, value judgements, or desired policies of the claim
-author \\
-- their purpose is to capture the gist of the claim \\
-- they stemmed from as many claims could be expressed as a \emph{relation} between \emph{concepts} using 
-a certain \emph{modality} \\
-- figure~\ref{fig:structures_flowchart} shows a claim microstructure bringing three elements 
-together \\
+author. Their purpose is to capture the gist of the claim. 
+They stemmed from as many claims could be expressed as a \emph{relation}
+between \emph{concepts} using a certain \emph{modality}. 
+Figure~\ref{fig:structures_flowchart} shows a claim microstructure bringing three elements 
+together. 
 
-\noindent - Relations.  \\
-- Many claims can be represented as expressing a relation between two concepts \\
-- for example, on the topic of ``Gay Rights'' , the relations may be 
-`\texttt{promotes(gay marriage, depopulation)}' and 
-`\texttt{purpose(love, procreation)}' \\
-- there are also comparably fewer claims that can be expressed via
-higher-order relations , e.g. `\texttt{entails(constitution, allow(state, gay marriage))} \\
-- each relation can be negated, e.g. $\neg$\texttt{promotes(gay marriage, depopulation)} expresses
-that gay marriage does not cause depopulation \\
-- relations are domain independent \\
+\paragraph{Relations. }  Many claims can be represented as expressing a
+relation between two concepts. For example, on the topic of ``Gay Rights'', 
+the relations may be `\texttt{promotes(gay marriage, depopulation)}' and 
+`\texttt{purpose(love, procreation)}'. 
+There are also comparably fewer claims that can be expressed via
+higher-order relations , e.g. `\texttt{entails(constitution, allow(state, gay marriage))}. 
+Each relation can be negated, e.g. $\neg$\texttt{promotes(gay marriage,
+depopulation)} expresses that gay marriage does not cause depopulation. 
+Relations are domain independent. 
 
-\noindent Concepts \\
-- the relations are established between concepts, expressed by noun phrases \\
-- for ease of access, they can be arranged into a small, domain specific taxonomy of concepts \\
-- for instance ``gay marriage'', ``heterosexual marriage'' and ``religious marriage''
-all belong under the concept of ``marrriage'' \\
-- the taxonomic relations could also be useful for later computational processing \\
-- concepts are domain dependent and need to defined for each topic anew \\
+\paragraph{Concepts. }
+The relations are established between concepts, expressed by noun phrases. 
+For ease of access, they can be arranged into a small, domain specific taxonomy of concepts. 
+For instance ``gay marriage'', ``heterosexual marriage'' and ``religious marriage''
+all belong under the concept of ``marrriage''. 
+The taxonomic relations could also be useful for later computational processing. 
+Concepts are domain dependent and need to defined for each topic anew
 
-\noindent Modalities \\
-- we observe that claims are expressed under different modalities \\
-- they can be roughly categorized into \textit{beliefs, value judgements, and policies} \\
-- we formalize this via unary relations `believes', `approves', `disapproves', and `desires' corresponding 
+\paragraph{Modalities. }
+We observe that claims are expressed under different modalities. 
+They can be roughly categorized into \textit{beliefs, value judgements, and policies}. 
+We formalize this via unary relations `believes', `approves', `disapproves',
+and `desires' corresponding 
 to beliefs (factual, religous, and opinion-based), positive value judgements, negative value 
-judgements, and desired policy (desired state of affairs) respectively \\
-- the three modalities act as a wrapper on the propositional content of the claim, 
-effectively modulating what is being claimed \\
-- for instance, `\texttt{believes(purpose(love, procreation))}' expresses the belief 
+judgements, and desired policy (desired state of affairs) respectively. 
+The three modalities act as a wrapper on the propositional content of the claim, 
+effectively modulating what is being claimed. 
+For instance, `\texttt{believes(purpose(love, procreation))}' expresses the belief 
 that love serves procreation, while \texttt{desires(}$\neg$\texttt{allow(state, gay marriage))}'
-expresses the wish for the state not to allow gay marriages \\
-- finally, in a number of claims the claim is expressed with a reference to a second
-opinion holder (e.g. the Bible, the state) \\
-- to tackle this, we add an additional modality layer with the opinion holder as
-an additional modifier \\
-- for instance `\texttt{believes(believes[state](promotes(marriage, advancement)))}' corresponds
-to the belief that the state believes gay marriages lead to an advancement \\
-- by convention , the opinion holder of the first modality is always the author of the post \\
+expresses the wish for the state not to allow gay marriages. 
+Finally, in a number of claims the claim is expressed with a reference to a second
+opinion holder (e.g. the Bible, the state). 
+To tackle this, we add an additional modality layer with the opinion holder as
+an additional modifier. 
+For instance `\texttt{believes(believes[state](promotes(marriage, advancement)))}' corresponds
+to the belief that the state believes gay marriages lead to an advancement. 
+By convention, the opinion holder of the first modality is always the author of the post. 
 
 \begin{table}
 {\footnotesize
