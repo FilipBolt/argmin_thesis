@@ -847,45 +847,99 @@ mining is considered to closely related to natural language processing
 \citep{lippi2015argument}, as it uses commonly used natural language processing
 techniques to work on problems from social sciences to analyze arguments.
 In the rest of this section, we give a introduction on various word representations
-in subsection~\ref{sec:word_representations}, then we go into more detail on two 
+in subsections~\ref{sec:bow},~\ref{sec:tf-idf}, and~\ref{sec:embedding}, 
+then we go into more detail on two 
 semantics-related NLP problems: textual entailment in subsection~\ref{sec:textual_entailment}
 and semantic textual similarity in subsection~\ref{sec:sts}.
 
-\subsection{Word representations}
-\label{sec:word_representations}
+\subsection{Bag-of-words}
+\label{sec:bow}
+In information retrieval it is often 
+vital to efficiently 
+store (index) and search collections of documents. 
+To do so, documents are represented as features. 
+One of the simplest document representations is applying the 
+\textbf{bag-of-words} (BoW) model to text. BoW represents text as a multiset of
+words along with their respective frequencies of occurence. However, it disregards
+grammar and word order
+\citep{harris1954distributional}, hence the term ``bag''. 
+We show an example of calculating BoW
+using an excerpt from \citep{dickens1949tale}:
+\begin{quote}
+``\emph{It was the best of times, \\
+it was the worst of times, \\
+it was the age of wisdom, \\
+it was the age of foolishness,
+}''
+\end{quote}
+We treat each line of the example as a document $D_i$ in the set of documents
+$D$. The vocabulary $V$ is 
+defined as all the unique words (ignoring case and punctuation)
+across the document collection:
+$$
+V = \{t_{ij} | w_{ij} \in D_i \cap i \in \{1 \dots |D|\} \}
+$$
+For this example, the vocabulary amounts to
+$V = \{$\emph{``it'', ``was'', ``the'' ``best'', ``of'', ``times'', ``worst'', ``age'',
+``wisdom'', ``foolishness''}$\}$.
+Now, for each word of the vocabulary, we calculate the frequency in the document. 
+A BoW representation of document $D_4$ 
+``\emph{it was the age of foolishness}''
+would then be: $x_4 = [1, 1, 1, 0, 1, 0, 0, 1, 0, 1]$
 
-%A document $d$ contains a list of terms $t$. 
-Information retrieval models documents through features in order to be able to efficiently 
-store (index) and search collections of documents. Commonly used features are 
-\textit{term frequency tf} and \textit{inverse document frequency idf}. Term frequency of a word
-is the number of occurences of that word in a given document:
+The \textbf{n-gram} document recepresentation is a generalization of the BoW
+approach. The ngram model
+can use multiple words ($n$) to represent a document preserving some spatial information.
+The bigram model ($n = 2$) uses pairs of words to represent a document
+The document $D_4$ using a bigram model would then consist of:
+\emph{``it was'', ``was the'', ``the age'', ``age of'', ``of foolishness''}.
+BoW is a specialization of the ngram model
+that sets $n=1$. 
+
+The BoW model has been succesfully applied to many areas, such as language
+modeling \citep{tirilly2008language}, sentiment analysis
+\citep{wang2014microblog}, and spam classification \citep{kolari2006detecting}.
+BoW models are
+usually used with an assumption that similar documents have only similar
+content. After transforming text into the BoW form, extra features can be
+calculated, such as tf-idf or embedding features. 
+
+\subsection{Tf-idf}
+\label{sec:tf-idf}
+%\label{sec:word_representations}
+Some other commonly used features  to represent text are \textbf{term frequency
+tf} and \textbf{inverse document frequency idf}. Term frequency of a word is
+the number of occurences of that word in a given document:
 
 $$
 \mathit{tf}(t, d) = \frac{f(t, d)}{|d|}
 $$
-where $f(t, d)$ is the frequency of term $t$ in document $d$ and $|d|$ is the number
-of total terms in document $d$.
+where $f(t, D_i)$ is the frequency of term (word) $t$ in document $D_i$ and $|D_i|$ is the number
+of total terms in document $D_i$.
 Inverse document frequency is a measure of how much information a word provides (common or rare
 across a collection of documents) as is calculated as:
 
 \begin{equation}
 	\label{eq:idf}
-\mathit{idf}(t, D) = \log \frac{N}{1 + |d \in D: t \in d|}
+\mathit{idf}(t, D) = \log \frac{N}{1 + |D_i \in D: t \in D_i|}
 \end{equation}
-where $N$ is the number of documents in the corpus $|D|$ and $|d \in D: t \in d|$ is the 
+where $N$ is the number of documents in the corpus $|D|$ and $|D_i \in D: t \in D_i|$ is the 
 number of documents in which term $t$ appears in. 
 These two features are often used together to represent a collection of documents 
-$d \in D$ each containing a list of terms $t$:
+$D_i \in D$ each containing a list of terms $t$:
 $$
-\mathit{tfidf} (t, d, D) = \mathit{tf}(t, d) \cdot \mathit{idf}(t, D)
+\mathit{tfidf} (t, D_i, D) = \mathit{tf}(t, D_i) \cdot \mathit{idf}(t, D)
 $$
 The vector space model \citep{meadow1992text} treats text documents as vectors  
 in an $N$-dimensional space, where $N$ is the size of the vocabulary (total number of 
 possible words). Comparing two documents in the vector space model can then be taking the
 cosine similarity of the vectors features.
 
-Another word representation approach is represent each word using a fixed-size
-vector of real numbers.  A set of such approaches is called \textit{word
+\subsection{Word embeddings}
+\label{sec:embedding}
+
+Another word representation approach represents each word using a fixed-size
+vector of real numbers. A set of such approaches is called \textit{word
 embeddings}. These vector representations of words are generated through
 different methods, most popular two being neural networks and word co-occurence
 matrix dimensionality reduction.
@@ -916,7 +970,8 @@ FastText is another word embedding procedure which is an extension on word2vec
 \citep{bojanowski2017enriching}. In fastText each word is represented as a
 n-gram of characters in order to capture the meaning of shorter words and allow
 for embeddings to understand prefixes and suffixes. After splitting words into
-subwords, similar procedures The biggest advantage of using fastText is working
+subwords, similar procedures as the word2vec model are applied. 
+The biggest advantage of using fastText is seen when dealing 
 with rare words, which can be assigned a representation even if the word was
 never seen during the model training period. 
 
