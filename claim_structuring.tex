@@ -1,217 +1,284 @@
 \chapter{Claim Structuring}
+\label{chap:claim_structuring}
 
-This chapter talks about how claims should be structured \\
+In the previous chapter, we have introduced two main approaches defining claim
+formalizations.  Having formalized claims can help in deriving inferred claims
+or help with related downstream tasks (such as stance classification) as it
+will be shown in chapter~\ref{chap:analysis}.
+Formalized claims can be obtained manually, applying the steps laid out in the 
+claim ontology framework in chapter~\ref{chap:formalization}. 
+In this chapter, we wish to explore how some of the steps of the framework can 
+be automatized: formalizing new claims when the rest of the framework is already setup.
+In a setting where the domain ontology has been determined (domain is
+restricted and closed) we wish to explore how feasible it is to automatically
+acquire formalized claims from raw text claims: solve the \textbf{claim structuring}
+problem.
 
-\section{Joint model}
+First, we introduce the dataset which will be used for claim structuring
+in section~\ref{sec:claim_struc_data}. Then we define models that attempt to solve the 
+claim structuring problem in section~\ref{sec:claim_struc_models}. 
+The models are applied to the data in multiple setups in section~\ref{sec:claim_struc_experiment}.
+We conclude in section~\ref{sec:claim_struc_conclusion}. 
+
+\section{Data}
+\label{sec:claim_struc_data}
+
+We export the ontology designed in 
+% TODO add reference
+section. 
+% TODO check numbers
+The ontology contains a total of 920 claims. Out of those 920, three annotators 
+A1, A2, and A3 manage to formalize X, Y, and Z respectively.
+We take formalizations from annotator A1. 
+Next, we attempt to formulate claim structuring as a supervised learning problem. 
+Two basic approaches are considered: predicting components of the formalization then putting
+them together (\emph{molecule}) or predicting the entire formalization (\emph{atomic}). 
+Using components corresponds to a more realistic scenario, as it more
+faithfully reflects how the claim formalization is built manually. 
+
+Following the molecule approach, the formalized ontology claim can be broken
+down into four main components:
+\begin{itemize}
+	% TODO add mathematical notation from ontology section
+	\item \emph{modality} ($\mathit{MOD} \in \{\mathit{fact},
+		\mathit{good value}, \mathit{bad value}, \mathit{policy}\}$), 
+	\item \emph{count} ($\mathit{CNT} \in \{\mathit{unary},
+		\mathit{binary},  \mathit{ternary}\}$),
+	\item \emph{properties} ($\mathit{PR} \in \{\mathit{has\_antecedent},
+		\mathit{has\_declaration}, \mathit{implies}, \dots\}$)
+	\item \emph{domain individuals} ($\mathit{DI} \in \{\mathit{marijuana},
+		\mathit{legalized\_marijuana}, \mathit{mafia\_bankrupt},
+		\dots\}$)
+\end{itemize}
+Now, to construct a formalized claim, we use a exactly one (out of four
+possible) \emph{modality}, exactly one (out of three possible) \emph{count},
+one or more (up to three, out of 22 possible) \emph{properties}, and one
+or more (out of 82 possible) \emph{domain individuals} (one for each property). 
+We could have had negation as an extra component of the formalized claim, but
+since only properties may be negated, we construct the properties set $P$ as a
+union of properties and their negations: 
+$$
+P = \{\mathit{has\_antecedent}, 
+\mathit{negated\_has\_antecedent}, \mathit{implies}, \mathit{not\_implies}\, \dots\}
+$$
+
+Taking into consideration all possible combinations of components from
+annotator A1, 106 binary labels ($82 \cdot \mathit{DI} + 17 \cdot \mathit{PR} + 4\cdot
+\mathit{CNT} + 3 \cdot \mathit{MOD}$) can be assigned to a claim, from which a
+formalized claim can be constructed.  This means that there  exists an
+exponential ($2^{106}$) number of possible formalizations, a large number of
+which is invalid.  An invalid formalization example would involve both
+\texttt{has\_declaration} and \texttt{has\_antecedent} which is not allowed,
+since \texttt{has\_declaration} can only be assigned to a \texttt{unary} claim,
+whereas \texttt{has\_antecedent} can only be assigned to \texttt{binary} claim. 
 
 \begin{figure}
-\begin{tikzpicture}[node distance=1.5cm]
-\tikzstyle{lstm} = 
-[rectangle, minimum width=1cm, minimum height=0.5cm, text
-centered, draw=black, fill=red!10]
-\tikzstyle{hidden} = 
-[rectangle, minimum width=1cm, minimum height=0.5cm, text 
-centered, draw=black, fill=blue!10, rounded corners]
-\tikzstyle{embed} = 
-[trapezium, minimum width=1cm, minimum height=0.5cm, text 
-centered, draw=black, fill=gray!10]
-\tikzstyle{label} = 
-[minimum width=1cm, minimum height=0.5cm, text 
-centered, text width=1.5cm]
-\tikzstyle{dots} = 
-[minimum width=0.3cm, 
-minimum height=0.5cm, text 
-centered, text width=0.3cm]
-\tikzstyle{component} = 
-[minimum width=1cm, minimum height=0.5cm, text 
-centered, text width=3cm, rectangle, draw=black]
-\tikzstyle{concept} =
-[rectangle, minimum width=1cm, minimum height=0.5cm, text 
-centered, draw=black, fill=orange!10, rounded corners, text width=2.5cm]
-
-\node (lstm_1) [lstm] {};
-\node (lstm_2) [lstm, right of=lstm_1] {};
-\node (dots_1) [dots, right=0.5cm of lstm_2] {\scriptsize{\dots}};
-\node (hidden_1) [hidden, above=0.5cm of lstm_1] {};
-\node (hidden_2) [hidden, above=0.5cm of lstm_2] {};
-\node (dots_2) [dots, right=0.5cm of hidden_2] {\scriptsize{\dots}};
-
-\node (hidden_3) [hidden, above=0.5cm of hidden_1] {};
-\node (hidden_4) [hidden, above=0.5cm of hidden_2] {};
-\node (dots_3) [dots, right=0.5cm of hidden_4] {\scriptsize{\dots}};
-
-\node (B_lab) [above=0.3cm of hidden_3] {B};
-\node (I_lab) [above=0.3cm of hidden_4] {I};
-
-\node (trapez_1) [embed, above=0.5 cm of B_lab] {};
-\node (trapez_2) [embed, above=0.5 cm of I_lab] {};
-
-\draw ($(hidden_3.north west) + (-0.5, 0.9)$) rectangle ($(lstm_2.south east) + (1.2, -0.2)$);
-
-\node (word_1) [below right=2.5cm and 4cm of lstm_1] {\scriptsize{marijuana}};
-\node (word_2) [below right=2.5cm and 4cm of lstm_2] {\scriptsize{smoking}};
-\node (word_3) [right of=word_2] {\scriptsize{is\textcolor{white}{jg}}};
-\node (word_4) [right of=word_3] {\scriptsize{harmful\textcolor{white}{jg}}};
-% \node (word_0) [left of=word_1] {\scriptsize{\dots}};
-% \node (word_5) [right of=word_4] {\scriptsize{\dots}};
-\node (word_m1) [left of=word_1] {\scriptsize{claims}};
-\node (word_m2) [left of=word_m1] {\scriptsize{science}};
-
-\node (w_1) [embed, above=0.7cm of word_1] {};
-\node (w_2) [embed, above=0.7cm of word_2] {};
-\node (dots_word1) [dots, right=0.8cm of w_2] {\scriptsize{\dots}};
-\node (dots_word4) [dots, right=0.8cm of dots_word1] {\scriptsize{\dots}};
-\node (dots_word2) [dots, left=0.7cm of w_1] {\scriptsize{\dots}};
-\node (dots_word3) [dots, left=1cm of dots_word2] {\scriptsize{\dots}};
-
-\node (lstm_3) [lstm, above right=-1 cm and 3.5cm of hidden_4] {};
-\node (lstm_4) [lstm, right of=lstm_3] {};
-\node (hidden_5) [hidden, above=0.5cm of lstm_3] {};
-\node (hidden_6) [hidden, above=0.5cm of lstm_4] {};
-\node (hidden_7) [hidden, above=0.5cm of hidden_5] {};
-\node (hidden_8) [hidden, above=0.5cm of hidden_6] {};
-\node (lstm2_dots_1) [dots, right=0.5cm of lstm_4] {\scriptsize{\dots}};
-\node (lstm2_dots_2) [dots, right=0.5cm of hidden_6] {\scriptsize{\dots}};
-\node (lstm2_dots_3) [dots, right=0.5cm of hidden_8] {\scriptsize{\dots}};
-
-%\node (struc) [above=0.8cm of hidden_8] {};
-\node (c_marijuana) [concept, above left=1.25 cm and 0.5cm of hidden_8] {marijuana consumption };
-\node (c_health) [concept, above right=1cm and 0.5cm of hidden_8] {negative health problems};
-\draw[-latex] (hidden_8) -- ($(c_marijuana.east) + (1, 0) $);
-
-\draw[-latex, red] (c_marijuana) -- (c_health) node[midway, above] {causes};
-
-\draw ($(hidden_7.north west) + (-0.5, 0.6)$) rectangle ($(lstm_4.south east) + (1.2, -0.2)$);
-%\draw ($(hidden_7.north west) + (-0.3, 0.6)$) rectangle ($(lstm_4.south east) + (0.3, -0.6)$);
-% 
-% \node (lstm_5) [lstm, right=1 cm of lstm_4] {};
-% \node (lstm_6) [lstm, right of=lstm_5] {};
-% \node (hidden_9) [hidden, above=0.5cm of lstm_5] {};
-% \node (hidden_10) [hidden, above=0.5cm of lstm_6] {};
-% \node (hidden_11) [hidden, above=0.5cm of hidden_9] {};
-% \node (hidden_12) [hidden, above=0.5cm of hidden_10] {};
-% 
-% \draw ($(hidden_11.north west) + (-0.3, 0.6)$) rectangle ($(lstm_6.south east) + (0.3, -0.6)$);
-% 
-% \node (lstm_7) [lstm, right=1 cm of lstm_6] {};
-% \node (lstm_8) [lstm, right of=lstm_7] {};
-% \node (hidden_13) [hidden, above=0.5cm of lstm_7   ] {};
-% \node (hidden_14) [hidden, above=0.5cm of lstm_8   ] {};
-% \node (hidden_15) [hidden, above=0.5cm of hidden_13] {};
-% \node (hidden_16) [hidden, above=0.5cm of hidden_14] {};
-% 
-% \draw ($(hidden_15.north west) + (-0.3, 0.6)$) rectangle ($(lstm_8.south east) + (0.3, -0.6)$);
-
-% labels of NN parts
-\node (label_word_pos) [label, left=0.5cm of dots_word3] {\scriptsize{word/POS embeddings}};
-\node (label_bilstm1) [label, left=0.5cm of lstm_1] {\scriptsize{BiLSTM}};
-\node (label_hidden1) [label, left=0.5cm of hidden_1] {\scriptsize{hidden}};
-\node (label_softmax1) [label, left=0.5cm of hidden_3] {\scriptsize{softmax}};
-\node (bio_embeddings) [label, left=0.5cm of trapez_1] {\scriptsize{\texttt{BIO} embeddings}};
-
-\node (label_bilstm1) [label, right=0.5cm of lstm2_dots_1] {\scriptsize{BiLSTM}};
-\node (label_hidden1) [label, right=0.5cm of lstm2_dots_2] {\scriptsize{hidden}};
-\node (label_softmax1) [label, right=0.5cm of lstm2_dots_3] {\scriptsize{softmax}};
-
-%\node (label_bilstm2) [label, left=0.5cm of lstm_3] {\scriptsize{BiLSTM}};
-%\node (label_hidden2) [label, left=0.5cm of hidden_] {\scriptsize{hidden}};
-%\node (label_softmax2) [label, left=0.5cm of hidden_3] {\scriptsize{softmax}};
-
-\node (bio_lstm) [component, above left=0.2cm and 0.4cm of hidden_3] 
-{\scriptsize{\textbf{Claim Segmentation}}};
-
-\node (struc_lstm) [component, above right=0.1cm and 1.1cm of hidden_8] 
-{\scriptsize{\textbf{Claim Structuring}}};
-
-%text width=4cm,minimum height=6cm,minimum width=10cm
-
-% connections
-% \draw[-latex] (trapez_1) .. controls +(up:1.5cm) and +(down:1cm) ..
-% node[above, sloped] {} (lstm_3);
-% \draw[-latex] (trapez_2) .. controls +(up:1.5cm) and +(down:1cm) ..
-% node[above, sloped] {} (lstm_4);
-% 
-% \draw[-latex] (trapez_1) .. controls +(up:1.3cm) and +(down:2cm) ..
-% node[above, sloped] {} (lstm_5);
-% \draw[-latex] (trapez_2) .. controls +(up:1.3cm) and +(down:2.5cm) ..
-% node[above, sloped] {} (lstm_6);
-% 
-% \draw[-latex] (trapez_1) .. controls +(up:1cm) and +(down:3cm) ..
-% node[above, sloped] {} (lstm_7);
-% \draw[-latex] (trapez_2) .. controls +(up:1cm) and +(down:3.5cm) ..
-% node[above, sloped] {} (lstm_8);
-
-% lstm connections
-\draw[-latex] (lstm_1) -- (hidden_1);
-\draw[-latex] (lstm_2) -- (hidden_2);
-\draw[-latex] (hidden_1) -- (hidden_3);
-\draw[-latex] (hidden_2) -- (hidden_4);
-\draw[-latex] (hidden_3) -- (B_lab);
-\draw[-latex] (hidden_4) -- (I_lab);
-
-%\draw[-latex] (hidden_8) -- (struc);
-
-% \draw[-latex] (lstm_1) .. controls +(up:1.1cm) and +(left:0.9cm) .. node[above, sloped] {} (lstm_2);
-% \draw[-latex] (lstm_2) .. controls +(up:1.1cm) and +(left:0.7cm) .. node[above, sloped] {} (dots_1);
-
-\draw[>=latex, <->] (lstm_1) -- (lstm_2);
-\draw[>=latex, <->] (lstm_2) -- (dots_1);
-
-\draw[>=latex, <->] (lstm_3) -- (lstm_4);
-\draw[>=latex, <->] (lstm_4) -- (lstm2_dots_1);
-
-\draw[-latex, dashed] (trapez_1) .. controls +(5cm, 3cm) and +(-3.5cm, -5cm) .. node[above, sloped] {} (lstm_3);
-\draw[-latex, dashed] (trapez_2) .. controls +(5cm, 3cm) and +(-4.3cm, -5cm) .. node[above, sloped] {} (lstm_4);
-
-\draw[-latex] (w_1) .. controls +(up:1cm) and +(down:1cm) .. node[above, sloped] {} (lstm_1);
-\draw[-latex] (w_2) .. controls +(up:1cm) and +(down:1cm) .. node[above, sloped] {} (lstm_2);
-
-\draw[-latex] (w_1) .. controls +(up:1cm) and +(down:1cm) .. node[above, sloped] {} (lstm_1);
-\draw[-latex] (w_2) .. controls +(up:1cm) and +(down:1cm) .. node[above, sloped] {} (lstm_2);
-
-\draw[-latex] (w_1) .. controls +(1cm, 1cm) .. node[above, sloped] {} (lstm_3);
-\draw[-latex] (w_2) .. controls +(1cm, 1cm) .. node[above, sloped] {} (lstm_4);
-
-%\draw[-latex] (w_1) -- (lstm_1);
-%\draw[-latex] (w_2) -- (lstm_2);
-\draw[-latex] (word_1) -- (w_1);
-\draw[-latex] (word_2) -- (w_2);
-\draw[-latex] (B_lab) -- (trapez_1);
-\draw[-latex] (I_lab) -- (trapez_2);
-
-\draw[-latex] (lstm_3) -- (hidden_5);
-\draw[-latex] (lstm_4) -- (hidden_6);
-\draw[-latex] (hidden_5) -- (hidden_7);
-\draw[-latex] (hidden_6) -- (hidden_8);
-
-\end{tikzpicture}
+	\input{joint_tikz.tex}
 	\caption{Joint BiLSTM model for both claim segmentation and claim 
 	structuring. }
 	\label{fig:joint_model}
 \end{figure}
 
-- Finally, we present a joint model which does claim segmentation 
-and claim structuring in one step \\
-- inspired by \citep{miwa2016end} which chain LSTM cells and use their intermediate outputs
-to jointly perform named entity extraction and relation classification between entities \\
-- we adopt a similar approach, where we have a shared BiLSTM layer which 
-gets words with respective POS tags as input \\
-- first it runs through a shared LSTM which outputs one of the \texttt{BIO} encodings
-for each word \\
-- these tags are then used to construct segments (claims) from which are then structured \\
-- a chained lstm is then used to classify parts of the structure \\
-- labels that are outputted from the shared LSTM and input for the chain are set
-as an embedding layer \\
-- the model is outlined in figure~\ref{fig:joint_model} \\
+\section{Models}
+\label{sec:claim_struc_models}
 
-- we experiment with both pretrained word embeddings and without \\
-- we also try fine tuning and not \\
+We wish to build models for claim structuring. The models should produce 
+formalized claims from text. 
+Three model setups are proposed: independent classifiers, 
+chain classification, and a joint model. 
 
-\section{Experiments and Discussion}
+\paragraph{Independent classifiers (IND). }
+As a baseline approach, we use independent SVMs to predict components
+For SVM features, we use distributed word representations
+(fastText\footnote{https://fasttext.cc/}
+and word2vec\footnote{https://code.google.com/archive/p/word2vec/}
+pretrained vectors).
+To train each independent model, we use $5 \times 3$ nested-cross validation.
+We experiment with in both the \emph{atomic} and \emph{molecular} approach.
 
-- joint model has problems when recognizing bad segments \\
-- we attempt to set lower learning rates for layers that are more shared, 
-such as the initial shared LSTM, but to no significant effect \\
+\paragraph{Chain classification (CC). }
+To take advantage of formalization component dependencies, we adopt the chain
+classification approach, as described in
+section~\ref{sec:chain_classification}.
+First, to verify this assumption we build a chain classifier which uses gold 
+labels as input in each prediction.  
+This yields performances of 
+% TODO add performance
+This promising performance is more than enough reason to adopt the
+chain classification approach for claim formalization. 
+We frame all component classifications as multilabel classification 
+(generalizing even the multiclass count and modality prediction problems).
+SVMs models are then chained such that the prediction of one SVM is added as
+input to the following SVM model, until all labels are predicted. We randomize 
+the ordering of labels which are predicted.
+Additionally, to alleviate the influence of randomization, we 
+ensemble chain classifiers (ECC) using a majority vote. 
+It is sensible to use the chain classification model only in the
+\emph{molecular} setting. 
+To train the model, we use $5 \times 3$ nested-cross validation. 
+
+\paragraph{Joint model (J). } 
+Apart from dependencies in the claim structure, we wish to investigate whether
+we can structure claims which aren't gold claims.  To that end, we present a
+joint model which does claim segmentation (details described in
+chapter~\ref{chap:claim_structuring}) and claim structuring in one step. We
+draw inspiration from \citep{miwa2016end} where they use multiple consecutive
+LSTM cells to predict multiple outputs.  We adopt a similar approach, where we
+two sets of BiLSTM layers: first (\texttt{BiLSTM-seg}), to predict claims, and
+second (\texttt{BiLSTM-struc}) to predict claim formalization components.  The
+\texttt{BiLSTM-struc} layer is a shared, as we wish to update its parameters
+when upon incorrect formalization in addition to incorrect claim segmentation.
+The input of the \texttt{BiLSTM-seg} layer is a sequence of tokens and their
+respective part-of-speech (POS) tags \citep{brown1957linguistic} paired \texttt{BIO}
+tags (explained in section~\ref{sec:claim_seg_problem}). The output of the
+\texttt{BiLSTM-seg} is a set of claims. Then each claim is formalized via the
+\texttt{BiLSTM-struc}.  The model is outlined in figure~\ref{fig:joint_model}. 
+We use three sets of embeddings: word, POS embeddings, and \texttt{BIO} tag
+embeddings. The joint model is applied for both the \emph{molecular} and 
+\emph{atomic} setup. 
+% TODO add learning
+We also experiment with both pretrained word embeddings. 
+
+\section{Experiments}
+\label{sec:claim_struc_experiment}
+
+\begin{table}
+	\centering
+\renewcommand{\arraystretch}{2}%
+	\begin{tabular}{p{3cm} c c c c  c  c c c  @{\hspace{1.5em}}c@{}  @{\hspace{1em}}c@{}  }
+	\toprule
+		\multirow{2}{*}{Model / Setup}
+		& \multicolumn{2}{c}{\texttt{MOD}} 
+		& \multicolumn{2}{c}{\texttt{CNT}} 
+		& \multicolumn{2}{c}{\texttt{PR}}
+		& \multicolumn{2}{c}{\texttt{DI}} 
+		& \multicolumn{2}{c}{\texttt{CL}}
+		\\
+
+		& OR  & PA  & OR  & PA  & OR  & PA & OR  & PA &  OR & PA \\
+		\midrule
+
+		MAJ & & & & & & & & & & \\
+		IND & & & & & & & & & & \\		
+		CC & & & & & & & & & & \\
+		ECC & & & & & & & & & & \\
+		J-BiLSTM & & & & & & & & & & \\
+
+		\bottomrule
+	\end{tabular}
+	\caption{F1-score comparison between 
+	the independent SVM (IND), majority classifier (MAJ), chain classification (CC), 
+	ensemble chain classification (ECC), and joint model (J)
+	in the task of 
+	claim structuring from both original (OR) and paraphrased text claims (PA)
+	using the \emph{molecular} approach. 
+	Results are compared on individual components
+	across modalities \texttt{MOD}, counts (\texttt{CNT}), 
+	properties (\texttt{PR}), and 
+	domain individuals (\texttt{DI}). Finally, predictions are assembled into a 
+	formalized claim and compared against the gold formalized claims (\texttt{CL}).
+	}
+	\label{tab:claim_struc_per_component}
+\end{table}
+
+
+We perform two sets of experiments. First, we wish to explore models
+that predict the formalization structure on a per-component basis (structure
+prediction). 
+Second, we investigate  
+
+\paragraph{Structure prediction feasibility. }
+This approach is more realistic, as it would the number of possible
+formalizations grows exponentially, we can expect the distribution of observed
+formalizations is long tailed, therefore it is not feasible to expect to
+predict infrequently seen formalizations.
+Table~\ref{tab:claim_struc_per_component} shows macro averaged F1-scores for
+the majority classifiers (MAJ), independent SVM classifiers (IND), chain
+classifiers (CC), ensemble chain classifiers (ECC), and the joint segmentation
+and structuring BiLSTM model (J-BiLSTM).  We experiment with both original
+source claims (as they were written by the authors) and paraphrased claims (as
+they were transcribed by annotators).
+Models are trained to predict components, which are then assembled together to 
+constitute a formalized claim, which is compared against the gold formalized claim. 
+The baseline is set using the majority 
+class , we use the majority class for all claim formalization individual 
+components. 
+The joint model might not produce the same number claim formalizations, 
+so we evaluate on a post level and average across all posts. 
+Additionally, we could have regularized the models by preventing invalid
+formalizations perhaps in the form of constraint programming, but leave this
+for future work. 
+
+The results suggest that predicting components is a somewhat feasible tasks,
+but predicting a correct combination of components seems very difficult.  The
+most problematic proved predicting the correct property (\texttt{PR}), with
+model X achieving the best performance of , which is still considered low. 
+% TODO insert rest of comments on the results
+
+% joint model analysis
+In the joint model setup, we set the learning rate in all layers. 
+We also experiment with setting lower learning rates for shared layers,
+but to no significant performance boost. 
+Looking into the joint model outputs, we notice that the formalization predictions
+are particularly bad when predicted claims are far from sensible. 
+
+\begin{table}
+	\centering
+%\renewcommand{\arraystretch}{2}%
+	\begin{tabular}{p{3cm} c c c c }
+	\toprule
+		\multirow{2}{*}{Model / Setup}
+		& \multicolumn{2}{c}{\texttt{AT}}
+		& \multicolumn{2}{c}{\texttt{MO}}
+		\\
+		& OR  & PA  & OR  & PA \\
+		\midrule
+
+		MAJ & & & &  \\
+		IND & & & & \\		
+		J-BiLSTM & & & & \\
+
+		\bottomrule
+	\end{tabular}
+	\caption{Claim segmentation
+	F1-score using the 
+	\emph{atomic} (\texttt{AT}) and \emph{molecular} (\texttt{MO})
+	approach for original (OR) and paraphrased (PA) claims. 
+	}
+	\label{tab:claim_struc_atomic_molecular}
+\end{table}
+
+\paragraph{Expansion vs. structure prediction. } Even though the
+\texttt{molecular} approach is more realistic setup, we explore now compare it
+to the \texttt{atomic} setup, where we each claim formalization a label to 
+train models to predict the claim. 
+Results are listed in table~\ref{tab:claim_struc_atomic_molecular}.
+% TODO compare results in general 
+In general, if we compare the best \texttt{molecular} approach and
+the best \texttt{atomic} approach \dots
+% TODO compare results of assembly vs. 
+
+All experiments clearly show that using paraphrases proved useful for
+\textbf{all} approaches. This clearly suggests that claim paraphrases
+proved useful for both claim understanding and for claim structuring. 
+We hypothesize this is mostly due to the reduction of noisyness and 
+vagueness of claims. 
 
 % TODO some conclusion on the joint model vs. no joint model
-- in the end, we conclude that the claim structuring is a difficult task, 
+
+\section{Conclusion}
+\label{sec:claim_struc_conclusion}
+
+We conclude that claim structuring is in general a difficult problem to solve, 
+but with the help of structured approaches can achieve decent performance 
+of X.
+%TODO give some decent number .
+Interestingly to note, results using paraphrased claims are significantly better across all 
+models on average by F1-score points, which shows claim paraphrases make it
+easier to process claims for both humans and machines (each in their own way). 
+% TODO use paraphrased number - original average across all 
+
+In the next chapter, we will explore the benefits of using formalized claims to
+demonstrate the example argumentation analysis one can perform using formalized
+claims. 
+
