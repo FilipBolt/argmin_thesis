@@ -45,6 +45,8 @@
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{algpseudocode}
+\usepackage{algorithm}
+\renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}} 
 \usepackage{bookmark}
 % for making examples of comments
 \usepackage{comment}
@@ -86,7 +88,11 @@
 % for tables in clustering section
 \newcommand{\str}[1]{{\scriptsize\emph{#1}}}
 
+% pro and con colors
+\newcommand{\pro}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\con}[1]{\textcolor{red}{#1}}
 
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
 
 \usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{setspace} 

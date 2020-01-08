@@ -4,19 +4,19 @@
 % TODO think about having an example with equivalent claims 
 %expressed differently
 
-We will start analyzing discussions by trying to find the discussions' most prominent 
-claims.
+We will start analyzing discussions by trying to find the discussions' most
+prominent claims.
 When discussing a topic, users express claims to back up their opinion. 
 Recognizing claims in text is a challenge in online discussions due to 
 dealing with noisy, vague, and implicit text. 
-Users use claims are to form arguments. 
+Users use claims to form arguments. 
 Arguments can then lead to more complex 
 argumentation structures, such as argumentation schemes \citep{walton2008argumentation}. 
-But, forming arguments from claims and generally going above the claim level of
+Forming arguments from claims and generally going above the claim level of
 argumentation abstraction is beyond the scope of this thesis. 
 As a first step of argumentation analysis, we wish to explore how prominent
 claims can be detected using standard methods which combine natural language
-processing and unstructured machine learning. 
+processing and machine learning. 
 
 In this chapter, we will first investigate on how to find 
 prominent claim candidates from text, considering the variability on how 
@@ -36,22 +36,22 @@ Finally, we will conclude in section~\ref{sec:argclu_conclusion}.
 We conduct our study on the dataset of users' posts compiled by \citet{hasan2014you}. 
 The dataset is acquired from two-side online debate forums on four topics: 
 ``Obama'', ``Marijuana'', ``Gay rights'', and ``Abortion''.
-Each post is assigned a stance label (\textit{\textcolor{green}{pro}} or 
-\textit{\textcolor{red}{con}}), provided
-by the author of the post. 
+Each post is assigned a stance label (\pro{pro}) or (\con{con}), provided by
+the author of the post. 
 Furthermore, each post is split up into sentences and each sentence is manually labelled
 with one prominent claim from a predefined set of prominent claims 
 (different for each topic). 
-All sentences are argumentative, non-argumentative sentences were removed from the 
-dataset (ratio of argumentative sentences topically varies from  20\% to 43.7\%). 
+All sentences are argumentative, non-argumentative sentences were removed from
+the dataset (ratio of argumentative vs. non-argumentative sentences topically
+varies from  20\% to 43.7\%). 
 \citet{hasan2014you} report high levels of inter-annotator agreement (between
 0.61 and 0.67 $\kappa$). 
 Additionally, sentences with rarely occuring prominent claims ($<2\%$) were removed. 
 In the end, the dataset contains 3104 sentences (``Abortion'' 814, ``Gay rights'' 824, 
 ``Marijuana'' 836, and ``Obama'' 630) and 47 different prominent claims
-(25 \textit{\textcolor{green}{pro}} and 22 \textit{\textcolor{red}{con}}, an
-average of 12 prominent claims per topic).  Majority of sentences (2028
-sentences) are labelled with \textit{\textcolor{green}{pro}} prominent claims.
+(25 \pro{pro}) and 22 \con{con}, an
+average of 12 prominent claims per topic). The majority of sentences (2028
+sentences) are labelled with \pro{pro} prominent claims.
 The average sentence length is 14 words. 
 
 \section{Model}
@@ -59,22 +59,21 @@ The average sentence length is 14 words.
 
 We use two approaches to measuring similarity of claims. 
 %\paragraph{Vector space similarity. } 
-We represent sentences as vectors in a semantic space. 
-We use two represetations 
+Sentences are represented as vectors in a semantic space
+using one of two represetations:
 \begin{enumerate} 
 \item a bag-of-word (BoW) vector, weighted
 by inverse sentence frequency and 
 \item a distributed representation based on the skip-gram model
 	\citep{mikolov2013distributed}. 
 \end{enumerate}
-These methods of representing sentences are explained in more detail in 
-section~\ref{sec:word_representations}. 
-We use BoW as it has been shown to be a powerful baseline for semantic similarity 
-\citep{ramage2009random}. 
+We use BoW as it has been shown to be a powerful baseline for semantic
+similarity \citep{ramage2009random}. 
 Using weighing by inverse sentence frequency is similar to the motivation 
-of inverse-document frequency in tf-idf (described in section~\ref{sec:word_representations} and
-equation~\ref{eq:idf}), which is that more frequently used words are less
-specific to a prominent claim, thus contributing less to similarity. 
+of inverse-document frequency in tf-idf (tf-idf is described in
+section~\ref{sec:tf-idf} and by Eq.~\ref{eq:idf}). We expect tf-idf 
+to model our intuition that frequently used words are less
+specific to a prominent claim. 
 Distributed representations were chosen since they represent individual words 
 very well (as shown in \citep{mikolov2013efficient, mikolov2013distributed}).
 To build a sentence vector, we simply sum up the distributed vector representations 
@@ -109,11 +108,13 @@ $$
 where $\mathit{sim}(s_1, s_2)$ is a method that returns the STS similarity
 between sentences $s_1$ and $s_2$. 
 As for linkage, we use complete linkage and Ward's method \citep{ward1963hierarchical}. 
-We do not cluster \textit{pro} and \textit{con} sentences separately. 
+We do not cluster \pro{pro} and \con{con} sentences separately. 
 This allows us to investigate to which extent stance can be captured by 
 semantic similarity (and is also more realistic). 
 
 \section{Claim Cluster Analysis}
+
+\todo{tu sam stao}
 \label{sec:argclu_analysis}
 
 Using data from online discussions presented in the previous section, 

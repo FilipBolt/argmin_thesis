@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+
+\newcommand{\segmentexample}{
+
+	\begin{tikzpicture}[node distance=1mm]
+	\node (s1) {Marijuana is believed to be a stepping-stone drug};
+	\node (s234) [right=of s1]{that can eventually lead to additiction to};
+	\node (s2) [right=of s234]{heroin};
+	\node (s3) [right=of s2]{cocaine};
+	\node (o) [right=of s3] {and};
+	\node (s4) [right=of o] {other harder drugs.};
+
+	\node (s1lab) [below=of s1] {Segment 1};
+	\node (s2lab) [below=of s2, xshift=-2cm, yshift=-2.5mm] {Segment 2};
+	\node (s3lab) [below left=1cm of s3, xshift=1mm, yshift=-1mm] {Segment 3};
+	\node (s4lab1) [below=of s234, xshift=-0.7cm, yshift=1mm] {Segment 4};
+	\node (s4lab2) [below=of s4] {Segment 4};
+	\draw [-]
+	($(s1.east) - (0.5mm, 0)$)
+	-- ++(0, -.2)
+	-| ($(s1.west) $);
+
+	% S4 segment
+	\draw [-]
+	($(s234.east) $)
+	-- ++(0, -0.2)
+	-| ($(s234.west) - (0, 0) $);
+
+	% S2 segment
+	\draw [-]
+	($(s234.west) - (0.5mm, 0)$)
+	-- ++(0, -0.6)
+	-| ($(s2.east) $);
+
+	% S3 segment
+	\draw [-]
+	($(s234.west) - (1mm, 0)$)
+	-- ++(0, -1.0)
+	-| ($(s3.east) $);
+
+	% other S4 segment
+	\draw [-]
+	($(s4.west) $)
+	-- ++(0, -.2)
+	-| ($(s4.east) $);
+\end{tikzpicture}
+}
+
+\begin{document}
+
+\begin{figure}
+\scriptsize
+\segmentexample
+\end{figure}
+\end{document}
