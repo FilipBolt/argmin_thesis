@@ -47,6 +47,8 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}} 
+\numberwithin{algorithm}{chapter}
+
 \usepackage{bookmark}
 % for making examples of comments
 \usepackage{comment}
@@ -203,6 +205,9 @@
 % references in words, chapter one opposed to chapter 1
 \usepackage{fmtcount,refcount}
 
+% i don't want splitting footnotes
+\interfootnotelinepenalty=10000
+
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -239,6 +244,7 @@
 \include{keytechniques}
 
 \part{Unstructured argumentation mining of claims}
+\label{part:unstruc}
 
 \input{argclu.tex}
 
@@ -250,8 +256,6 @@
 \label{part:struc}
 
 \input{claim_segmentation.tex}
-
-\input{microstructures.tex}
 
 % microstructure vs. ontologies
 \input{formalizations.tex}

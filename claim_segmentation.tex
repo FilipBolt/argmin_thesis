@@ -1,44 +1,54 @@
 \chapter{Claim segmentation}
 \label{chap:claim_segmentation}
 
-Instead of dealing with entire posts as done in chapters~\ref{chap:argclu} and~\ref{chap:argrec}, 
-here we wish to first segment posts into \emph{atomic units
+In part~\ref{part:unstruc} of the thesis, we have explored unstructured
+approaches to solving argumentation mining problems. 
+The term unstructured describes the methods we used for claim clustering
+(chapter~\ref{chap:argclu}), prominent claim identification (chapter~\ref{chap:argrec}),
+and inferring implicit claims (chapter~\ref{chap:deriving_implicit}).
+Using unstructured approaches showed that determining implicit thoughts and
+opinions proved extremely difficult. Additionally, 
+when implicit claims were correctly established (mostly through some downstream
+task), there was no way to 
+derive the explanation behind the used inference. Because of this, we
+turn to structured approaches to argumentation mining. 
+We start by breaking down the claim into sub-claims to 
+get a better understanding how claims are formed. 
+Similarly to previous chapters, we work with argumentative comments from 
+online discussions.
+
+First, we wish to split the user discussion comments into \emph{atomic units
 that convey a single thought} -- \textbf{claims}.
-The term claim is used to refer to an \emph{elementary argumentative component}, 
+The term claim is used to refer to an elementary \emph{argument component}, 
 which are a generalization of elementary discourse units
 \citep{winter1982towards, givon1983topic, polanyi1996linguistic}
 (argumentative units are 
-explained in subsection~\ref{subsec:arg_comp_ext}).  Claims as
-defined here are not to be confused with claims from Toulmin or Freeman's
-argumentation model. Splitting text into argumentative claims is important
+explained in subsection~\ref{subsec:arg_comp_ext}). Claims as
+defined here are not to be confused with claims from Toulmin's or Freeman's
+argument model. Splitting text into argumentative claims is important
 because of two main reasons. 
 First, non-argumentative content is discarded as it does not 
 make statements relevant to the topic
-only (even though sometimes that can prove useful as shown by 
+(even though sometimes that can prove useful as shown by 
 \citep{madnani2012identifying}).
 Second, the process of claim segmentation results in claims, which are the
 basis of subsequent argumentation analysis. Extracted claims can then be related to each
-other (i.e. \emph{support} or \emph{attack} relations in Freeman's model),
+other (i.e. \pro{support} or \con{attack} relations in Freeman's model),
 further categorized to
 fit an argument model (i.e.~claims are classified into warrants or rebuttals
 in the Toulmin argument framework), directly analyzed (i.e. clustered as
 done in chapter~\ref{chap:argclu}), or structured (i.e.~as microstructures or
 ontological formalizations as explained in chapter~\ref{chap:formalization}).
 
-In this chapter we will deal with claim segmentation. First, we will 
-describe the dataset of claims in section~\ref{sec:claim_seg_data}. Next, we
-will explore different options to formulate the problem of claim segmentation 
-in section~\ref{sec:claim_seg_problem}. After formalizing the claim segmentation problem, 
-we will propose models to solve the claim segmentation problem in section~\ref{sec:claim_seg_model}.
-The proposed models will be evaluated in section~\ref{sec:claim_seg_experiment}. 
-Finally, we will conclude with section~\ref{sec:claim_seg_conclusion}. 
-
-%The \textbf{claim segmentation task} corresponds to the task of argumentative component
-%extraction, more specifically argumentative boundary detection, which is
-%explained in subsection~\ref{subsec:arg_comp_ext}. 
-
-% TODO give intro to motivate structure approach
-% outline steps of structured approach
+This chapter introduces structured argumentation mining of claims with claim
+segmentation. First, we  describe the dataset of claims in
+section~\ref{sec:claim_seg_data}. Next, we will explore different options to
+formulate the problem of claim segmentation in
+section~\ref{sec:claim_seg_problem}. After formalizing the claim segmentation
+problem, we propose models to solve the claim segmentation problem in
+section~\ref{sec:claim_seg_model}.  The proposed models are evaluated in
+section~\ref{sec:claim_seg_experiment}.  Finally, we conclude with
+section~\ref{sec:claim_seg_conclusion}. 
 
 \section{Data}
 \label{sec:claim_seg_data}
@@ -50,7 +60,7 @@ Finally, we will conclude with section~\ref{sec:claim_seg_conclusion}.
 {\footnotesize
 	\begin{tabular}{@{}p{0.2\linewidth} p{0.30\linewidth} p{0.30\linewidth} }
 \toprule
-\textbf{User post} & \textbf{Claim segment} & \textbf{Claim paraphrase}   \\
+\textbf{User comment} & \textbf{Claim segment} & \textbf{Claim paraphrase}   \\
 \midrule
 \multirow{3}{*}{\parbox{3cm}{
 		\emph{Men should fall in love with women that's why they where
@@ -71,18 +81,18 @@ Finally, we will conclude with section~\ref{sec:claim_seg_conclusion}.
  \bottomrule
 \end{tabular}}
 \end{center}
-\caption{An example of a user post segmented into three claim segments with
-	their correspoding paraphrase.}
+\caption{An example of a user comment segmented into three claim segments with
+	their corresponding paraphrase.}
 \label{tab:claim_seg_post_segments}
 \end{table*}
 
 We adopt the dataset of \citet{hasan2014you} which contains 
-user posts from online two-sided discussions on a number of issues. 
-We consider two topics: ``Gay Rights'' and 
-``Marijuana'' and 
-sample 100 posts (50 \textbf{pro} and 50 \textbf{con}) from each topic. 
+user comments from online two-sided discussions on a number of issues. 
+We consider two topics: ``\emph{Gay Rights}'' and 
+``\emph{Marijuana}'' and 
+sample 100 comments (50 \textbf{pro} and 50 \textbf{con}) from each topic. 
 For both topics, we hired trained annotators.
-First, annotators segment out claims from user posts.
+First, annotators segment out claims from user comments.
 Second, after segmenting out a claim, the annotators provide a paraphrased
 version of the claim.
 We assume that paraphrasing helps understanding of claims and will prove useful
@@ -91,43 +101,45 @@ in contextualizing claims.
 % Our work is similar to \citep{wyner2016working} who use a controlled language 
 % for paraphrasing claims. 
 
-Claim segmenting separates argumenative from non-argumentative content. 
-There are many ways a post can be segmented into claims in addition to being
+Claim segmenting separates argumentative from non-argumentative content. 
+There are many ways a comment can be segmented into claims in addition to being
 a number of ways to paraphrase a claim. 
 The ambiguity can be reduced by doing these two tasks jointly. 
-The end result paraphrased should be \emph{simplyfing claim paraphrases}: 
+The end result paraphrased should be \emph{simplifying claim paraphrases}: 
 paraphrases that provide the essence of claims devoid of 
-superflous words and phrases. 
+superfluous words and phrases. 
 To that end, we adopt nine paraphrasing principles: 
-\begin{enumdescript}
-\item[Argumentativeness] --- Only argumentative text should paraphrased;
-\item[Atomicity] --- A claim should convey a single thought; 
-\item[Authority] --- Experts in claims from expert opinion should be made
+\begin{enumdescript}[leftmargin=!,labelwidth=\widthof{\bfseries Argumentativeness bla}]
+\item[Argumentativeness] only argumentative text should paraphrased;
+\item[Atomicity] a claim should convey a single thought; 
+\item[Authority] experts in claims from expert opinion should be made
 	explicit in the paraphrase; 
-\item[Brevity] --- Paraphrases should keep only the relevant argumentative
+\item[Brevity] paraphrases should keep only the relevant argumentative
 	content; 
-\item[Canonicity] --- Canonical terms and phrases are preffered over idiomatic
+\item[Canonicity] canonical terms and phrases are proffered over idiomatic
 	language; 
-\item[Contextuality] --- Claims should be paraphrased by considering their
+\item[Contextually] claims should be paraphrased by considering their
 	local and topical context as well as their context; 
-\item[Declarativity] --- paraphrases should be in declarative form; 
-\item[Dereferencing] --- Pronouns and nominal references should be resolved; and
-\item[Explicitness] --- Only explicitly stated information should be
-	paraphrased, and not whatever might be implied by the claim 
+\item[Declarativity] paraphrases should be in declarative form; 
+\item[Dereferencing] pronouns and nominal references should be resolved; and
+\item[Explicitness] only explicitly stated information should be
+	paraphrased, and not whatever might be implied by the claim.
 \end{enumdescript}
-Unlike most previous approaches to argumentative component boundaries, we allow
-for both overlapping and discontiguous segments.  Full annotation guidelines
-are in appendix~\ref{sec:argseg_annotation}. The annotation for ``Gay Rights''
+Unlike most previous approaches to detecting argument component boundaries, we
+allow for both overlapping and discontiguous segments.  Full annotation
+guidelines
+are in appendix~\ref{sec:argseg_annotation}. The annotation for ``\emph{Gay Rights}''
 was carried out by one trained annotator and took 25 hours.
-The annotation for ``Marijuana'' was carried out by three annotators. 
-The 100 user posts yield 920 claim segments for ``Gay rights'', as did the 100 
-user posts in ``Marijuana''. 
-For the ``Gay Rights'' topic, the segments covered 79.6\% of the text, while the remaining
-20.4\% may be considered non-argumentative. The ``Marijuana'' topic contained 
+The annotation for ``\emph{Marijuana}'' was carried out by three annotators. 
+The 100 user comments yield 920 claim segments for ``\emph{Gay Rights}'', as did the 100 
+user comments in ``\emph{Marijuana}''. 
+For the ``\emph{Gay Rights}'' topic, the segments covered 79.6\% of the text,
+while the remaining 20.4\% may be considered non-argumentative. The
+``\emph{Marijuana}'' topic contained 
 more argumentative text, as 88.98\% of text is covered by argumentative 
 segments, while 11.02\% was annotated as non-argumentative. 
-Table~\ref{tab:claim_seg_post_segments} gives an example of a post from
-the ``Gay Rights'' topic split into segmented and paraphrased claims. 
+Table~\ref{tab:claim_seg_post_segments} gives an example of a comment from
+the ``\emph{Gay Rights}'' topic split into segmented and paraphrased claims. 
 
 % \noindent - dataset statistics \\
 % - how many examples are overlapping \\
@@ -136,6 +148,7 @@ the ``Gay Rights'' topic split into segmented and paraphrased claims.
 \label{sec:claim_seg_problem}
 
 \begin{table}
+\small{
 \centering
 \begin{tabular}{c| c c}
  i & $x_i$ & $Y_i$ \\
@@ -175,15 +188,41 @@ the ``Gay Rights'' topic split into segmented and paraphrased claims.
 23 & harder& $\{ 4 \} $\\
 24 & drugs& $\{ 4 \} $\\
 \end{tabular}
-\caption{An example post from the ``Marijuana'' topic. Each token of the post 
-	is assigned a set of labels. Segments $2, 3, 4$ overlap on tokens 10-17. 
-	Segments $3$ and $4$ are discontiguous.}
-\label{tab:multilabel_segment_example}
+}
+\caption{An example comment from the ``\emph{Marijuana}'' topic. Each token of
+	the comment is assigned a set of labels. Segments $2, 3, 4$ overlap on
+	tokens 10-17.  Segments $3$ and $4$ are discontiguous.}
+\label{tab:multi-label_segment_example}
 \end{table}
 
 
-\begin{figure}
-\scriptsize
+
+Now, since the dataset is defined, we will mathematically formalize this
+problem.  Let $\mathbf{x} = (x_1, \dots, x_N)$ represent a sentence of size $N$
+as a vector of tokens where the index $i$ represents the position of the token in
+the sentence.  Then $\mathbf{Y} = (Y_1, \dots, Y_N)$ is a vector where each
+element represents a set of labels.  Each $Y_i, i \in \{1, \dots, N\}$ is a set
+of labels corresponding to the token $x_i$ at index $i$. The \textbf{claim segmentation}
+problem is then defined as finding function $f$ that maps $\mathbf{x}$ to $\mathbf{Y}$.
+As an example, the
+comment (from the ``\emph{Marijuana}'' topic):
+\begin{quote}
+``\textit{Marijuana is believed to be a stepping-stone drug that
+can eventually lead to addiction to heroin, cocaine and other harder
+% TODO actually is 25 tokens
+drugs.}''
+\end{quote}
+ is tokenized into 24 tokens. It contains three segments: 
+\begin{enumerate}[label=(\arabic*)]
+\item ``\emph{Marijuana is believed to be a stepping-stone drug}'', 
+\item ``\emph{that can eventually lead to addiction to heroin,}'',
+\item ``\emph{that can eventually lead to addiction to cocaine}'' and
+\item ``\emph{that can eventually lead to other harder drugs}''.
+\end{enumerate}
+
+\begin{figure}[t]
+	\centering
+\tiny
 \begin{tabular}{l | ccccccc cccccccc ccc ccccc}
 	& Nothing& can& bring& peace& to& this& world 
 &Its& a& great& idea& to& try& and& push& 
@@ -209,66 +248,56 @@ for& world& peace
 	& 1 & 1 & 1 & 1 & 1 \\
 
 \end{tabular}
-	\caption{Binary relevance Multilabel (BR) and \texttt{BIO} labelling of post with three segments: 
+	\caption{Binary relevance Multi-label (BR) and \texttt{BIO} labelling of comment with three segments: 
 	``\textit{Nothing can bring peace to this world}'', 
 	``\textit{Its a great idea to try and push for world peace}'', and
 	``\textit{but it will never happen}''. 
 }
-\label{fig:segment_example_bio_multilabel}
+\label{fig:segment_example_bio_multi-label}
 \end{figure}
 
-Now, since the dataset is defined, we will mathematically formalize this
-problem.  Let $\mathbf{x} = (x_1, \dots, x_N)$ represent a sentence of size $N$
-as a vector of tokens where the index represents the position of the token in
-the sentence.  Then $\mathbf{Y} = (Y_1, \dots, Y_N)$ is a vector where each
-element represents a set of labels.  Each $Y_i, i \in \{1, \dots, N\}$ is a set
-of labels correspoding to the token $x_i$ at position $i$. 
-As an example, the
-post (comment) ``\textit{ Marijuana is believed to be a stepping-stone drug that
-can eventually lead to addiction to heroin, cocaine and other harder
-% TODO actually is 25 tokens
-drugs.}'' is tokenized into 24 tokens with respective $X$ and $Y$ shown in
-table~\ref{tab:multilabel_segment_example}. 
-Mapping $x$ to $Y$ can be framed as multilabel classification since
-each $y \in Y$ can contain up to $N$ labels, yielding a total of $2^{N}$ 
+Table~\ref{tab:multi-label_segment_example}
+shows $\mathbf{x}$ and $\mathbf{Y}$ of those tokens. 
+Mapping $\mathbf{x}$ to $\mathbf{Y}$ can be framed as multi-label classification since
+each $y \in \mathbf{Y}$ can contain up to $N$ labels, yielding a total of $2^{N}$ 
 possible combinations per element. 
-This problem can now be framed as multilabel classification 
-(solving multilabel classification problems is described in section
+We frame this problem as multi-label classification 
+(solving multi-label classification problems is described in section
 \ref{sec:chain_classification}). 
-One option to approach the multilabel classification setup is to apply the
-binary relevance (BR) setup which requires searching through an exponential
-number of possible solutions. 
-The third row of figure~\ref{fig:segment_example_bio_multilabel} shows how a
-multilabel labeling of segments would be on a post from the ``Marijuana''
-topic. 
+One option to approach the multi-label classification setup is to apply the
+binary relevance (BR) setup, but binary relevance requires searching through
+an exponential number of solutions. 
+The last three rows  of
+Fig.~\ref{fig:segment_example_bio_multi-label} show BR labeling of
+the segments for the example comment. 
 
-Since it has proved inefficient to design algorithms
-that use the binary relevance to frame multilabel classification 
-problems, various other approaches have been
+As an alternative to inefficient BR labeling to frame multi-label classification
+in the context of sequence prediction, various other approaches have been
 explored. 
 Extracting sequences has been investigated in information extraction, 
-with problems of shallow parsing \citep{sha2003shallow} and named entity
-recognition \citep{nadeau2007survey} standing out in particular.  \citet{sha2003shallow}
+more specifically in the context of 
+shallow parsing \citep{sha2003shallow} and named entity
+recognition \citep{nadeau2007survey}. \citet{sha2003shallow}
 employed \texttt{BIO} encoding for shallow parsing and used conditional random
 fields in one of the first structured prediction approaches in information
 extraction. \texttt{BIO} labels indicate whether the word is outside a segment
 (\texttt{O}), starts a segment (\texttt{B}) or continues a segment
 (\texttt{I}). In order to apply \texttt{BIO} labeling, the final segments
 \emph{must} be non-overlapping and contiguous. 
-Row 2 of figure~\ref{fig:segment_example_bio_multilabel} shows a
-post from the ``Marijuana'' topic 
+Row two in Fig.~\ref{fig:segment_example_bio_multi-label} shows a
+comment from the ``Marijuana'' topic 
 containing three segments labeled with \texttt{BIO} tags. 
-Using \texttt{BIO} tags instead of applying the multilabel approach
+Using \texttt{BIO} tags instead of applying the multi-label approach
 simplifies solving the sequence extraction by 
 having to predict only a single label per token, which makes the number of solutions 
 for $x_i \in \mathbf{x}$ go down from exponential ($Y_i \in \{\emptyset, \{1\}, 
 \{2\}, \{1, 2\}, 
 \dots, \{1, \dots, N\}\}$) to linear ($Y_i \in \{B, I, O\}$). 
-%However, multilabel problems can not always be reduced to the \texttt{BIO} 
+%However, multi-label problems can not always be reduced to the \texttt{BIO} 
 %tagset. 
 
-In the case when segments are overlapping or discontiguous using \texttt{BIO} tags
-can not be used to bijectively encode segments of labels. 
+In the case when segments are overlapping or discontiguous using \texttt{BIO}
+tags can not be used to bijectively encode segments of labels. 
 To tackle overlapping and/or discontiguous segments a number of approaches have been
 proposed, mostly
 in the area of named entity recognition, particularly on
@@ -277,56 +306,52 @@ on datasets such as BioInfer \citep{pyysalo2007bioinfer}.
 extracting non-overlapping contiguous entities which uses
 tag n-grams instead of words. Working to also solve 
 non-overlapping contiguous entities,
-\citet{alex2007recognising} proposed using multiple-layer tagging. 
+\citet{alex2007recognising} proposed using multiple-layer token tagging. 
 \citet{finkel2009nested} treated entity recognition as a parsing task
-and adopted common state machine parsing approaches. 
-More recently, there has been renewed interesting in solving 
+and adopting common state machine parsing approaches. 
+More recently, there has been a renewed interesting in solving 
 the problem of extracting overlapping and contiguous 
 entities as part of the 
 the SemEval-2014 analysis of clinical texts competition
 \citep{pradhan2014semeval}.
-One of the tasks in the compentition was medical named entity recognition,
-which involved both discontiguous and overlapping entities. 
-Out of all submissions, only two systems produced solutions that 
- could handle both 
-discontiguous and overlapping entities. 
-The first system, described in \citep{pathak2014ezdi}, uses
-a standard \texttt{BIO} tagging pipelined 
-with SVMs to combine resulting spans. 
-Whereas the second system, described in \citep{zhang2014uth_ccb}, expands 
-on the regular \texttt{BIO} tagset. 
-They propose to tag each token with one of \textbf{B}, \textbf{I},
-\textbf{O}, \textbf{BD}, \textbf{ID}, \textbf{BH}, and
-\textbf{IH}, which denote \textbf{B}eggining of entity, \textbf{I}nside entity, \textbf{O}utside
-of entity, \textbf{B}eginning of 
-\textbf{D}iscontigious entity, \textbf{I}nside of \textbf{D}iscontigious entity,
-\textbf{B}eginning of \textbf{H}ead, and
-\textbf{I}nside of \textbf{H}ead. 
-However, this encoding is lossy, which makes decoding ambigous in some cases. 
-Furthermore, using this encoding may produce invalid sequences of tags. 
-Apart from this work, this expanded \texttt{BIO} encoding 
-was used in \citep{muis2018learning} where they proposed
-a hypergraph-based model to solve the clinical named entity challenge. 
-A thorough survey on extracting overlapping and discontiguous named entities can 
-be found in \citep{dai2018recognizing}. In the survey, the authors 
-consider all tag encodings and 
-recommend multilabel encoding if feasible, as it is the only one which is unambigous.
+One of the tasks in the SemEval competition was medical named entity
+recognition, which involved entities which are both discontiguous and
+overlapping.  Out of all submissions, only two systems produced solutions that
+could handle both discontiguous and overlapping entities.  The first system,
+described in \citep{pathak2014ezdi}, uses a standard \texttt{BIO} tagging
+pipelined with SVMs to combine resulting spans. Whereas the second system,
+described in \citep{zhang2014uth_ccb}, expands on the regular \texttt{BIO}
+tagset. They propose to tag each token with one of \textbf{B}, \textbf{I},
+\textbf{O}, \textbf{BD}, \textbf{ID}, \textbf{BH}, and \textbf{IH}, which
+denote \textbf{B}eggining of entity, \textbf{I}nside entity, \textbf{O}utside
+of entity, \textbf{B}eginning of \textbf{D}iscontigious entity, \textbf{I}nside
+of \textbf{D}iscontigious entity, \textbf{B}eginning of \textbf{H}ead, and
+\textbf{I}nside of \textbf{H}ead. However, this encoding is lossy, which makes
+decoding from tags to segments ambiguous in some cases.  Furthermore, using this
+encoding may produce
+invalid sequences of tags.  Apart from this work, this expanded \texttt{BIO}
+encoding was used in \citep{muis2018learning} where they proposed a
+hypergraph-based model to solve the clinical named entity challenge.  A
+thorough survey on extracting overlapping and discontiguous named entities can
+be found in \citep{dai2018recognizing}. In the survey, the authors consider all
+tag encodings and recommend multi-label encoding if feasible, as it is the only
+one which is unambigous.
 
 The clinical named entity extraction problem and semantic parsing are
 equivalent to the claim segmentation problem. 
 Both problems are usually framed as sequence labeling problems. Thus we frame 
 claim segmentation as a sequence labeling problem. 
 Based on related work on named entity recognition, to encode labels for tokens we consider
-two approaches: multilabel and \texttt{BIO} approach since both
+two approaches: multi-label and \texttt{BIO} approach since both
 are unambigous. 
-The multilabel approach can handle both discontiguous and overlapping entities,
+The multi-label approach can handle both discontiguous and overlapping entities,
 but requires search through a much broader (exponential) solution space.
 On the other hand, the \texttt{BIO} tagging approach has a linear search space,
-but applying it can only work in the case of contiguou and non-overlapping segments.
-A comparison of the \texttt{BIO} and multilabel token labeling for a post divided
+but applying it can only work in the case of contiguous and non-overlapping segments.
+A comparison of the \texttt{BIO} and multi-label token labeling for a comment divided
 into claim segments is shown in 
-figure~\ref{fig:segment_example_bio_multilabel} and an example of a post with overlapping
-and discontiguous segments in shown in table~\ref{tab:multilabel_segment_example}.
+figure~\ref{fig:segment_example_bio_multi-label} and an example of a comment with overlapping
+and discontiguous segments in shown in table~\ref{tab:multi-label_segment_example}.
 
 \begin{figure}
 \scriptsize
@@ -373,7 +398,7 @@ and discontiguous segments in shown in table~\ref{tab:multilabel_segment_example
 -- ++(0, -.2)
 -| ($(s4.east) $);
 \end{tikzpicture}
-	\caption{An example of post made in the ``Marijuana'' topic. 
+	\caption{An example of comment made in the ``Marijuana'' topic. 
 	\textcolor{red}{Claim 1} is a regular segment. 
 	\textcolor{blue}{Claim 2} and \textcolor{green}{Claim 3} are mutually overlapping.
 	\textcolor{orangegreen}{Claim 4} is both overlapping and discontiguous.}
@@ -388,8 +413,8 @@ and discontiguous segments in shown in table~\ref{tab:multilabel_segment_example
 % <S1>Nothing can bring peace to this earth.</S1> <S2>Its a great idea to try and
 % push for world peace</S2> <S3>but it will never happen...</S3>'
 
-\begin{figure}[t]
-	\begin{algorithmic}
+\begin{algorithm}[t]
+	\begin{algorithmic}[1]
 \Function{is\_punctuation}{ch}
 		\If{$ch = ``." \hspace{0.1cm} \cup \hspace{0.1cm} ch = ``?"
 		\hspace{0.1cm} \cup \hspace{0.1cm}  ch = ``!"$}
@@ -405,60 +430,63 @@ and discontiguous segments in shown in table~\ref{tab:multilabel_segment_example
 \State
 \State 
 
-\State \textbf{INPUT} $\mathit{text}$
-\State $\mathit{seg\_id} \gets 1$
-\State $Y[\mathit{seg\_id}] \gets \emptyset$
-\ForAll{$i \in |\mathit{text}|$}
-	\State $token \gets text[i]$
-	\State $Y[\mathit{seg\_id}] \gets Y[\mathit{seg\_id}] \cup \mathit{token}$
+\Function{na\"ive\_heuristic}{$text$}
+
+	\State $\mathit{seg\_id} \gets 1$
+	\State $Y[\mathit{seg\_id}] \gets \emptyset$
+	\ForAll{$i \in |\mathit{text}|$}
+		\State $token \gets text[i]$
+		\State $Y[\mathit{seg\_id}] \gets Y[\mathit{seg\_id}] \cup \mathit{token}$
+		\State
+		\If{$\mathit{IS\_PUNCTUATION}(\mathit{token}) \cap i \neq 0$}
+		\State $\mathit{seg\_id} \gets \mathit{seg\_id} + 1$
+		\EndIf
+	\EndFor
 	\State
-	\If{$\mathit{IS\_PUNCTUATION}(\mathit{token}) \cap i \neq 0$}
-	\State $\mathit{seg\_id} \gets \mathit{seg\_id} + 1$
-	\EndIf
-\EndFor
-\State
-\Return $Y$
+	\Return $Y$
+\EndFunction
 \end{algorithmic}
 \caption{Claim segmentation punctuation based heuristic.
 Input is a list of tokens, outputs a nested list of lists, where 
 each list corresponds to a segment. 
 None of the tokens is declared as non-argumentative.
 The \texttt{IS\_PUNCTUATION} function has been simplified for readability
-purposes, since it uses regular expressions. 
+purposes, since in practice it uses regular expressions. 
 	}
 \label{alg:heuristic_claimseg}
-\end{figure}
+\end{algorithm}
 
 \section{Models}
 \label{sec:claim_seg_model}
 
-We frame the claim segmentation problem as a supervised learning token-level 
-classification \citep{ajjour2017unit}. 
+We frame the claim segmentation problem as supervised learning token-level 
+classification (as it was done in \citep{ajjour2017unit} to detect
+argumentative units of text). 
 To label tokens, we use one of two 
 token-level tagging solutions. 
-First, we adopt the binary relevance multilabel classification (\texttt{BR}) approach, where
-each token can belong to zero or more segments. For the second (\texttt{BIO}) approach, 
-we discard overlapping and discontiguous segments and then apply
-standard \texttt{BIO} labels. 
-After applying the tagging to data, we propose three models to 
-solve the claim segmentation problems. First, we apply a classic approach 
-from argumentation mining literature where each sentence is treated as a segment. 
-Second, we use n-gram features as input to a SVM. 
-Finally, we combine deep learning and structured prediction.
+First, we adopt the binary relevance multi-label classification (\texttt{BR})
+approach, where each token can belong to zero or more claim segments. For the
+second (\texttt{BIO}) approach, we discard overlapping and discontiguous
+segments and then apply standard \texttt{BIO} labels.  After applying the
+tagging to data, we propose three models to solve the claim segmentation
+problem. In the first we apply a classic approach from argumentation mining
+literature where each sentence is treated as a claim segment. For the second approach 
+we use n-gram features as input to a SVM. In the third and last approach
+we combine deep learning and structured prediction.
 
 \paragraph{Na\"ive Heuristic. } 
-Our baseline model is extremely similar to most approaches in argumentation mining: 
-each sentence is a claim \citep{rooney2012applying, stab2014identifying}.
-We adopt an equivalent approach, but unlike other argumentation mining
-approaches we make each sentence argumentative. We consider this a reasonable
-assumption given that a large portion (>80\%) of the dataset is argumentative.
-For each post (comment), we simply iterate through all tokens
-and start a new claim when a token equals a punctuation mark. 
-This is a simplification of sentence segmentation \citep{palmer2000tokenisation}. 
-The heuristic is outlined in algorithm~\ref{alg:heuristic_claimseg}. 
-An example of how the algorithm works for a post is shown in
-table~\ref{tab:heuristic_example}. This approach inherently can not extract
-discontiguous and overlapping segments.
+Our baseline model is extremely similar to most approaches in argumentation
+mining: we declare each sentence of the comment to be a claim.  This approach
+is common in argumentation mining with the difference that some sentences may
+be non-argumentative \citep{rooney2012applying,
+stab2014identifying}.  We consider our assumption is reasonable, given given
+that a large portion (>80\%) of the dataset is argumentative.  For each
+comment, we simply iterate through all tokens and start a new claim when a
+token equals a punctuation mark.  This is a similar to sentence segmentation
+\citep{palmer2000tokenisation}.  The heuristic is outlined in
+algorithm~\ref{alg:heuristic_claimseg}.  An example of how the algorithm works
+for a comment is shown in table~\ref{tab:heuristic_example}. This approach
+inherently can not extract discontiguous and overlapping segments.
 
 \begin{table}[t]
 \begin{tabular}{@{}p{0.5\linewidth} p{0.50\linewidth}}
@@ -496,67 +524,75 @@ opinion there is no war .......
 there never was ...
 } \\
 \bottomrule
-	\caption{Example of heuristic algorithm output. }
+\caption{Example of heuristic algorithm output. }
 \label{tab:heuristic_example}
 \end{tabular}
 \end{table}
 
-\paragraph{SVM. } We use a weighted SVM for the second approach. 
-Class weights are 
-used to compensate for the disbalance amongst classes. 
-The ratio between classes in the training set is used to set weights, 
-to give classes with less examples more prominence. 
-We use the token and a configurable-sized context window of surrounding tokens
-as input. 
-For features, we use calculate tf-idf and 
+\paragraph{SVM. } 
+We use a weighted SVM. 
+Class weights compensate for the disbalance amongst classes. 
+The ratio between classes in the training set is used to set weight values, 
+with the intent being in 
+giving classes with less examples more prominence. 
+% # We use the token and a configurable-sized context window of surrounding tokens
+% # as input to the model. 
+For features, we use tf-idf and 
 distributed word representations 
-(fasttext\footnote{https://fasttext.cc/}
+(fastText\footnote{https://fasttext.cc/}
 and word2vec\footnote{https://code.google.com/archive/p/word2vec/}
 pretrained vectors).
-Finally, to train the model, we use $5 \times 3$ nested-cross validation.
+Finally, to train the model, we use $5 \times 3$ nested-cross validation
+optimizing hyperparameters $C$ and $\gamma$ using
+grid-search (model selection described in section~\ref{sec:selection}).
 
-\paragraph{BiLSTM + CRF Model.}
+\paragraph{BiLSTM+CRF Model.}
 Finally, we try combining deep learning (BiLSTM) and structured prediction
 (CRF). 
-The general idea of a BiLSTM + CRF model is described in
-subsection~\ref{subsec:lstm_crf}.  We make a few minor modifications in our
-model. 
-Our model works in two stages. In the first stage, a BiLSTM is used to
-encode a sequence of tokens. The BiLSTM produces pairs of hidden states and
-outputs. The
-outputs of the BiLSTM are then fed into a feed-forward linear layer which maps
-the BiLSTM output to the label probability space. In the second stage, the
-output of the BiLSTM is used as features for the CRF.  
-The CRF uses the input features and its state transition matrix to efficiently
-use past and future tags to predict the current tag. The viterbi algorithm
-(described in subsection~\ref{sec:viterbi}) is used 
-to efficiently compute optimal tag sequences. 
-
-The parameters of the model involve BiLSTM parameters, linear layer weights, and
-state transition matrix of the CRF. As for the hyperparameters of the model, 
-we use 200 feed forward units, set the word embedding size to 300, and
-use a single layer bidirectional LSTM to encode sequences. 
-We consider both using pretrained word embeddings
-and training embeddings from scratch. Furthermore, we experiment by enabling
-and disabling fine-tunning of input embeddings when using pretrained
-word embeddings. We experiment with both multilabel and \texttt{BIO} tags. 
-In the multilabel setup, we attempt to share the transition matrix across
-different when training across claims. 
-We use negative log likelihood as the loss function. We train and evaluate the model
-using 5-fold cross-validation. 
-
 The reason we opt for this model is two fold. First, BiLSTMs have previously
 been successfully used in argumentation mining \citep{habernal2016argument}. 
 Second, the combination of a BiLSTM with a CRF is considered an extremely strong baseline
 (and often proves as a topline) for sequence tagging problems
 \citep{huang2015bidirectional}.
+The general idea of a BiLSTM+CRF model is described in
+subsection~\ref{subsec:lstm_crf}.  We make a few minor modifications in our
+model. 
+Our model works in two stages. In the first stage, a BiLSTM is used to
+encode a sequence of tokens of the comment. The BiLSTM produces pairs of hidden states and
+outputs. The
+outputs of the BiLSTM are then fed into a feed-forward linear layer which maps
+the BiLSTM outputs to the label probability space. In the second stage, the
+output of the BiLSTM is used as features for the CRF.  
+The CRF uses the input features and its state transition matrix to efficiently
+use past and future tags to predict the current tag. The Viterbi algorithm
+(described in subsection~\ref{sec:viterbi}) is used 
+to efficiently compute optimal tag sequences. 
+
+The parameters of the BiLSTM+CRF model include 
+\begin{enumerate*}[label=(\arabic*)]
+\item BiLSTM parameters, 
+\item linear layer weights, and 
+\item state transition matrix of the CRF. 
+\end{enumerate*}
+As for the hyperparameters of the model, we use 200 feed forward units, set the
+word embedding size to 300, and use a single layer bi-directional LSTM to encode
+sequences.  We consider using pretrained word embeddings and training
+embeddings from scratch.  Furthermore, we experiment by enabling and disabling
+fine-tuning of input embeddings when using pretrained word embeddings.  
+We use negative log likelihood as the loss function. We train
+and evaluate the model using 5-fold cross-validation. 
+
+% potencijalno staviti u experiments
+%  When experimenting with In the multi-label
+%  setup, we attempt to share the transition matrix across different when training
+%  across claims.  
 
 \section{Experiments}
 \label{sec:claim_seg_experiment}
 
-\begin{figure}
+\begin{algorithm}[t]
 \begin{algorithmic}[1]
-\State \textbf{INPUT} $\mathit{predicted}, \mathit{true}, \mathit{offset}$
+	\Function{precision\_offset}{$\mathit{predicted}, \mathit{true}, \mathit{offset}$}
 \State $\mathit{found} \gets \{\}$
 \State
 \ForAll{$i \in |\mathit{true}|$}
@@ -577,7 +613,10 @@ Second, the combination of a BiLSTM with a CRF is considered an extremely strong
   \EndFor
 \EndFor
 \State 
-\State $\mathit{precision} \gets \frac{|found|}{|true|}$
+\State
+\Return $\frac{|found|}{|true|}$
+\State
+\EndFunction
 \end{algorithmic}
 \caption{Algorithm to calculate precision with arbitrary offset between 
 	two sets of segments, each segment being a list of tokens.
@@ -588,7 +627,7 @@ Second, the combination of a BiLSTM with a CRF is considered an extremely strong
 	Recall is equivalently calculated, but with different inputs. 
 	}
 \label{alg:precision_offset}
-\end{figure}
+\end{algorithm}
 
 We compare the models using two main set of metrics. The first set of 
 metrics is standard when evaluating information extraction problems.
@@ -597,10 +636,11 @@ which we denote with P, R and F1 respectively.
 Also, since we're dealing with sequences, we use the standard metrics, but 
 we allow for mistakes of arbitrary length. This means that a retrieved claim which
 has an extra or missing token will still count as correctly retrieved. This
-method is outlined in figure~\ref{alg:precision_offset}. 
+Algorithm~\ref{alg:precision_offset} shows how to calculate precision with an allowed
+margin of error (offset) on the token level.
 The measure indicates when the predicted claim is close to the gold one,
 since having exact claims might not always be important, for example: the
-post ``\emph{Nothing can bring peace to this earth. Its a great idea to try and
+comment ``\emph{Nothing can bring peace to this earth. Its a great idea to try and
 push for world peace, but it will never happen...}'' contains three claims,
 one of them being ``\emph{but it will never happen...}'', but if the predicted claim is
 ``\textit{world peace but it will never happen...} and the allowed offset is two or more
@@ -608,7 +648,7 @@ this will be counted as correct. We can even see that in this example it might b
 to have additional information in the claim since it provides additional 
 context.
 The reported results use the allowed offset of two and denote precision,
-recall, and F1-score with offset as oP, oR and oF1 respectively.
+recall, and F1-score with offset as oP, oR, and oF1 respectively.
 
 \begin{table}
 	\centering
@@ -622,7 +662,7 @@ recall, and F1-score with offset as oP, oR and oF1 respectively.
 		& Heuristic    & \textbf{0.41} & \textbf{0.23} & \textbf{0.29} &
 		\textbf{0.89} & 0.49 & \textbf{0.63} \\
 		\cline{2-8}
-		\multirow{2}{*}{Multilabel } & SVM & & & & & & \\
+		\multirow{2}{*}{Multi-label } & SVM & & & & & & \\
 		& BiLSTM + CRF & 0.12 & 0.01 & 0.02 & 0.32 & 0.04 & 0.06\\
 		\cline{2-8}
 		\multirow{2}{*}{\texttt{BIO}} & SVM & & & & & & \\
@@ -637,20 +677,19 @@ recall, and F1-score with offset as oP, oR and oF1 respectively.
 \end{table}
 
 \paragraph{\texttt{\textbf{BR}}} First, we wish to compare the three proposed approaches: 
-the simple heuristic, the SVM, and the BiLSTM+CRF approach
+the na\"ive heuristic, the SVM, and the BiLSTM+CRF
 in terms of both standard and offset precision, recall, and F1-score.
 In both the SVM and BiLSTM+CRF approach, we use \texttt{BR} encoding. 
-In the CRF approach, we don't share the transition table across 
-segments and train embeddings from scratch.
+In the CRF, we don't share the transition table across 
+claim segments and train embeddings from scratch.
 Results are in table~\ref{tab:claim_seg_results}. 
-The results clearly show that the simple heuristic model significantly outperforms
+The results clearly show that the na\"ive heuristic model significantly outperforms
 both the SVM and BiLSTM+CRF model which use \texttt{BR} encoding. 
 This clearly suggests that using the \texttt{BR} encoding struggles to 
-predict claims, most likely since claims are predicted independently. 
-To improve the results, we also attempt to fine tune pretrained embeddings during training
-time and
-share the transition table in the BiLSTM+CRF setup, but observe no significant
-performance improvement, therefore we omit those results.  
+predict claims, most likely since claims are predicted independently . 
+To improve the results, we also attempt to fine tune pretrained embeddings
+during training time and share the transition table in the BiLSTM+CRF setup,
+but observe no significant performance improvement.
 
 \paragraph{\texttt{\textbf{BIO}}} 
 Next, since using \texttt{BR} encoding produces limited results 
@@ -658,19 +697,18 @@ even with the contiguous and non-overlapping claims, we explore the
 \texttt{BIO} encoding. In order to do so, we first need to label the
 dataset using \texttt{BIO} tags. Before applying the \texttt{BIO} tagset overlapping
 and discontiguous claims are discarded. Then, we assign \texttt{BIO} tags
-to tokens (example in~\ref{fig:segment_example_bio_multilabel}). 
+to tokens (example in~\ref{fig:segment_example_bio_multi-label}). 
 To measure the topline results, we perform the inverse mapping from \texttt{BIO} tags
 to claims and compare against gold claims (which include discontiguous and overlapping 
 claims).
-The topline precision, recall, and 
-F1-score are then $1.0$, $0.74$, and $0.84$ respectively. 
-Using the token and \texttt{BIO} tag pairs 
-we now train the BiLSTM+CRF model. 
-This time, we end up with comparable results with the heuristic baseline, as
-shown in the final row of table~\ref{tab:claim_seg_results}. 
-Based on these results, we therefore conclude that claim segmentation is a
-difficult problem to solve. A simple heuristic proved difficult to beat, even
-with advanced deep learning and structured prediction techniques. 
+The topline precision, recall, and F1-score are then $1.0$, $0.74$, and $0.84$
+respectively.  Using the token and \texttt{BIO} tag pairs we now train the
+BiLSTM+CRF model.  This time, we end up with comparable results with the
+na\"ive heuristic baseline, as shown in the final row of
+table~\ref{tab:claim_seg_results}.  Based on these results, we therefore
+conclude that claim segmentation is a difficult problem to solve. The na\"ive
+heuristic proved difficult to beat, even with advanced deep learning and
+structured prediction techniques.
 
 % 110 # precision basic 208 509 0.4086444007858546                                                                                                                                                                   
 % 111 # recall basic 208 921 0.2258414766558089                                                                                                                                                                      
@@ -697,19 +735,19 @@ with advanced deep learning and structured prediction techniques.
 \label{sec:claim_seg_conclusion}
 
 In this chapter, we have explored the claim segmentation problem.  We
-constructed a dataset of posts split into claims. The claim segmentation
-problem was then mathematically formalized in two proposed models: a multilabel
-binary relevance and a \texttt{BIO} encoding. The comparison of three models
+constructed a dataset of comments split into claims. The claim segmentation
+problem was then mathematically formalized in two ways: a multi-label
+binary relevance and a \texttt{BIO} encoding setup. The comparison of a
+na\"ive heuristic, SVM, and BiLSTM+CRF model 
 showed that a simple sentence splitting heuristic is a strong baseline to
 detect claims in text. This justifies the approach of most argumentation
 mining literature which assumes claims matches very well to sentences. 
 Additionally, trying to detect discontiguous and overlapping claims proved 
 extremely difficult in all experimental setups. 
-Perhaps exploring a purely structured 
-approach proposed by \citet{mcdonald2005flexible} could provide 
-further insight. 
+Perhaps starting from a purely structured SVM
+approach proposed by \citet{mcdonald2005flexible} would yield better results.
 
-In chapter~\ref{chap:claim_structuring}, we will revisit claim segmentation
-as part of a joint model. In the same chapter, we will explore the next stage
-in the argumentation mining pipeline: 
-argumentative structure prediction. 
+In chapter~\ref{chap:claim_structuring}, we will revisit claim segmentation as
+part of a joint model that also structures claims.  Now that we have explored
+claim segmentation, we move on to the next stage in the argumentation mining
+pipeline: argumentative structure prediction. 
