@@ -64,6 +64,8 @@ effectively modulating what is being claimed.
 For instance, `\texttt{believes(purpose(love, procreation))}' expresses the belief 
 that love serves procreation, while \texttt{desires(}$\neg$\texttt{allow(state, gay marriage))}'
 expresses the wish for the state not to allow gay marriages. 
+
+\paragraph{Second opinion holder. }
 Finally, in a number of claims the claim is expressed with a reference to a second
 opinion holder (e.g. the Bible, the state). 
 To tackle this, we add an additional modality layer with the opinion holder as
@@ -97,22 +99,110 @@ By convention, the opinion holder of the first modality is always the author of 
 \label{tab:microstructures_relations}
 \end{table}
 
-\noindent - $\mathcal{R}, \mathcal{C}$, and $\mathcal{M}$ denote the set of relations, concepts and
-modalities, respectively \\
-- we define a claim microstructure as a quadruple 
+\paragraph{Microstructure formalization. }$\mathcal{R}, \mathcal{C}$, and
+$\mathcal{M}$ denote the set of relations, concepts and
+modalities, respectively. 
+Formally, we define a claim microstructure as a quadruple 
 $$
 (m_1, m_2, o_2, r)
 $$ 
-where $m_1 \in \mathcal{M}$, and (optionally) $m_2 \in \mathcal{M} \cup \{\epsilon\}$,
+where $m_1 \in \mathcal{M}$, $m_2 \in \mathcal{M} \cup \{\epsilon\}$,
 $o_2 \in \mathcal{C} \cup \{\epsilon\}$ is the optional second opinion holder, and 
 $r = (t, c_1, c_2) \in \mathcal{R}$ is the (possibly higher order) relation 
-between two concepts or relations $c_1, c_2 \in \mathcal{C} \cup \mathcal{R}$, 
-conveyed by the relation type $t$. \\
-- table~\ref{tab:microstructures_relations} lists all possible relation types \\
+between two concepts or relations $c_1, c_2 \in \mathcal{C} \cup \mathcal{R}$
+conveyed by the relation type $t$.
+Table~\ref{tab:microstructures_relations} lists all possible relation types. 
+In chapter~\ref{chap:analysis} we will show
+how this microstructure formalization can be used. 
+Now that we have formally defined microstructures, we move on to another
+formal claim representation. 
 
-\section{Ontology}
+\section{Ontology-based formalization}
 
-- here we talk about an alternative approach to structuring claims \\
+Microstuctures provide a claim structure which can then be used 
+to ``compress'' the claim for subsequent argumentation tasks
+(see application to stance classification in section~\ref{sec:stance_micro}).
+However, microstructures do not inherently support any
+well-established computer science standard. 
+Hence, we turn to ontologies. Using ontologies not only allows for 
+formalizing a claim, but also provides inference opportunities within
+a well-established frameworks (such as the resource description framework RDF). 
+
+We propose an ontology-based framework ClaimOntology to  formalize claims. The
+ontology is key part of a formalization framework which defines how to
+bootstrap a claim formalization from scratch. The end product of the workflow
+is a ontology containing formalized claims in a specific domain. 
+The ontology itself is built on two levels: 
+\begin{enumerate*}[label=(\arabic*)]
+\item the upper and 
+\item the domain ontology 
+(the motivation of using two-level ontologies is described in
+		section~\ref{sec:knowledge_representation}). 
+\end{enumerate*}
+The upper ontology formalizes abstract patterns in argumentative
+claims as object properties. The domain-level ontology conceptualizes 
+a specific discussion domain. The relationship between the upper 
+and domain ontology is similar to a predicate-argument
+relationship \citep{hindle1990noun}, where the upper ontology
+defines argumentation-specific predicates --- defined through object properties, 
+and the domain ontology defines arguments --- defined through 
+individuals. 
+
+The steps to be able to perform domain-specific claim analysis
+involve
+\begin{enumerate*}[label=(\arabic*)]
+\item domain experts designing the domain ontology,
+\item integrating the proposed domain ontology with the upper ontology,
+\item defining the claims as individuals in the two-level ontology, and
+\item validating claim individuals to ensure quality of fit for
+	individuals in the domain ontology
+\end{enumerate*}
+Completing these steps allows users of the formalization framework
+to do deep domain claim analysis for the domain of interest. 
+An example of a deep domain analysis is in chapter~\ref{chap:analysis}.
+
+Apart from modeling domain concepts and the relationships amongst them, we also
+wish to formalize the \emph{modality} of how the claim was expressed: as facts,
+policies, and positive or negative value statements (see definition in
+\citep{rieke1997argumentation} and microstructure
+section~\ref{sec:for_microstructures}). 
+
+\subsection{ClaimOntology}
+\label{subsec:claimontology}
+
+The upper ontology represents general argumentation patterns, mostly on the claim level. 
+The concepts and relations are used across different domains. 
+The central object of the upper ontology is the claim class.
+We are interested in extracting as much as possible claims from a single topic. 
+We leave the levels above the claim (argument) for future work. The proposed
+ontology is an OWL second-order description logic (2DL) ontology built using the
+Prot\'{e}g\'{e} software \citep{gennari2003evolution}. The four main concepts of the
+upper ontology are:
+\begin{itemize}
+	\item \texttt{claim}, corresponding to any argumentative statement,
+	\item \texttt{speaker},  denoting the author of the claim
+		(one speaker may be associated with $N$ \texttt{claims})
+	\item \texttt{modality}, which is one of fact, value, or policy, and
+	\item \texttt{domain\_topic}, representing any individual from the domain ontology.
+\end{itemize}
+
+The main concepts are related to each other through different types of object
+properties, suitable to represent both the structural and semantic aspects of
+claims. The former aim at formalizing the structure of claims used in
+the argumentation, such as the presence of an antecedent element. The latter
+are used to describe the semantic relations in claims, for instance that
+an element causes another one. Thus, on one hand, the attempt of 
+formalizing structural aspects improves the analysis of structuring and
+forming process of argumentation. On the other hand, this type of formalization
+is allows for a semantic analysis of building blocks, namely claims, used in 
+argumentative discussions. Among the structural properties, we identify:
+\begin{itemize}
+\item \texttt{has\_declaration}, 
+\item \texttt{has\_antecedent},
+\item \texttt{has\_opinion\_holder}, and
+\item \texttt{has\_claim}. 
+\end{itemize}
+
 
 
 \begin{figure}
@@ -188,125 +278,6 @@ text centered}
 \end{tikzpicture}
 \end{figure}
 
-\begin{figure}
-\footnotesize
-	\begin{tikzpicture}[
-lefttext/.style={rectangle, fill=white,
-text width=7cm, text ragged, minimum height=0.5cm},
-centertext/.style={rectangle, fill=white,
-text width=1.8cm, text ragged, minimum height=0.8cm, align=center},
-pro/.style={nodes={fill=green!30}},  
-]
-\node[matrix of nodes] (mymat) {
-	\node [lefttext] (mymat-1-1) {1: There are side effects to smoking marijuana}; &
-		\node[centertext] (topleft) {}; &
-		\node[centertext] (grid-1-2){}; & 
-		\node[centertext] (half-1) {}; &
-		\node[centertext] (first) {}; &
-		\node[centertext] (grid-1-5){}; & 
-		\\[0.5cm]
-\node [lefttext] (mymat-2-1) {1: There are side effects to smoking marijuana}; &
-		\node[centertext] (grid-2-1){}; &
-		\node[centertext] (grid-2-2){}; & 
-		\node[centertext] (half-2) {}; &
-		\node[centertext] (grid-2-4){}; &
-		\node[centertext] (grid-2-5) {}; & 
-		\\
-		\node [lefttext] (mymat-3-1) {2: Marijuana is not a drug }; &
-		\node[centertext] (grid-3-1){}; &
-		\node[centertext] (grid-3-2){}; & 
-		\node[centertext] (half-3) {}; &
-		\node[centertext] (grid-3-4){}; &
-		\node[centertext] (grid-3-5){}; & 
-		\\[0.5cm]
-		\node [lefttext] (mymat-4-1) {1: There are side effects to smoking marijuana}; &
-		\node[centertext] (grid-4-1){}; &
-		\node[centertext] (grid-4-2){}; & 
-		\node[centertext] (half-4) {}; &
-		\node[centertext] (grid-4-4){}; &
-		\node[centertext] (grid-4-5){}; & 
-		\\
-		\node [lefttext] (mymat-5-1) {2: Marijuana is not a drug}; &
-		\node[centertext] (third) {}; &
-		\node[centertext] (grid-5-2) {}; & 
-		\node[centertext] (half-5) {}; &
-		\node[centertext] (grid-5-4) {}; &
-		\node[centertext] (grid-5-5) {}; & 
-		\\
-		\node[lefttext] (mymat-6-1) {3: Marijuana should be legalized}; &
-		\node[centertext] (bottomleft) {} ; &
-		\node[centertext] (grid-6-2){}; & 
-		\node[centertext] (half-6) {}; &
-		\node[centertext] (grid-6-4) {}; &
-		\node[centertext] (bottomright) {}; & 
-		\\
-		&
-		\node [centertext] {Definitely Pro};  & 
-		\node [centertext] {Probably Pro}; & 
-		\node [centertext] {Neutral }; & 
-		\node [centertext] (kre) {Probably Con}; & 
-		\node [centertext] (bla) {Definitely Con}; \\
-};
-
-\draw[fill=green!30, draw=none] (topleft.north west)
-rectangle ($(half-6.south west)!0.5!(half-6.south east)$);
-
-\draw[fill=red!30, draw=none] ($(half-1.north west)!0.5!(half-1.north east)$)
-rectangle (bottomright.south east);
-
-% circles
-% \draw ($(first.base) + (-0.2cm, 0.1cm)$) circle (0.2cm) node {\tiny{x}};
-% \draw ($(half-3.base) +(-0.0005cm, 0.4cm) $) circle (0.2cm) node {\tiny{x}};
-% \draw ($(third.base) + (0, 0)$) circle (0.2cm) node {\tiny{x}};
-
-% x-marks the spot
-%lower
-\draw[thick] ($(bottomleft.south west) + (0.1cm, 0.1cm)$) -- 
-($(grid-4-1.north east)$);
-\draw[thick] ($(bottomleft.south east) + (0, 0.1cm)$) -- 
-($(grid-4-1.north west) + (0.1cm, 0)$);
-
-%middle
-\draw[thick] (half-3.south west) -- 
-(half-2.north east);
-\draw[thick] (half-2.north west) -- 
-(half-3.south east);
-
-%upper
-\draw[thick] ($(first.south west) + (0.3cm, -0.1cm)$) --
-($(first.north east) + (-0.3cm, -0.1cm)$ );
-\draw[thick] ($(first.north west) + (0.3cm, -0.1cm)$) -- 
-($(first.south east) + (-0.3cm, -0.1cm)$);
-
-% horizontal lines
-% lower
-\node[fit=(bla) (kre), inner sep=0pt] (R5) {};
-\draw [thick] ($(R5.north -| mymat.west) + (0, 0.1cm)$)  -- ($(R5.north -| mymat.east) + (0, 0.1cm)$);
-
-%upper
-\node[fit=(mymat-1-1), inner sep=0pt] (R4) {};
-\draw [thick] ($(R4.north -| mymat.west) + (0, 0.05cm)$)  -- 
-($(R4.north -| mymat.east) + (0, 0.05cm)$);
- 
-%mid-1
-\node[fit=(mymat-2-1), inner sep=0pt] (R2) {};
-\draw ($(R2.north -| mymat.west) + (0.2cm, 0.4cm)$) -- ($(R2.north -| mymat.east) + (-0.2cm,0.4cm)$);
-
-%mid-2
-\node[fit=(mymat-4-1), inner sep=0pt] (R3) {};
-\draw ($(R3.north -| mymat.west) + (0.2cm, 0.4cm)$) -- ($(R3.north -| mymat.east) + (-0.2cm,0.4cm)$);
-
-% vertical line
-\draw ($(topleft.north west)$) -- ($(bottomleft.south west)$);
-
-\end{tikzpicture}
-\caption{Shifts pro con. The stance changes as more claims are uncovered. In the first row, 
-a single claim is known, based on which the \textbf{con} stance is inferred.
-The stance shifts as the second and third claim are uncovered towards neutral and 
-\textbf{pro} stance, respectively. 
-}
-\label{fig:pro_con_shift}
-\end{figure}
 
 \begin{figure}
 	\centering
