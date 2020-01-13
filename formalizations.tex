@@ -9,11 +9,13 @@ assume a claim is atomic, we wish to work on the sub-claim level in an attempt t
 derive a logical representation of claims. 
 
 % TODO this needs further writing
-This chapter is divided into two main parts. 
-In the first part, the microstructure formalism is introduced 
-(section~\ref{sec:for_microstructures}). 
-In the second part, we introduce a
-a formalization based on ontologies. 
+This chapter is divided into two main parts.  In the first part, the
+microstructure formalism is introduced (section~\ref{sec:for_microstructures}).
+In the second part (section~\ref{sec:ontology_formalization}), we introduce a a
+formalization based on ontologies To demonstrate examples of both formalization
+standards, we take the dataset of claims and their respective paraphrases
+described in section~\ref{sec:claim_seg_data} and formalize them using both
+standards. 
 
 \section{Microstructures}
 \label{sec:for_microstructures}
@@ -118,6 +120,7 @@ Now that we have formally defined microstructures, we move on to another
 formal claim representation. 
 
 \section{Ontology-based formalization}
+\label{sec:ontology_formalization}
 
 Microstuctures provide a claim structure which can then be used 
 to ``compress'' the claim for subsequent argumentation tasks
@@ -170,6 +173,49 @@ section~\ref{sec:for_microstructures}).
 \subsection{ClaimOntology}
 \label{subsec:claimontology}
 
+\begin{figure}
+	\centering
+	\footnotesize
+	\begin{tikzpicture}[
+concept/.style={shape=rectangle, rounded corners,
+draw, align=center,
+top color=white, bottom color=orange!20},
+node distance=5cm,
+]
+\node[concept] (claim) {claim};
+\node[concept, below of=claim] (modality) {modality};
+\node[concept, right of=claim] (speaker) {speaker};
+\node[concept, left=4cm  of modality] (domain) {domain\_topic};
+
+\draw[-Latex] (speaker) -- (claim) 
+	node [midway, below] {has claim}; 
+
+\draw[-Latex, densely dashed, color=olive] (claim) -- (modality)
+	node [midway, right] {has modality}; 
+
+\draw [-Latex] (claim) .. controls ($(claim.west) + (-4cm,
+-0.2cm)$) ..  ($(domain.north)$) node [sloped, above, near end] {has\_declaration}; 
+
+\draw [-Latex] (claim) .. controls ($(claim.west) + (-3cm,
+-1.1cm)$) ..  ($(domain.north)$) node [sloped, above, midway] {has\_antecedent}; 
+
+\draw [-Latex] (claim) --  ($(domain.north)$) node [above, sloped, midway] {has\_opinion\_holder}; 
+
+\draw [-Latex, densely dashed, color=olive] (claim) .. controls ($(claim.west) + (-1cm,
+-2.2cm)$) ..  ($(domain.north)$) node [sloped, above, midway] {promotes / suppresses}; 
+
+\draw [-Latex, densely dashed, color=olive] (claim) .. controls ($(claim.west) + (-1cm,
+-3.2cm)$) ..  ($(domain.north)$) node [sloped, above, midway] {comparison}; 
+
+\end{tikzpicture}
+\caption{Main classes and properties of ClaimOntology. Dashed lines indicate
+	semantic properties, full lines structural properties. 
+	indicate. Arrow orientation indicates the
+	triplet ordering. }
+\label{fig:claimontology}
+\end{figure}
+
+
 The upper ontology represents general argumentation patterns, mostly on the claim level. 
 The concepts and relations are used across different domains. 
 The central object of the upper ontology is the claim class.
@@ -187,7 +233,7 @@ upper ontology are:
 \end{itemize}
 
 The main concepts are related to each other through different types of object
-properties, suitable to represent both the structural and semantic aspects of
+properties, suitable to represent both the \emph{structural and semantic aspects} of
 claims. The former aim at formalizing the structure of claims used in
 the argumentation, such as the presence of an antecedent element. The latter
 are used to describe the semantic relations in claims, for instance that
@@ -195,15 +241,225 @@ an element causes another one. Thus, on one hand, the attempt of
 formalizing structural aspects improves the analysis of structuring and
 forming process of argumentation. On the other hand, this type of formalization
 is allows for a semantic analysis of building blocks, namely claims, used in 
-argumentative discussions. Among the structural properties, we identify:
+argumentative discussions. Among the \emph{structural properties}, we identify:
 \begin{itemize}
 \item \texttt{has\_declaration}, 
 \item \texttt{has\_antecedent},
 \item \texttt{has\_opinion\_holder}, and
 \item \texttt{has\_claim}. 
 \end{itemize}
+The \texttt{has\_declaration} property indicates an acknowledgement of
+existence of a domain individual. For example, the claim 
+\emph{marijuana consumption is out there} acknowledges
+the existence of the domain individual \emph{marijuana consumption}.
+The \text{has\_antecedent} property indicates the presence of an 
+antecedent in a claim. The antecedent is always paired with some
+form of a consequent, which is a semantic property. To indicate
+there is a second opinion holder the \texttt{has\_opinion\_holder}
+property is used. The role of the \texttt{has\_opinion\_holder}
+property is equivalent to the second opinion holder in the microstructure
+formalization (see section~\ref{sec:for_microstructures}). Finally, the speaker
+who made the claim is attributed using the \texttt{has\_claim} property.
+
+We discern between three different types of \emph{semantic properties}:
+\begin{itemize}
+\item \texttt{promotes / suppresses},
+\item \texttt{comparison}, and
+\item \texttt{has\_modality}
+\end{itemize}
+The \texttt{promotes / suppresses} property is used to represent the claim
+consequent as either a \texttt{promotes} or \texttt{suppresses} property
+(inspired by \citet{hashimoto2012excitatory}). It is always paired with
+the \texttt{has\_antecedent} structural property. The \texttt{promotes}
+property has subproperties with \texttt{causes} and \texttt{implies}
+properties, whereas the \texttt{suppresses} property has 
+subproperties \texttt{implies} and \texttt{does\_not\_cause}.
+The claim \texttt{claim\_x} made by \texttt{speaker\_x}
+\emph{smoking marijuana hurts your lungs} can then be formalized as triplets:
+\begin{align*}
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{has\_antecedent}, \hspace{0.1cm}
+	\mathit{marijuana\_consumption} > \\
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{suppresses}, \hspace{0.1cm}
+	\mathit{lung\_health} > 
+\end{align*}
+Alternatively, it may also be formalized in a negation fashion as:
+\begin{align*}
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{has\_antecedent}, \hspace{0.1cm}
+	\mathit{marijuana\_consumption} > \\
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{causes}, \hspace{0.1cm}
+	\mathit{lung\_damage} > 
+\end{align*}
+The \texttt{comparison} property is used to formalize a comparison of 
+two domain concepts. There are three comparison object properties (each with the
+\texttt{domain\_topic} as the object individual): \texttt{comparison\_greater},
+\texttt{comparison\_less}, and \texttt{comparison\_criterion}. The
+\texttt{comparison\_criterion} is optional and is used to denote the feature of 
+comparison. For example, the claim \emph{alcohol is worse for your health than marijuana} can
+be formalized as:
+\begin{align*}
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{comparison\_greater}, \hspace{0.1cm}
+	\mathit{alcohol} > \\
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{comparison\_less}, \hspace{0.1cm}
+	\mathit{marijuana} >  \\
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{comparison\_property}, \hspace{0.1cm}
+	\mathit{health} > 
+\end{align*}
+The \texttt{has\_modality} property reflects in which modality the claim was made. 
+Claims \emph{marijuana should be legalized} and \emph{marijuana is legalized} 
+can be formalized to have different modalities for the same domain concepts
+(\emph{marijuana\_legalization}). 
+
+The main classes and properties of ClaimOntology are visualized in 
+figure~\ref{fig:claimontology}. The domain ontology defines 
+claim individuals as claims made by speakers of the
+\texttt{domain\_individual} type. Thus, the domain individuals need to be
+defined before making claim individuals. Now, we show a full formalization 
+example on \emph{claim\_x} which states
+\emph{heavy industry did not cause climate change}. Here, we may establish
+two domain individuals: \texttt{industry} and \texttt{climate change}
+connected via a \texttt{cause} property. Note that we omit the \emph{industry}
+adjective \emph{heavy} which is a decision left to the domain expert to decide
+on the granularity level of the domain ontology. 
+More formally, we define \texttt{claim\_x} to contain properties:
+\begin{align*}
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{has\_antecedent}, \hspace{0.1cm}
+	\mathit{industry} > \\
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{does\_not\_cause}, \hspace{0.1cm}
+	\mathit{climate\_change} >  \\
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{has\_modality}, \hspace{0.1cm}
+	\mathit{fact} > 
+\end{align*}
+
+We define claims as done in section~\ref{sec:claim_seg_data}, also 
+abiding by nine principles. We reuse the claims and their paraphrases 
+annotated in section~\ref{sec:claim_seg_data} to formalize in ClaimOntology. 
+
+\begin{algorithm}[t]
+	\footnotesize{
+	\begin{algorithmic}[1]
+%\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`_=8}]
+
+\Function{viewpoint}{claim}
+\State \begin{varwidth}[t]{\linewidth}
+      map~$\gets$~"policy": "It should be that ", \par
+        \hskip\algorithmicindent "good\_value": "I approve that ", \par
+        \hskip\algorithmicindent "bad\_value": "I approve that ", \par
+        \hskip\algorithmicindent "fact": ""
+      \end{varwidth}
+
+	\State 
+	\Return map[claim.viewpoint]
+\EndFunction
+\State
+
+\Function{negate}{claim, object}
+\If{claim is\_negated}
+\State
+\Return " does not " + object
+\Else
+\State
+\Return object
+\EndIf
+
+\EndFunction
+\State
+
+\If{claim.nary == 1}
+	\State object $\gets$ claim.property["has\_declaration"].object
+	\State
+	\Return viewpoint(claim) + negate(claim, object) + "exist"
+\EndIf
+\State
+\If{claim.nary == 2}
+	\State ante $\gets$ claim.property["has\_antecedent"].object
+	\State cons $\gets$ claim.property["promotes"].object
+	\State
+	\Return viewpoint(claim) + ante + negate(claim, object) + cons
+\EndIf
+\State
+\If{claim.nary = 3}
+	\State less $\gets$ claim.property["comparison\_less"].object
+	\State more $\gets$ claim.property["comparison\_greater"].object
+	\State prop $\gets$ claim.property["comparison\_property"].object
+	\State
+
+	\State exp $\gets$ more + " is greater than " + less + " by " + prop
+	\Return viewpoint(claim) + exp
+\EndIf
+\end{algorithmic}
 
 
+
+% \textbf{function} viewpoint (claim)
+%  map $\gets$ "policy": "It should be that ",
+%         "good\_value": "I approve that ",
+%         "bad\_value": "I disapprove that "
+%         "fact": "
+% \textbf{return} map[claim.viewpoint]
+% 
+% \textbf{function} negate (claim, object)
+%   \textbf{if} claim is\_negated
+%     \textbf{return} " does not " + object
+%   \textbf{else} 
+%     \textbf{return} object
+%   \textbf{end if}
+% 
+% \textbf{if} claim.nary == 1
+%   object = claim.property["has\_declaration"].object
+%   \textbf{return} viewpoint(claim) + negate(claim, object) + "exist"
+% 
+% \textbf{if} claim.nary == 22
+%   ante = claim.property["has\_antecedent"].object
+%   cons = claim.property["promotes"].object
+%   \textbf{return} viewpoint(claim) + ante + negate(claim, object) + cons
+% 
+% \textbf{if} claim.nary == 3
+%   less = claim.property["comparison\_less"].object
+%   more = claim.property["comparison\_greater"].object
+%   prop = claim.property["comparison\_property"].object
+% 
+%   exp $\gets$ more + " is greater than " + less + " by " + prop
+%   \textbf{return} viewpoint(claim) + exp
+% \end{Verbatim}
+}
+\caption{Algorithm to generate a natural language sentence from a formalized
+	claim individual}
+\label{alg:formalization_to_sentence}
+\end{algorithm}
+
+To validate how well the formalized claims represent the original claims
+made by the speakers, we propose measuring textual entailment between the formalized 
+and the original claim. Textual Entailment (\textbf{TE}) models take a pair 
+of sentences and predict whether the facts in the first sentence necessarily imply
+facts in the second sentence (see section~\ref{sec:textual_entailment} for a
+a short introduction to textual entaiment). Textual entailment expects 
+sentences, so we have to translate the formalized claim back to natural language. 
+For that purpose, we build algorithm~\ref{alg:formalization_to_sentence} which 
+very roughly produces natural language sentences from formalizations. 
+We acknowledge that produced sentences may not always be grammatical (depending on the
+domain ontology). Using algorithm~\ref{alg:formalization_to_sentence} on the claim 
+\texttt{claim\_y} with properties:
+\begin{align*}
+	< & \mathit{claim\_y}, \hspace{0.1cm} \mathit{comparison\_greater}, \hspace{0.1cm}
+	\mathit{alcohol} > \\
+	< & \mathit{claim\_y}, \hspace{0.1cm} \mathit{comparison\_less}, \hspace{0.1cm}
+	\mathit{marijuana} >  \\
+	< & \mathit{claim\_y}, \hspace{0.1cm} \mathit{comparison\_property}, \hspace{0.1cm}
+	\mathit{mind\_influental} >  \\
+	< & \mathit{claim\_y}, \hspace{0.1cm} \mathit{has\_modality}, \hspace{0.1cm}
+	\mathit{fact} > 
+\end{align*}
+produces the sentence \emph{alcohol is more than marijuana by being mind influental}.
+Now, we compare this claim to the original and paraphrased claim via 
+textual entailment models. Textual entailment estimates how well 
+formalized claims represent original claims. To calculate
+textual entailment between the (original or paraphrased) claim and reconstructed
+formalized claim, we use the decomposable attention model \citep{parikh2016decomposable}
+(available via Allennlp \citep{gardner2018allennlp}) which performs
+close to the state-of-the-art on the widely used SNLI dataset \citep{bowman2015large}.
+
+\subsection{Use-case: ``Marijuana'' }
+\label{sec:usecase_ontology}
 
 \begin{figure}
 	\centering
@@ -231,6 +487,95 @@ node [concept] {domain topic}[clockwise from=0]
 \caption{Marijuana legalization domain ontology classes}
 \label{fig:marijuana_domain_ontology}
 \end{figure}
+
+
+Now, we wish to apply the ClaimOntology to the ``\emph{Marijuana}'' topic in
+two steps.  First, we construct a domain ontology ``\emph{Marijuana
+legalization}''.  Second, we formalize claims from the ``\emph{Marijuana}''
+topic as claim individuals. 
+
+The domain ontology should contain domain specific classes, properties, and
+instances. The idea is to build the domain ontology in a data driven 
+fashion from speakers' claims. We build the domain ontology in two steps:
+\begin{enumerate*}[label=(\arabic*)]
+\item building the domain ontology of concepts, and 
+\item claim individual annotation. 
+\end{enumerate*}
+After completing those two steps, the ontology can be used in a claim analysis. 
+
+A domain ontology conceptualizes the specific domain of the online discussion. 
+It is usually recommended to have some central terms around which to build
+around (i.e. \emph{person}). We inspect claims in the ``\emph{Marijuana}'' topic,
+using noun phrases as likely candidates for classes. We introduce
+data properties mainly for noun phrases with some varying nuance relevant to
+the domain. One example of using a data property would be to disambiguate between
+\emph{illegal abortion} and \emph{legal abortion} by using boolean data
+property \emph{legal} with the concept of \emph{abortion}.
+Individuals of the domain ontologies should reflect all realizations of a concepts as
+it appears in text. So, if we have a concept of \emph{taxes}, we require a concept
+that covers all linguistic realizations in text, such as \emph{government tribute} or
+\emph{compulsory state fee}. 
+
+\begin{figure}
+	\centering
+	\footnotesize
+	\begin{tikzpicture}[
+concept/.style={shape=rectangle, rounded corners,
+draw, align=center,
+top color=white, bottom color=orange!20},
+node distance=5cm,
+]
+\node [concept] (human) {human being};
+\node [concept, below right of=human] (domain) {domain topic};
+\node [concept, above left of=human] (disease) {disease};
+\node [concept, below left of=human] (status) {status behavior};
+\node [concept, above right of=human] (drug) {drug};
+
+\draw[densely dashed, color=olive] (human) -- (domain);
+\draw[densely dashed, color=olive] (disease) .. controls ($(human) + (-1.3cm,
+		-1.3cm)$) .. (domain); 
+\draw[densely dashed, color=olive] (status) -- (domain); 
+\draw[densely dashed, color=olive] (drug) -- (domain); 
+\draw[densely dashed, color=olive] (human) -- (domain); 
+
+\draw [-Latex] (human.north) .. controls ($(human.north) + (0cm,
+3cm)$) ..  (drug) node [sloped, above, near end] {buys drugs}; 
+\draw [-Latex] (human.north) .. controls ($(human) + (3.5cm, 1cm)$)
+..  (drug) node [sloped, above, near start] {consumes drugs}; 
+\draw [-Latex] (human) -- (status) node [below, midway, sloped] {has behavior}; 
+\draw [-Latex] (human) -- (disease) node [below, midway, sloped] {has disease}; 
+
+\end{tikzpicture}
+\caption{Main classes and properties of the \textit{marijuana} domain 
+ontology. 
+Dashed lines indicate subclasses, full lines indicate object properties. 
+The triple (\texttt{human\_being}, \texttt{buys\_drugs}, \texttt{drug}) represents an 
+individual that belongs to the
+\texttt{human\_being} class, which posses the property \texttt{buys\_drugs} with 
+object \texttt{drug}.
+} 
+\label{fig:main-classes}
+\end{figure}
+
+The ``\emph{Marijuana legalization}'' domain ontology is built by experts over
+several iterations with reviews in-between rounds. The end result proposes 
+\texttt{domain\_topic} concepts, properties, and individuals. The resulted
+domain ontology produced a diverse set of concepts, such as states (\texttt{war}),
+people (\texttt{drug\_consumer}), or general abstract events (\texttt{society\_effect}). 
+The top level classes of the ontology are displayed in 
+Fig.~\ref{fig:marijuana_domain_ontology}. THe relationships between some of the more frequently
+used classes are shown in Fig.~\ref{fig:main-classes}. 
+Individuals instantiate classes
+and use properties. In total, 75 domain individuals were created, some of those
+begin \texttt{marijuana addicted consumer}, \texttt{legalized marijuana}, \texttt{
+legalized alcohol}, \texttt{reduced mental capability}, etc.
+
+% The ontology contains the following top level classes : \texttt{crime}, 
+% \texttt{disease}, \texttt{drug}, \texttt{economy\_cost}, \texttt{human\_being}, 
+% \texttt{human\_rights}, \texttt{organization}, \texttt{plant}, \texttt{religion}, 
+% \texttt{science}, \texttt{society\_effect}, \texttt{status\_behavior}, and
+% \texttt{war} 
+
 
 \begin{figure}
 \begin{tikzpicture}
@@ -271,46 +616,4 @@ text centered}
 \caption{Marijuana legalization domain ontology drug individuals. 
 	Classes/entities and orange and individuals are blue. }
 	\label{fig:drug_domain_individuals}
-\end{figure}
-
-\begin{figure}
-\begin{tikzpicture}
-\end{tikzpicture}
-\end{figure}
-
-
-\begin{figure}
-	\centering
-	\footnotesize
-	\begin{tikzpicture}[
-concept/.style={shape=rectangle, rounded corners,
-draw, align=center,
-top color=white, bottom color=orange!20},
-node distance=5cm,
-]
-\node [concept] (human) {human being};
-\node [concept, below right of=human] (domain) {domain topic};
-\node [concept, above left of=human] (disease) {disease};
-\node [concept, below left of=human] (status) {status behavior};
-\node [concept, above right of=human] (drug) {drug};
-
-\draw[densely dashed, color=olive] (human) -- (domain);
-\draw[densely dashed, color=olive] (disease) .. controls ($(human) + (-1.3cm, -1.3cm)$) .. (domain); 
-\draw[densely dashed, color=olive] (status) -- (domain); 
-\draw[densely dashed, color=olive] (drug) -- (domain); 
-\draw[densely dashed, color=olive] (human) -- (domain); 
-
-		\draw [->] (human.north) .. controls ($(human.north) + (0cm,
-		3cm)$) ..  (drug) node [sloped, above, near end] {buys drugs}; 
-		\draw [->] (human.north) .. controls ($(human) + (3.5cm, 1cm)$)
-		..  (drug) node [sloped, above, near start] {consumes drugs}; 
-		\draw [->] (human) -- (status) node [below, midway, sloped] {has behavior}; 
-		\draw [->] (human) -- (disease) node [below, midway, sloped] {has disease}; 
-\end{tikzpicture}
-	\caption{Dashed lines indicate subclass, full lines indicate object property relations. 
-	The triple (\texttt{human\_being}, \texttt{buys\_drugs}, \texttt{drug}) represents an 
-	individual that belongs to the
-	\texttt{human\_being} class, which posses the property \texttt{buys\_drugs} with 
-	object \texttt{drug}.} 
-	\label{fig:main-classes}
 \end{figure}
