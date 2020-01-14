@@ -1,7 +1,7 @@
 \chapter{Formalizing claims}
 \label{chap:formalization}
 
-In the previous chapter we have explored how to identify claims in text. 
+In the previous chapter we have explored how to identify claims in text.
 Now, we wish to lay the ground work for the next step: structuring those claims. 
 To do so, we first need a model according to which the claims will be structured. 
 Unlike most approaches in argumentation mining and computational argumentation that
@@ -51,7 +51,7 @@ Relations are domain independent.
 The relations are established between concepts, expressed by noun phrases. 
 For ease of access, they can be arranged into a small, domain specific taxonomy of concepts. 
 For instance ``gay marriage'', ``heterosexual marriage'' and ``religious marriage''
-all belong under the concept of ``marrriage''. 
+all belong under the concept of ``marriage''. 
 The taxonomic relations could also be useful for later computational processing. 
 Concepts are domain dependent and need to defined for each topic anew
 
@@ -60,7 +60,7 @@ We observe that claims are expressed under different modalities.
 They can be roughly categorized into \textit{beliefs, value judgements, and policies}. 
 We formalize this via unary relations `believes', `approves', `disapproves',
 and `desires' corresponding 
-to beliefs (factual, religous, and opinion-based), positive value judgements, negative value 
+to beliefs (factual, religious, and opinion-based), positive value judgements, negative value 
 judgements, and desired policy (desired state of affairs) respectively. 
 The three modalities act as a wrapper on the propositional content of the claim, 
 effectively modulating what is being claimed. 
@@ -247,15 +247,14 @@ node distance=5cm,
 \label{fig:claimontology}
 \end{figure}
 
-
-The upper ontology represents general argumentation patterns, mostly on the claim level. 
-The concepts and relations are used across different domains. 
-The central object of the upper ontology is the claim class.
-We are interested in extracting as much as possible claims from a single topic. 
-We leave the levels above the claim (argument) for future work. The proposed
-ontology is an OWL second-order description logic (2DL) ontology built using the
-Prot\'{e}g\'{e} software \citep{gennari2003evolution}. The four main concepts of the
-upper ontology are:
+The upper ontology represents general argumentation patterns, mostly on the
+claim level.  The concepts and relations are used across different domains.
+The central object of the upper ontology is the claim class. We are interested
+in extracting as much as possible claims from a single topic. We leave the
+levels above the claim (argument) for future work. The proposed ontology is an
+OWL second-order description logic (2DL) ontology built using the
+Prot\'{e}g\'{e} software \citep{gennari2003evolution}. The four main concepts
+of the upper ontology are:
 \begin{itemize}
 	\item \texttt{claim}, corresponding to any argumentative statement,
 	\item \texttt{speaker},  denoting the author of the claim
@@ -409,13 +408,14 @@ annotated in section~\ref{sec:claim_seg_data} to formalize in ClaimOntology.
 	\Return viewpoint(claim) + ante + negate(claim, object) + cons
 \EndIf
 \State
-\If{claim.nary = 3}
+\If{claim.nary == 3}
 	\State less $\gets$ claim.property["comparison\_less"].object
 	\State more $\gets$ claim.property["comparison\_greater"].object
 	\State prop $\gets$ claim.property["comparison\_property"].object
 	\State
 
 	\State exp $\gets$ more + " is greater than " + less + " by " + prop
+	\State
 	\Return viewpoint(claim) + exp
 \EndIf
 \end{algorithmic}
@@ -440,7 +440,7 @@ annotated in section~\ref{sec:claim_seg_data} to formalize in ClaimOntology.
 %   object = claim.property["has\_declaration"].object
 %   \textbf{return} viewpoint(claim) + negate(claim, object) + "exist"
 % 
-% \textbf{if} claim.nary == 22
+% \textbf{if} claim.nary == 2
 %   ante = claim.property["has\_antecedent"].object
 %   cons = claim.property["promotes"].object
 %   \textbf{return} viewpoint(claim) + ante + negate(claim, object) + cons
@@ -464,7 +464,7 @@ made by the speakers, we propose measuring textual entailment between the formal
 and the original claim. Textual Entailment (\textbf{TE}) models take a pair 
 of sentences and predict whether the facts in the first sentence necessarily imply
 facts in the second sentence (see section~\ref{sec:textual_entailment} for a
-a short introduction to textual entaiment). Textual entailment expects 
+a short introduction to textual entailment). Textual entailment expects 
 sentences, so we have to translate the formalized claim back to natural language. 
 For that purpose, we build algorithm~\ref{alg:formalization_to_sentence} which 
 very roughly produces natural language sentences from formalizations. 
@@ -496,17 +496,19 @@ close to the state-of-the-art on the widely used SNLI dataset \citep{bowman2015l
 \begin{figure}
 	\centering
 \begin{tikzpicture}
-\path [mindmap, grow cyclic, level 1/.append style={sibling angle=360/13},
+
+\path [small mindmap, grow cyclic, level 1/.append style={sibling angle=360/12},
+root /.append style={font=\scriptsize},
+every node/.append style={scale=0.8},
 concept color=orange!40,
 ]
-node [concept] {domain topic}[clockwise from=0]
+node [concept] {domain \\ topic}[clockwise from=0]
 	child { node[concept] {religion}}
 	child { node [concept]{plant}}
 	child { node[concept] {war}}
 	child { node[concept] {organization}}
 	child { node[concept] {human being}}
 	child { node[concept]  {human rights}}
-  child {  node[concept] {plant}}
   child {  node[concept] {status behavior}}
   child {  node[concept] {economic cost}}
   child {  node[concept] {drug}}
@@ -516,6 +518,7 @@ node [concept] {domain topic}[clockwise from=0]
   child {  node[concept] {society effect}};
 	
 \end{tikzpicture}
+
 \caption{Marijuana legalization domain ontology classes}
 \label{fig:marijuana_domain_ontology}
 \end{figure}
@@ -645,6 +648,23 @@ text centered}
 	\label{fig:drug_domain_individuals}
 \end{figure}
 
+
+The ontology with domain individuals can now be merged with the upper ontology. 
+Next, we move on to annotating claim individuals. Three expert annotators
+formalize 920 claims from the ``\emph{Marijuana}'' topic. A few annotation
+examples are listed in table~\ref{tab:ontology_annotation}.
+They fail to formalize 56, 53, and 60 claims, which makes about 6\% of the dataset. 
+There are multiple reasons on why a claim is not suitable to be formalized. 
+For one, a claim may be lacking appropriate domain individuals, such as in the claim
+\emph{tobacco odors dissipate quickly} where we \emph{tobacco odor} is a concept
+not seen when building the domain individuals. Other non-formalized claims
+deemed to abstract in meaning, an example being \emph{nothing can bring 
+world peace}. In 243 out of 920 claims, the same formalization was produced 
+by all three annotators, whereas for 325 two out of three annotators agreed. 
+Upon manually checking formalizations at random, we observe that some
+formalizations were different, yet equally suitable. After annotating and manually
+checking claim individuals, we move on to  automatic validation. 
+
 \begin{table*}[t]
 	\begin{tabular}{p{5cm}|p{5cm}|p{5cm}}
 	\toprule
@@ -678,22 +698,6 @@ marijuana consumer promotes death \\
 	}
 \end{table*}
 
-The ontology with domain individuals can now be merged with the upper ontology. 
-Next, we move on to annotating claim individuals. Three expert annotators
-formalize 920 claims from the ``\emph{Marijuana}'' topic. A few annotation
-example listed in table~\ref{tab:ontology_annotation}.
-They fail to formalize 56, 53, and 60 claims, which makes about 6\% of the dataset. 
-There are multiple reasons on why a claim is not suitable to be formalized. 
-For one, a claim may be lacking appropriate domain individuals, such as in the claim
-\emph{tobacco odors dissipate quickly} where we \emph{tobacco odor} is a concept
-not seen when building the domain individuals. Other non-formalized claims
-deemed to abstract in meaning, an example being \emph{nothing can bring 
-world peace}. In 243 out of 920 claims, the same formalization was produced 
-by all three annotators, whereas for 325 two out of three annotators agreed. 
-Upon manually checking formalizations at random, we observe that some
-formalizations were different, yet equally suitable. After annotating and manually
-checking claim individuals, we move on to  automatic validation. 
-
 With the domain ontology built and integrated with the upper ontology and claim
 individuals annotated, it is considered a good practice to verify and validate
 the resulting ontology. 
@@ -706,10 +710,10 @@ which at least one of the annotators deemed unsuitable to formalize.
 We use an off-the-shelf entailment system which outputs a decision $d \in \{E, C, N\}$
 along with normalized decision probabilities, where $E$ stands for entailment, 
 $C$ stands for contradiction, and $N$ for neutral (neither an entailment or 
-contradiction relation hold). Since entailment is not a symetric relation, we
+contradiction relation hold). Since entailment is not a symmetric relation, we
 measure by setting the claim as both the text and hypothesis. 
 
-Measuring entailment across all three anotators, we observe 2591 pairs of claims
+Measuring entailment across all three annotators, we observe 2591 pairs of claims
 and formalizations. The entailment decision was made in 1323 (51\%), 1031 (40\%)
 were neutral, whereas contradiction was found in the fewest number of pairs, 
 237 (9\%). We compare this a randomized baseline where claims were 
@@ -731,7 +735,7 @@ to pass the entailment validation step.
 In this chapter, we proposed two formalizations of argumentative claims.  The
 first, microstructures define a domain dependent taxonomy of concepts and
 define relations amongst concepts. We annotate 920 claims from the ``\emph{Gay
-Rights}'' topic. A high number of claims (93\%) was succesfully translated to
+Rights}'' topic. A high number of claims (93\%) was successfully translated to
 microstructures.  However, it showed that two annotators managed to produce the
 identical microstructure in only 58 (6.3\%) cases in addition to introducing
 157 new concepts. Although some of the differences can be attributed to
@@ -756,4 +760,3 @@ claim ontologies to deriving implicit claims.
 Additionally, in chapter~\ref{chap:claim_structuring} we will explore
 how feasible it is to automatically acquire formalized
 claims directly from text.  
-
