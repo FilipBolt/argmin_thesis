@@ -12,10 +12,11 @@ derive a logical representation of claims.
 This chapter is divided into two main parts.  In the first part, the
 microstructure formalism is introduced (section~\ref{sec:for_microstructures}).
 In the second part (section~\ref{sec:ontology_formalization}), we introduce a a
-formalization based on ontologies To demonstrate examples of both formalization
-standards, we take the dataset of claims and their respective paraphrases
-described in section~\ref{sec:claim_seg_data} and formalize them using both
-standards. 
+formalization based on ontologies. To demonstrate examples of both formalization
+standards, we first take the dataset of claims and their respective paraphrases
+described in section~\ref{sec:claim_seg_data}. We then formalize claims 
+according to the microstructure and ontology standard.
+Finally, we conclude in section~\ref{sec:formalization_conclusion}.
 
 \section{Microstructures}
 \label{sec:for_microstructures}
@@ -118,6 +119,37 @@ In chapter~\ref{chap:analysis} we will show
 how this microstructure formalization can be used. 
 Now that we have formally defined microstructures, we move on to another
 formal claim representation. 
+
+\paragraph{Data annotation. }
+We use the dataset defined in chapter~\ref{chap:claim_segmentation}
+and single out the ``\emph{Gay Rights}'' topic. We end with 100 
+posts (50 \pro{pro} and 50 \con{con}) which break down into 920 claims and their
+respective paraphrases. We ask two annotators (A1 and A2) to translate each of 
+the 920 claims into claim microstructures. The annotators were provided 
+with a domain-specific taxonomy on ``\emph{Gay Rights}'', compiled 
+based on a manual analysis of claims. The taxonomy consists of 150 concepts
+arranged into a tree of maximum depth of four. The annotators
+were instructed to use the existing concepts from the taxonomy, and
+introduce new ones only if they could not find a suitable one in the
+taxonomy. They were also instructed not to use microstructures of order higher 
+than two. Full annotation guidelines are listed in
+appendix~\ref{sec:microstructure_annotation_appendix}.
+Out of 920 claims, annotator A1 managed to translate 882 claims into 707
+distinct microstructures while annotator A2 translated 842 claims into
+767 distinct microstructures. The average annotation effort was 33 hours. 
+The number of claims for which both provided an identical microstructure is only
+58 (6.3\%). The annotators introduced 157 new concepts, indicating that the initial 
+taxonomy was of too limited a scope. The low annotator agreement and relatively 
+large number of added concepts suggest that a fair amount of ambiguity exists
+in translating claims to microstructures. Our analysis revealed that, in the majority
+of cases, the ambiguity is genuine and in such cases having more candidate 
+microstructures for a single claim can be considered advantageous. 
+The analysis also revealed that 'believes' is the most frequent modality, used for
+79\% of the claims. For A1, \emph{entails} is the most common relation (61\%), while
+A2 made a more balanced use of relations, with the top two being \emph{has} (21\%)
+and \emph{entails} (15\%). The concepts most frequently used by A1 were
+\emph{homosexuality}, \emph{homosexual people}, and \emph{marriage}, while for A2
+these are \emph{the Bible}, \emph{homosexual people}, and \emph{government interest}. 
 
 \section{Ontology-based formalization}
 \label{sec:ontology_formalization}
@@ -563,19 +595,14 @@ several iterations with reviews in-between rounds. The end result proposes
 domain ontology produced a diverse set of concepts, such as states (\texttt{war}),
 people (\texttt{drug\_consumer}), or general abstract events (\texttt{society\_effect}). 
 The top level classes of the ontology are displayed in 
-Fig.~\ref{fig:marijuana_domain_ontology}. THe relationships between some of the more frequently
+Fig.~\ref{fig:marijuana_domain_ontology}. The relationships between some of the more frequently
 used classes are shown in Fig.~\ref{fig:main-classes}. 
 Individuals instantiate classes
 and use properties. In total, 75 domain individuals were created, some of those
-begin \texttt{marijuana addicted consumer}, \texttt{legalized marijuana}, \texttt{
-legalized alcohol}, \texttt{reduced mental capability}, etc.
-
-% The ontology contains the following top level classes : \texttt{crime}, 
-% \texttt{disease}, \texttt{drug}, \texttt{economy\_cost}, \texttt{human\_being}, 
-% \texttt{human\_rights}, \texttt{organization}, \texttt{plant}, \texttt{religion}, 
-% \texttt{science}, \texttt{society\_effect}, \texttt{status\_behavior}, and
-% \texttt{war} 
-
+being \texttt{marijuana addicted consumer}, \texttt{legalized marijuana}, \texttt{
+legalized alcohol}, \texttt{reduced mental capability}, etc. 
+Fig.~\ref{fig:drug_domain_individuals} shows the hierarchy classes and 
+individuals stemming from the drug class. 
 
 \begin{figure}
 \begin{tikzpicture}
@@ -617,3 +644,116 @@ text centered}
 	Classes/entities and orange and individuals are blue. }
 	\label{fig:drug_domain_individuals}
 \end{figure}
+
+\begin{table*}[t]
+	\begin{tabular}{p{5cm}|p{5cm}|p{5cm}}
+	\toprule
+Original & Paraphrased & Formalized \\
+\midrule
+Pot hurts you & Marijuana is bad for your health & Marijuana consumption has negative health effects \\
+
+One may suffer or develop hallucinations, &                                                                                            
+When one is under the influence of marijuana, one may hallucinate. &       
+marijuana consumer causes mind influential \\ 
+
+Cannabis has been proven to have health benefits . & 
+Marijuana has been proven to have health benefits. & 
+marijuana suppresses negative health effect \\
+
+legalization would open up a larger market for vaporizers, &                                                                                          
+Legalizing marijuana would open up a larger market for vaporizers. &                                           
+legalized marijuana promotes free market marijuana seller \\
+
+YOU WILL DIE IF YOU USE THIS TO OFTEN &                                                                     
+Using marijuana too often causes death. &                                                                                                                                                     
+marijuana consumer promotes death \\                                                         
+\bottomrule
+\end{tabular}
+\label{tab:ontology_annotation}
+\caption{Annotation examples. Original represents the unedited speakers' claim.
+	Paraphrased represents the from canonical claim made by the annotators.
+	Formalized is the text version  of the formalized claim (obtained by
+	applying algorithm~\ref{alg:formalization_to_sentence} on a formalized
+	claim)
+	}
+\end{table*}
+
+The ontology with domain individuals can now be merged with the upper ontology. 
+Next, we move on to annotating claim individuals. Three expert annotators
+formalize 920 claims from the ``\emph{Marijuana}'' topic. A few annotation
+example listed in table~\ref{tab:ontology_annotation}.
+They fail to formalize 56, 53, and 60 claims, which makes about 6\% of the dataset. 
+There are multiple reasons on why a claim is not suitable to be formalized. 
+For one, a claim may be lacking appropriate domain individuals, such as in the claim
+\emph{tobacco odors dissipate quickly} where we \emph{tobacco odor} is a concept
+not seen when building the domain individuals. Other non-formalized claims
+deemed to abstract in meaning, an example being \emph{nothing can bring 
+world peace}. In 243 out of 920 claims, the same formalization was produced 
+by all three annotators, whereas for 325 two out of three annotators agreed. 
+Upon manually checking formalizations at random, we observe that some
+formalizations were different, yet equally suitable. After annotating and manually
+checking claim individuals, we move on to  automatic validation. 
+
+With the domain ontology built and integrated with the upper ontology and claim
+individuals annotated, it is considered a good practice to verify and validate
+the resulting ontology. 
+We first verify the ontology using Prot\'{e}g\'{e} to ensure logical
+consistency. For validity, we estimate how much do formalized claims entail 
+speakers' original claims by measuring textual entailment between the formalized
+and original (or paraphrased) claim. 
+Now, we compare formalized sentences to paraphrased claims, excluding 169 claims 
+which at least one of the annotators deemed unsuitable to formalize. 
+We use an off-the-shelf entailment system which outputs a decision $d \in \{E, C, N\}$
+along with normalized decision probabilities, where $E$ stands for entailment, 
+$C$ stands for contradiction, and $N$ for neutral (neither an entailment or 
+contradiction relation hold). Since entailment is not a symetric relation, we
+measure by setting the claim as both the text and hypothesis. 
+
+Measuring entailment across all three anotators, we observe 2591 pairs of claims
+and formalizations. The entailment decision was made in 1323 (51\%), 1031 (40\%)
+were neutral, whereas contradiction was found in the fewest number of pairs, 
+237 (9\%). We compare this a randomized baseline where claims were 
+paired with a randomly selected formalized claim. 
+We obtain that the entailment decision was made in 
+%TODO add numbers for random decisions
+We manually inspect some of the examples to determine why were some 
+pairs labelled as contradictions or neutral. 
+% TODO add examples on false positives
+Since the evaluation showed entailment decisions in 
+% percent more 
+than the randomized baseline, and that the contradiction-labelled examples 
+seem to be hard to capture by the entailment system, we feel confident for this ontology
+to pass the entailment validation step. 
+
+\section{Conclusion}
+\label{sec:formalization_conclusion}
+
+In this chapter, we proposed two formalizations of argumentative claims.  The
+first, microstructures define a domain dependent taxonomy of concepts and
+define relations amongst concepts. We annotate 920 claims from the ``\emph{Gay
+Rights}'' topic. A high number of claims (93\%) was succesfully translated to
+microstructures.  However, it showed that two annotators managed to produce the
+identical microstructure in only 58 (6.3\%) cases in addition to introducing
+157 new concepts. Although some of the differences can be attributed to
+microstructure ambiguity, this inter-annotator agreement rate is considered
+very low. 
+The second proposed formalization is based on ontologies. 
+The ontology formalization, ClaimOntology is built from an upper and 
+domain ontology. We annotate 920 claims from the ``\emph{Marijuana}''
+topic. Similarly to microstructures, a high number (94\%) of the dataset of
+successfully formalized.
+But, unlike microstructures, inter-annotator agreement was much higher, with 
+61\% of claims having at least two identical formalizations. 
+
+Microstructure and ontology formalizations represent first steps
+towards sub-claim formalizations. 
+Both model the linguistic argumentation patterns
+joined with the the domain knowledge. 
+Having formalized claims will allow us various applications in 
+argumentation mining. In chapter~\ref{chap:analysis}, we will use
+microstructures in stance classification, and 
+claim ontologies to deriving implicit claims. 
+Additionally, in chapter~\ref{chap:claim_structuring} we will explore
+how feasible it is to automatically acquire formalized
+claims directly from text.  
+
