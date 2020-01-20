@@ -5,12 +5,32 @@ In the previous chapter we have explored how to identify claims in text.
 Now, we wish to lay the ground work for the next step: structuring those claims. 
 To do so, we first need a model according to which the claims will be structured. 
 Unlike most approaches in argumentation mining and computational argumentation that
-assume a claim is atomic, we wish to work on the sub-claim level in an attempt to 
-derive a logical representation of claims. 
+assume a claim is atomic, we wish to disect claims by working on a 
+sub-claim level. Our final goal is deriving a logical representation of a claim. 
 
-% TODO this needs further writing
+Deriving the logical form of a natural language utterance is the task of
+semantic parsing. Semantic parsing is divided into shallow and deep semantic parsing. 
+Shallow semantic parsing (also denoted semantic role labeling) attempts to
+identify entities in a text and assign roles to identified entities
+\citep{pradhan2004shallow}. 
+Deep semantic parsing deals with producing precise meaning representations
+with complex (compositional) expressions \citep{pasupat2015compositional}. 
+Semantic parsing is based on frame semantics, a theory of lingustic meaning
+according to which one cannot understand the meaning of a single word without
+all essential knowledge that relates to the word \citep{fillmore2006frame}.
+A semantic frame can then be defined as a coherent structure of related concepts,
+such that without knowledge of all of them, one does not have complete knowledge
+of any one. An example semantic frames is ``buy''  which is 
+enriched with actor entities (``buyer'', ''seller'', etc.).
+Formalizing claims is closely related to the task of semantic parsing, as the
+goal is to derive a machine-understandable, logical representation of a claim.
+However, claim formalization ``frames'' do not attempt to derive the exact
+meaning of a claim, but reflect the argumentative structure of a claim. 
+The argumentative structure of a claim should mainly involve the modality of the
+claim speaker and the form of a claim (implication, contradiction). 
+
 This chapter is divided into two main parts.  In the first part, the
-microstructure formalism is introduced (section~\ref{sec:for_microstructures}).
+microstructures are introduced (section~\ref{sec:for_microstructures}).
 In the second part (section~\ref{sec:ontology_formalization}), we introduce a a
 formalization based on ontologies. To demonstrate examples of both formalization
 standards, we first take the dataset of claims and their respective paraphrases
@@ -73,7 +93,7 @@ Finally, in a number of claims the claim is expressed with a reference to a seco
 opinion holder (e.g. the Bible, the state). 
 To tackle this, we add an additional modality layer with the opinion holder as
 an additional modifier. 
-For instance `\texttt{believes(believes[state](promotes(marriage, advancement)))}' corresponds
+For instance `\texttt{believes (believes[state] (promotes(marriage, advancement)))}' corresponds
 to the belief that the state believes gay marriages lead to an advancement. 
 By convention, the opinion holder of the first modality is always the author of the post. 
 
@@ -160,18 +180,18 @@ to ``compress'' the claim for subsequent argumentation tasks
 However, microstructures do not inherently support any
 well-established computer science standard. 
 Hence, we turn to ontologies. Using ontologies not only allows for 
-formalizing a claim, but also provides inference opportunities within
-a well-established frameworks (such as the resource description framework RDF). 
+formalizing a claim, but also provides inference capabilities within
+well-established frameworks (such as the resource description framework RDF). 
 
-We propose an ontology-based framework ClaimOntology to  formalize claims. The
+We propose an ontology-based framework ClaimOntology to formalize claims. The
 ontology is key part of a formalization framework which defines how to
-bootstrap a claim formalization from scratch. The end product of the workflow
-is a ontology containing formalized claims in a specific domain. 
+bootstrap a claim formalization from scratch. The end product of the framework
+is an ontology containing formalized claims in a specific domain. 
 The ontology itself is built on two levels: 
 \begin{enumerate*}[label=(\arabic*)]
 \item the upper and 
 \item the domain ontology 
-(the motivation of using two-level ontologies is described in
+(the motivation behind using two-level ontologies in general is described in
 		section~\ref{sec:knowledge_representation}). 
 \end{enumerate*}
 The upper ontology formalizes abstract patterns in argumentative
@@ -190,7 +210,7 @@ involve
 \item integrating the proposed domain ontology with the upper ontology,
 \item defining the claims as individuals in the two-level ontology, and
 \item validating claim individuals to ensure quality of fit for
-	individuals in the domain ontology
+	individuals in the domain ontology.
 \end{enumerate*}
 Completing these steps allows users of the formalization framework
 to do deep domain claim analysis for the domain of interest. 
@@ -271,7 +291,7 @@ are used to describe the semantic relations in claims, for instance that
 an element causes another one. Thus, on one hand, the attempt of 
 formalizing structural aspects improves the analysis of structuring and
 forming process of argumentation. On the other hand, this type of formalization
-is allows for a semantic analysis of building blocks, namely claims, used in 
+allows for a semantic analysis of building blocks, namely claims, used in 
 argumentative discussions. Among the \emph{structural properties}, we identify:
 \begin{itemize}
 \item \texttt{has\_declaration}, 
@@ -380,6 +400,7 @@ annotated in section~\ref{sec:claim_seg_data} to formalize in ClaimOntology.
 
 	\State 
 	\Return map[claim.viewpoint]
+	\State
 \EndFunction
 \State
 
@@ -395,20 +416,20 @@ annotated in section~\ref{sec:claim_seg_data} to formalize in ClaimOntology.
 \EndFunction
 \State
 
-\If{claim.nary == 1}
+\If{claim.nprop == 1}
 	\State object $\gets$ claim.property["has\_declaration"].object
 	\State
 	\Return viewpoint(claim) + negate(claim, object) + "exist"
 \EndIf
 \State
-\If{claim.nary == 2}
+\If{claim.nprop == 2}
 	\State ante $\gets$ claim.property["has\_antecedent"].object
 	\State cons $\gets$ claim.property["promotes"].object
 	\State
 	\Return viewpoint(claim) + ante + negate(claim, object) + cons
 \EndIf
 \State
-\If{claim.nary == 3}
+\If{claim.nprop == 3}
 	\State less $\gets$ claim.property["comparison\_less"].object
 	\State more $\gets$ claim.property["comparison\_greater"].object
 	\State prop $\gets$ claim.property["comparison\_property"].object
@@ -455,7 +476,10 @@ annotated in section~\ref{sec:claim_seg_data} to formalize in ClaimOntology.
 % \end{Verbatim}
 }
 \caption{Algorithm to generate a natural language sentence from a formalized
-	claim individual}
+	claim individual. The claim \texttt{nprop} is the sum of how many object properties
+	\texttt{has\_declaration}, \texttt{has\_antecedent}, \texttt{promotes}, 
+	\texttt{comparison\_less}, \texttt{comparison\_greater}, \texttt{comparison\_property}
+	does the claim contain}
 \label{alg:formalization_to_sentence}
 \end{algorithm}
 
@@ -729,34 +753,31 @@ than the randomized baseline, and that the contradiction-labelled examples
 seem to be hard to capture by the entailment system, we feel confident for this ontology
 to pass the entailment validation step. 
 
-\section{Conclusion}
-\label{sec:formalization_conclusion}
+% \section{Discussion}
+% \label{sec:formalization_conclusion}
+% 
+% In this chapter, we proposed two formalizations for argumentative claims.  The
+% first, microstructures define a domain dependent taxonomy of concepts and
+% define relations amongst concepts. We annotate 920 claims from the ``\emph{Gay
+% Rights}'' topic. A high number of claims (93\%) was successfully translated to
+% microstructures.  However, it showed that two annotators managed to produce the
+% identical microstructure in only 58 (6.3\%) cases in addition to introducing
+% 157 new concepts. Although some of the differences can be attributed to
+% microstructure ambiguity, this inter-annotator agreement rate is considered
+% very low. 
+% The second proposed formalization is based on ontologies. 
+% The ontology formalization, ClaimOntology is built from an upper and 
+% domain ontology. We annotate 920 claims from the ``\emph{Marijuana}''
+% topic. Similarly to microstructures, a high number (94\%) of the dataset of
+% successfully formalized.
+% But, unlike microstructures, inter-annotator agreement was much higher, with 
+% 61\% of claims having at least two identical formalizations. 
 
-In this chapter, we proposed two formalizations of argumentative claims.  The
-first, microstructures define a domain dependent taxonomy of concepts and
-define relations amongst concepts. We annotate 920 claims from the ``\emph{Gay
-Rights}'' topic. A high number of claims (93\%) was successfully translated to
-microstructures.  However, it showed that two annotators managed to produce the
-identical microstructure in only 58 (6.3\%) cases in addition to introducing
-157 new concepts. Although some of the differences can be attributed to
-microstructure ambiguity, this inter-annotator agreement rate is considered
-very low. 
-The second proposed formalization is based on ontologies. 
-The ontology formalization, ClaimOntology is built from an upper and 
-domain ontology. We annotate 920 claims from the ``\emph{Marijuana}''
-topic. Similarly to microstructures, a high number (94\%) of the dataset of
-successfully formalized.
-But, unlike microstructures, inter-annotator agreement was much higher, with 
-61\% of claims having at least two identical formalizations. 
-
-Microstructure and ontology formalizations represent first steps
-towards sub-claim formalizations. 
-Both model the linguistic argumentation patterns
-joined with the the domain knowledge. 
-Having formalized claims will allow us various applications in 
-argumentation mining. In chapter~\ref{chap:analysis}, we will use
-microstructures in stance classification, and 
-claim ontologies to deriving implicit claims. 
-Additionally, in chapter~\ref{chap:claim_structuring} we will explore
-how feasible it is to automatically acquire formalized
-claims directly from text.  
+Microstructure and ontology formalizations represent first steps towards
+sub-claim formalizations. Both model the linguistic argumentation patterns
+joined with the the domain knowledge.  Having formalized claims will allow us
+various applications in argumentation mining. In chapter~\ref{chap:analysis},
+we will use microstructures in stance classification, and claim ontologies to
+deriving implicit claims.  Additionally, in
+chapter~\ref{chap:claim_structuring} we will explore how feasible it is to
+automatically acquire formalized claims directly from text.  

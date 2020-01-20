@@ -2,22 +2,34 @@
 \label{chap:claim_segmentation}
 
 In part~\ref{part:unstruc} of the thesis, we have explored unstructured
-approaches to solving argumentation mining problems. 
-The term unstructured describes the methods we used for claim clustering
-(chapter~\ref{chap:argclu}), prominent claim identification (chapter~\ref{chap:argrec}),
-and inferring implicit claims (chapter~\ref{chap:deriving_implicit}).
-Using unstructured approaches showed that determining implicit thoughts and
-opinions proved extremely difficult. Additionally, 
+approaches to solving argumentation mining problems.  The term unstructured
+describes how we approached the tasks of claim clustering
+(chapter~\ref{chap:argclu}), prominent claim identification
+(chapter~\ref{chap:argrec}), and inferring implicit claims
+(chapter~\ref{chap:deriving_implicit}).  For example, in claim clustering we
+end up with clusters of claims that express similar arguments.  However, apart
+from the vague notion of similarity, we do not have any additional information
+to describe the relationships between the clustered claims. Looking at pairs of
+similar claims, one claim may be more general than another (i.e. stating that
+\emph{all drugs should be banned} is more general than stating \emph{marijuana
+is a drug that should be banned}), one claim may involve personal judgements or
+call upon factual sources (\emph{I believe marijuana is bad for your mental
+health} vs.  \emph{Science confirmed marijuana actually causes mental health
+problems}), etc.  Additionally, using unstructured approaches showed that
+determining implicit thoughts and opinions proved extremely difficult. Even
 when implicit claims were correctly established (mostly through some downstream
-task), there was no way to 
-derive the explanation behind the used inference. Because of this, we
-turn to structured approaches to argumentation mining. 
-We start by breaking down the claim into sub-claims to 
-get a better understanding how claims are formed. 
-Similarly to previous chapters, we work with argumentative comments from 
-online discussions.
+task), there was no way to derive the explanation behind the (correct)
+selection process. To overcome challenges observed in unstructured
+argumentation mining, we turn to structured approaches. 
+We start by breaking down a comment into several claims. Then, to 
+get a better understanding of the claim propose a structure for the claim.
+The claim structure is formed on a sub-claim level. Finally, structured
+claims are then used for argumentation analysis one could not make using
+unstructured methods.
+As done in previous chapters, we work with argumentative comments from online
+discussions.
 
-First, we wish to split the user discussion comments into \emph{atomic units
+We wish to split the user discussion comments into \emph{atomic units
 that convey a single thought} -- \textbf{claims}.
 The term claim is used to refer to an elementary \emph{argument component}, 
 which are a generalization of elementary discourse units
@@ -90,7 +102,7 @@ We adopt the dataset of \citet{hasan2014you} which contains
 user comments from online two-sided discussions on a number of issues. 
 We consider two topics: ``\emph{Gay Rights}'' and 
 ``\emph{Marijuana}'' and 
-sample 100 comments (50 \textbf{pro} and 50 \textbf{con}) from each topic. 
+sample 100 comments (50 \pro{pro} and 50 \con{con}) from each topic. 
 For both topics, we hired trained annotators.
 First, annotators segment out claims from user comments.
 Second, after segmenting out a claim, the annotators provide a paraphrased
@@ -479,7 +491,7 @@ Our baseline model is extremely similar to most approaches in argumentation
 mining: we declare each sentence of the comment to be a claim.  This approach
 is common in argumentation mining with the difference that some sentences may
 be non-argumentative \citep{rooney2012applying,
-stab2014identifying}.  We consider our assumption is reasonable, given given
+stab2014identifying}.  We consider our assumption is reasonable, given
 that a large portion (>80\%) of the dataset is argumentative.  For each
 comment, we simply iterate through all tokens and start a new claim when a
 token equals a punctuation mark.  This is a similar to sentence segmentation
@@ -548,25 +560,22 @@ grid-search (model selection described in section~\ref{sec:selection}).
 
 \paragraph{BiLSTM+CRF Model.}
 Finally, we try combining deep learning (BiLSTM) and structured prediction
-(CRF). 
-The reason we opt for this model is two fold. First, BiLSTMs have previously
-been successfully used in argumentation mining \citep{habernal2016argument}. 
-Second, the combination of a BiLSTM with a CRF is considered an extremely strong baseline
-(and often proves as a topline) for sequence tagging problems
-\citep{huang2015bidirectional}.
-The general idea of a BiLSTM+CRF model is described in
-subsection~\ref{subsec:lstm_crf}.  We make a few minor modifications in our
-model. 
-Our model works in two stages. In the first stage, a BiLSTM is used to
-encode a sequence of tokens of the comment. The BiLSTM produces pairs of hidden states and
-outputs. The
-outputs of the BiLSTM are then fed into a feed-forward linear layer which maps
-the BiLSTM outputs to the label probability space. In the second stage, the
-output of the BiLSTM is used as features for the CRF.  
-The CRF uses the input features and its state transition matrix to efficiently
-use past and future tags to predict the current tag. The Viterbi algorithm
-(described in subsection~\ref{sec:viterbi}) is used 
-to efficiently compute optimal tag sequences. 
+(CRF).  The reason we opt for this model is two fold. First, BiLSTMs have
+previously been successfully used in argumentation mining
+\citep{habernal2016argument}.  Second, the combination of a BiLSTM with a CRF
+is considered an extremely strong baseline (and often proves as a topline) for
+sequence tagging problems \citep{huang2015bidirectional}.  The general idea of
+a BiLSTM+CRF model is described in subsection~\ref{subsec:lstm_crf}.  We make a
+few minor modifications in our model.  Our model works in two stages. In the
+first stage, a BiLSTM is used to encode a sequence of tokens of the comment.
+The BiLSTM produces pairs of hidden states and outputs. The outputs of the
+BiLSTM are then fed into a feed-forward linear layer which maps the BiLSTM
+outputs to the label probability space. In the second stage, the output of the
+BiLSTM is used as features for the CRF.  The CRF combines the BiLSTM outputs
+with a state transition table of possible tags to efficiently use past and
+future tags to predict the current tag. The Viterbi algorithm (described in
+subsection~\ref{sec:viterbi}) is used to efficiently compute optimal tag
+sequences. 
 
 The parameters of the BiLSTM+CRF model include 
 \begin{enumerate*}[label=(\arabic*)]
@@ -630,16 +639,16 @@ and evaluate the model using 5-fold cross-validation.
 \end{algorithm}
 
 We compare the models using two main set of metrics. The first set of 
-metrics is standard when evaluating information extraction problems.
-We measure precision, recall, and F1-score of the retrieved claims, 
+metrics is standard when evaluating information extraction problems:
+ precision, recall, and F1-score of the retrieved claims, 
 which we denote with P, R and F1 respectively. 
-Also, since we're dealing with sequences, we use the standard metrics, but 
-we allow for mistakes of arbitrary length. This means that a retrieved claim which
-has an extra or missing token will still count as correctly retrieved. This
-Algorithm~\ref{alg:precision_offset} shows how to calculate precision with an allowed
-margin of error (offset) on the token level.
+Also, since we're dealing with sequences, we wish to allow 
+for small mistakes. This means that a retrieved claim which
+has an extra or missing token will still count as correctly retrieved. 
+Algorithm~\ref{alg:precision_offset} shows how to calculate precision with an
+configurable margin of error (offset) on the token level.
 The measure indicates when the predicted claim is close to the gold one,
-since having exact claims might not always be important, for example: the
+since having exact claims might not always be important. For example, the
 comment ``\emph{Nothing can bring peace to this earth. Its a great idea to try and
 push for world peace, but it will never happen...}'' contains three claims,
 one of them being ``\emph{but it will never happen...}'', but if the predicted claim is
@@ -647,7 +656,7 @@ one of them being ``\emph{but it will never happen...}'', but if the predicted c
 this will be counted as correct. We can even see that in this example it might be useful 
 to have additional information in the claim since it provides additional 
 context.
-The reported results use the allowed offset of two and denote precision,
+The reported results use allowed offset of two and denote precision,
 recall, and F1-score with offset as oP, oR, and oF1 respectively.
 
 \begin{table}
@@ -659,15 +668,15 @@ recall, and F1-score with offset as oP, oR, and oF1 respectively.
 \toprule
 		Tagset & Model & P & R & F1 & oP & oR & oF1 \\
       \midrule
-		& Heuristic    & \textbf{0.41} & \textbf{0.23} & \textbf{0.29} &
-		\textbf{0.89} & 0.49 & \textbf{0.63} \\
+		& Heuristic    & \textbf{0.41} & 0.23 & 0.29 & 0.89 & 0.49 & 0.63 \\
 		\cline{2-8}
-		\multirow{2}{*}{Multi-label } & SVM & & & & & & \\
-		& BiLSTM + CRF & 0.12 & 0.01 & 0.02 & 0.32 & 0.04 & 0.06\\
+		\multirow{2}{*}{\texttt{BR} } & SVM & 0.03 & 0.01 & 0.02 & 0.09 & 0.01 & 0.02 \\
+		                     & BiLSTM + CRF & 0.12 & 0.01 & 0.02 & 0.32 & 0.04 & 0.06 \\
 		\cline{2-8}
-		\multirow{2}{*}{\texttt{BIO}} & SVM & & & & & & \\
-
-		& BiLSTM + CRF & 0.32 & 0.22 & 0.26 & 0.63 & \textbf{0.57} & 0.60 \\
+		\multirow{2}{*}{\texttt{BIO}} & SVM & 0.35 & 0.14 & 0.20 & 0.88 & 0.35 & 0.50 \\
+				     & BiLSTM + CRF & 
+				     \textbf{0.41} & 
+				     \textbf{0.27}  & \textbf{0.32} & \textbf{0.92} & \textbf{0.61} & \textbf{0.74} \\
       \bottomrule
 	\end{tabular}
 	\endgroup
@@ -676,40 +685,93 @@ recall, and F1-score with offset as oP, oR, and oF1 respectively.
 	\label{tab:claim_seg_results}
 \end{table}
 
-\paragraph{\texttt{\textbf{BR}}} First, we wish to compare the three proposed approaches: 
+\paragraph{Multi-label encoding (\texttt{BR}).} 
+First, we wish to compare the three proposed approaches: 
 the na\"ive heuristic, the SVM, and the BiLSTM+CRF
 in terms of both standard and offset precision, recall, and F1-score.
 In both the SVM and BiLSTM+CRF approach, we use \texttt{BR} encoding. 
-In the CRF, we don't share the transition table across 
+In the CRF, we don't share the tag transition table across 
 claim segments and train embeddings from scratch.
-Results are in table~\ref{tab:claim_seg_results}. 
+Results are in table~\ref{tab:claim_seg_results} with boldfaced
+best results. 
 The results clearly show that the na\"ive heuristic model significantly outperforms
-both the SVM and BiLSTM+CRF model which use \texttt{BR} encoding. 
+both the BiLSTM+CRF and the SVM model using \texttt{BR} encoding. 
+The results of the heuristic model have
+high precision and low recall. One reason may be that 
+the model favors longer claims segments (that map to sentences). 
+Intuitively, longer sentences contain more claims, on which the 
+heuristic model performed poorly. 
+By inspecting the outputs of the SVM and BiLSTM+CRF model, they consisted of
+mainly majority class labels, so they manage to extract claims in short posts
+(consisting of very claims). 
+An obvious problem for the SVM and BiLSTM+CRF model 
+is not having enough data points  
+(100 samples for 48 labels). We considered reusing data across different
+labels, but to no significant effect, since most of the training examples were
+then labeled differently. More specifically, it would often be the case that
+a token would be labelled as a claim in one
+training instance, but not in another.
+This is a less of a problem when dealing with a task such as named entity
+recognition, as the number of such conflicting data points is much smaller. 
 This clearly suggests that using the \texttt{BR} encoding struggles to 
-predict claims, most likely since claims are predicted independently . 
+predict claims. 
 To improve the results, we also attempt to fine tune pretrained embeddings
-during training time and share the transition table in the BiLSTM+CRF setup,
-but observe no significant performance improvement.
+during training time and share the transition table in the BiLSTM+CRF setup. 
+Sharing the CRF
+state transiton table  (which in this case defines the probability of going from a
+non-argumentative to an argumentative state and vice versa) across folds should provide
+models stronger priors of when a claim starts or ends. 
+However, we do not see any performance improvement in that case either.
 
-\paragraph{\texttt{\textbf{BIO}}} 
-Next, since using \texttt{BR} encoding produces limited results 
+\paragraph{\texttt{\textbf{BIO}} encoding.} 
+Since using \texttt{BR} encoding produces limited results 
 even with the contiguous and non-overlapping claims, we explore the
 \texttt{BIO} encoding. In order to do so, we first need to label the
-dataset using \texttt{BIO} tags. Before applying the \texttt{BIO} tagset overlapping
+dataset using \texttt{BIO} tags. Before applying the \texttt{BIO} tagset, overlapping
 and discontiguous claims are discarded. Then, we assign \texttt{BIO} tags
-to tokens (example in~\ref{fig:segment_example_bio_multi-label}). 
+to tokens (example in \texttt{BIO} labeling is shown in
+Fig.~\ref{fig:segment_example_bio_multi-label}). 
 To measure the topline results, we perform the inverse mapping from \texttt{BIO} tags
 to claims and compare against gold claims (which include discontiguous and overlapping 
 claims).
 The topline precision, recall, and F1-score are then $1.0$, $0.74$, and $0.84$
-respectively.  Using the token and \texttt{BIO} tag pairs we now train the
-BiLSTM+CRF model.  This time, we end up with comparable results with the
-na\"ive heuristic baseline, as shown in the final row of
-table~\ref{tab:claim_seg_results}.  Based on these results, we therefore
-conclude that claim segmentation is a difficult problem to solve. The na\"ive
-heuristic proved difficult to beat, even with advanced deep learning and
-structured prediction techniques.
+respectively. Using the token and \texttt{BIO} tag pairs, we now train the
+SVM and BiLSTM+CRF models.  This time around, we end up with comparable results
+with the na\"ive heuristic baseline, as shown in the final two rows of
+table~\ref{tab:claim_seg_results}.  
+The SVM model performs 0.09 and 0.13 less F1-score percentage points than the
+na\"ive heuristic, but much better (0.32 and 0.79 more F1-score percentage
+points) than the SVM model using \texttt{BR} encoding. 
+In terms of F1-score, the BiLSTM+CRF showed the best performance, narrowly
+outperforming the na\"ive heuristic by 0.03 and 0.09 F1-score percentage points. 
+% The na\"ive heuristic has higher precision, most likely since it produced less
+% claim segments (509 versus 565 by the BiLSTM+SVM model). 
 
+Looking at the results in general, predicting the exact boundary of a  claim
+segment is a difficult task, since the best performing model produced
+0.32 F1-score. 
+However, the claims produced were often very close to the exactly correct one, 
+which is reflected with the 0.74 offset F1-score for the best-performing model. 
+Inspecting the predicted labels of all models, none of the models
+correctly label non-argumentative segments (\texttt{O} labels). 
+The most likely reason lies in the fact that non-argumentative content
+is greatly underrepresented in this dataset and we should work on a method to 
+such as penalizing or oversampling. 
+In general, to solve the claim segmentation problem, the na\"ive
+heuristic proved difficult to beat, even by advanced deep learning and
+structured prediction techniques.
+To further research on claim segmentation, we propose working on slighly more
+advanced heuristics as a starting point, as a very simple one produced decent
+results. The claim segmentation looks like mostly a syntax-related problem, so
+perhaps looking into exploiting syntactic clues would yield even better
+results.  In chapter~\ref{chap:claim_structuring}, we will revisit claim
+segmentation as part of a joint model that also structures claims. 
+
+% Now that we
+% have scratched the  claim segmentation problem, we move on to the
+% next stage in the argumentation mining pipeline: argumentative structure
+% prediction. 
+% 
 % 110 # precision basic 208 509 0.4086444007858546                                                                                                                                                                   
 % 111 # recall basic 208 921 0.2258414766558089                                                                                                                                                                      
 % 112 # offset 452 509 0.888015717092338                                                                                                                                                                             
@@ -723,7 +785,16 @@ structured prediction techniques.
 % # precision basic 28 203
 % # recall basic 27 921
 
+% BiLSTM with adam
+% precision basic 251 614 0.40879478827361565
+% recall basic 251 921 0.2725298588490771
+% offset 565 614 0.9201954397394136
+% offset 565 921 0.6134636264929425
+
+
 % BiLSTM with offset
+% # basic 254 641
+% # basic 254 921
 % # offset 528 838
 % # offset 528 921
 % 
@@ -731,23 +802,33 @@ structured prediction techniques.
 % # precision 204 / 641
 % # recall 204 921
 
-\section{Conclusion}
-\label{sec:claim_seg_conclusion}
 
-In this chapter, we have explored the claim segmentation problem.  We
-constructed a dataset of comments split into claims. The claim segmentation
-problem was then mathematically formalized in two ways: a multi-label
-binary relevance and a \texttt{BIO} encoding setup. The comparison of a
-na\"ive heuristic, SVM, and BiLSTM+CRF model 
-showed that a simple sentence splitting heuristic is a strong baseline to
-detect claims in text. This justifies the approach of most argumentation
-mining literature which assumes claims matches very well to sentences. 
-Additionally, trying to detect discontiguous and overlapping claims proved 
-extremely difficult in all experimental setups. 
-Perhaps starting from a purely structured SVM
-approach proposed by \citet{mcdonald2005flexible} would yield better results.
 
-In chapter~\ref{chap:claim_structuring}, we will revisit claim segmentation as
-part of a joint model that also structures claims.  Now that we have explored
-claim segmentation, we move on to the next stage in the argumentation mining
-pipeline: argumentative structure prediction. 
+% # SVM BR
+% # precision basic 3 99 0.030303030303030304
+% # recall basic 3 921 0.003257328990228013
+% # offset 9 99 0.09090909090909091
+% # offset 9 921 0.009771986970684038
+
+% # SVM BIO
+% # precision basic 129 365 0.35342465753424657
+% # recall basic 129 918 0.14052287581699346
+% # offset 322 365 0.8821917808219178
+% # offset 322 918 0.35076252723311546
+
+% \section{Conclusion}
+% \label{sec:claim_seg_conclusion}
+
+% In this chapter, we have explored the claim segmentation problem.  We
+% constructed a dataset of comments split into claims. The claim segmentation
+% problem was then mathematically formalized in two ways: a multi-label
+% binary relevance and a \texttt{BIO} encoding setup. The comparison of a
+% na\"ive heuristic, SVM, and BiLSTM+CRF model 
+% showed that a simple sentence splitting heuristic is a strong baseline to
+% detect claims in text. This justifies the approach of most argumentation
+% mining literature which assumes claims matches very well to sentences. 
+% Additionally, trying to detect discontiguous and overlapping claims proved 
+% extremely difficult in all experimental setups. 
+% Perhaps starting from a purely structured SVM
+% approach proposed by \citet{mcdonald2005flexible} would yield better results.
+

@@ -1,9 +1,7 @@
 \section{Claim formalization annotation}
 \label{sec:formalization_annotation}
 
-This produced the \ref{item:structure_dataset}
-
-\subsection{Cheat sheet}
+\subsection*{Cheat sheet}
 
 \textbf{Task}: Transform natural language claims into logical form. Logical form needs to have:
 \begin{itemize}
@@ -13,14 +11,19 @@ This produced the \ref{item:structure_dataset}
 \item (Opinion holder)
 \end{itemize}
 
+\vspace{0.3cm}
+
 \noindent \textbf{Domain individual} \\
 Find appropriate individuals mentioned in the claim (i.e. \textit{marijuana consumers},
 \textit{brain damage}, \textit{legalized tobacco}, \textit{heroin}, \textit{mafia selling marijuana}) \\
 
+\pagebreak
+
 \noindent \textbf{Claim relations} \\
 
+\begin{table}[h!]
 \begin{tabular}{| l |  p{9cm} | p{3cm}| }
-\toprule
+\hline
 \textbf{Promotes} & 
 \makecell[cc]{
 \texttt{has\_antecedent + domain\_individual} \\
@@ -28,7 +31,7 @@ Find appropriate individuals mentioned in the claim (i.e. \textit{marijuana cons
 }
 & 
 fosters, brings about, leads, forces, advances \\
-\midrule
+\hline
 \textbf{Implies} &
 \makecell[cc]{
 \texttt{has\_antecedent + domain\_individual} \\
@@ -36,41 +39,41 @@ fosters, brings about, leads, forces, advances \\
 }
 &
 if .. then .. is \\
-\midrule
+\hline
 \textbf{Causes} & 
 \makecell[cc]{
 \texttt{has\_antecedent + domain\_individual} \\
 \texttt{causes + domain\_individual}
 }
 & causes \\
-\midrule
+\hline
 \textbf{Suppresses} & 
 \makecell[cc]{
 \texttt{has\_antecedent + domain\_individual} \\
 \texttt{suppresses + domain\_individual}
 } &
 inhibits, stops, decreases \\
-\midrule
+\hline
 \textbf{Contradicts} & 
 \makecell[cc]{
 \texttt{has\_antecedent + domain\_individual} \\
 \texttt{contradicts + domain\_individual}
 } &
 if .. then not .., is .. not a \\
-\midrule
+\hline
 \textbf{Does not cause} &
 \makecell[cc]{
 \texttt{has\_antecedent + domain\_individual} \\
 \texttt{does\_not\_cause + domain\_individual}
 } &
 causes not, does not cause \\
-\midrule
+\hline
 \textbf{Declaration} &
 \makecell[cc]{
 \texttt{has\_declaration + domain\_individual}
 } &
 defines, exists \\
-\midrule
+\hline
 \textbf{Comparison} &
 \makecell[cc]{
 \texttt{comparison\_greater + domain\_individual} \\
@@ -80,13 +83,13 @@ defines, exists \\
 less than, more than, greater than \\
 \bottomrule
 \end{tabular}
-\\
+\end{table}
 
-\textbf{Modality} $\Rightarrow$ \texttt{has\_modality + fact/good\_value/bad\_value/policy} \\
+\noindent \textbf{Modality} $\Rightarrow$ \texttt{has\_modality + fact/good\_value/bad\_value/policy} \\
 
-\textbf{Opinion holder} $\Rightarrow$ \texttt{has\_opinion\_holder + domain\_individual} \\
+\noindent \textbf{Opinion holder} $\Rightarrow$ \texttt{has\_opinion\_holder + domain\_individual} \\
 
-\subsection{Examples cheat sheet}
+\subsection*{Examples cheat sheet}
 
 \noindent \textbf{Promotes} \\
 \begin{tabular}{p{8cm} p{8cm}}
@@ -95,10 +98,12 @@ Smoking marijuana makes people happy. & \texttt{marijuana\_consumer promotes hap
 \end{tabular}
 
 \noindent \textbf{Implies} \\
+\begin{table}[h!]
 \begin{tabular}{p{8cm} p{8cm}}
 Marijuana is a drug. & \texttt{marijuana implies any\_drug} \\
 	If we legalize marijuana, the government will earn money.  &\texttt{legalized\_marijuana implies government\_making\_money}
 \end{tabular}
+\end{table}
  
 \noindent \textbf{Causes} \\
 \begin{tabular}{p{8cm} p{8cm}}
@@ -111,16 +116,16 @@ Marijuana is a drug. & \texttt{marijuana implies any\_drug} \\
 \begin{tabular}{p{8cm} p{8cm}}
 	Legalizing marijuana hurts the balance of the economy. & \texttt{legalized\_marijuana suppresses government\_making\_money} \\
 	Consuming marijuana decreases aggressive behavior. & \texttt{marijuana\_consumer suppresses aggressive\_behavior} \\
-	Legalizing marijuana lowers the number of consumers. & \texttt{legalized\_marijuana supppresses marijuana\_consumer}
+	Legalizing marijuana lowers the number of consumers. & \texttt{legalized\_marijuana suppresses marijuana\_consumer}
 \end{tabular}
 
-\noindent \textbf{Contradicts} be careful with double negation! \\
+\noindent \textbf{Contradicts} --- be careful with double negation! \\
 \begin{tabular}{p{8cm} p{8cm}}
-	If legalization of marijuana happens, there will be no crime. & \texttt{legalized\_marjuana contradicts crime} \\
+	If legalization of marijuana happens, there will be no crime. & \texttt{legalized\_marijuana contradicts crime} \\
 	Tobacco is not a plant. & \texttt{tobacco contradicts any\_plant}
 \end{tabular}
 
-\noindent \textbf{Does not cause} be careful with double negation! \\
+\noindent \textbf{Does not cause} --- be careful with double negation! \\
 \begin{tabular}{p{8cm} p{8cm}}
 	Consuming marijuana does not cause death. & \texttt{marijuana\_consumer does\_not\_cause death} \\
 	Legalizing marijuana never helped the government economy. & \texttt{legalized\_marijuana does\_not\_cause government\_making\_money}
@@ -136,10 +141,10 @@ Marijuana is a drug. & \texttt{marijuana implies any\_drug} \\
 \noindent \textbf{Comparison} \\
 \begin{tabular}{p{8cm} p{8cm}}
 	Alcohol is more stimulative than marijuana. & \texttt{comparison\_more alcohol + comparison\_less marijuana + comparison\_property stimulative\_behavior}\\
-	Heroin is worse than marijuana. & \texttt{comparison\_more herion + comparison\_less marijuana}
+	Heroin is worse than marijuana. & \texttt{comparison\_more heroin + comparison\_less marijuana}
 \end{tabular}
 
-\subsection{Introduction}
+\subsection*{Introduction}
 
 The goal is to transform natural language claims to logical form given claims
 and rules for annotation of logical form. This document explains the rules for
@@ -148,9 +153,9 @@ from legalizing marijuana'' made on the topic of \textit{Drug legalization} by a
 named \textit{Fred}, we wish to transform it into logical form which would be: \\
 
 \noindent \texttt{
-author(Fred) \^{} has\_claim(Fred, c) \^{} has\_modality(c, fact) 
-\^{} has\_antecedent(c, marijuana\_legalization) 
-\^{} implies(c, government\_profit)
+author(Fred) $\wedge$ has\_claim(Fred, c) $\wedge$ has\_modality(c, fact) 
+$\wedge$ has\_antecedent(c, marijuana\_legalization) 
+$\wedge$ implies(c, government\_profit)
 } \\
 
 \noindent The logical form and its rules are defined by the ontology that has been
@@ -160,11 +165,11 @@ The outline of the annotation is:
 \begin{enumerate}
 \item Open Protege and load pre-created ontology
 \item Read and understand the claim individual and its entire post.  
-\item Tranform the claim individual to logical form in Protege by adding properties to the claim
+\item Transform the claim individual to logical form in Protege by adding properties to the claim
 individual. 
 \end{enumerate}
 
-\subsubsection{Setup}
+\subsubsection*{Setup}
 
 To annotate data you will need:
 \begin{enumerate}
@@ -177,7 +182,7 @@ Download and install the desktop version of Protege 5. Links for Windows instruc
 \item \url{https://protegewiki.stanford.edu/wiki/Instal_Protege5_Win}.
 \end{itemize}
 
-\subsection{Annotation steps}
+\subsection*{Annotation steps}
 
 All the annotation will be done in the individuals tab of Protege. 
 We discern between \textbf{domain} and \textbf{claim individuals}. 
@@ -196,7 +201,7 @@ steps to annotate a natural language claim:
 \end{enumerate}
 
 
-\subsubsection{Step 1: Choosing domain individuals}
+\subsubsection*{Step 1: Choosing domain individuals}
 
 We offer a list of \textbf{domain individuals} to choose from beforehand (loaded with
 the ontology). We consider domain individuals well-established topics in the
@@ -214,82 +219,84 @@ For example, even though \textit{marijuana legalization}, \textit{marijuana lega
 \textit{legalized marijuana} are three different concepts, we consider them the \underline{same
 domain individual}. 
 
-\subsubsection{Step 2.2: Recognizing claim relations}
+\subsubsection*{Step 2.2: Recognizing claim relations}
 
 Claim relations are usually, but not always, indicated by the main verb or the
 conjunction in the claim. We’ve noticed four basic different claim relations
-with four more subrelations (we highlight subrelations in the table with
+with four more sub relations (we highlight sub relations in the table with
 $\rightarrow$). In the table below, we list the claim relations, possible
 indicators that might hint the claim relation, the pattern in which the claim
 relation might appear in natural language with respect to domain individuals
 (A, B, C represent any domain individual) and an example of a natural language
 claim containing the claim relation. 
 
+\begin{table}[h!]
 \begin{tabular}{| l | p{3.5cm} | p{3cm} | p{5cm}| }
-\toprule
+\hline
 \cellcolor{gray!25} Claim relation & \cellcolor{gray!25}Indicators &
 \cellcolor{gray!25}Pattern & \cellcolor{gray!25}Example \\
-\midrule
+\hline
 	\textbf{Promotes} & 
 	Promotes, fosters, brings about, leads, forces, advances & 
 	\textbf{A} promotes \textbf{B} &
 \textit{Marijuana legalization improves health} \\
-\midrule
+\hline
 	$\rightarrow$ \textbf{Implies} & 
 	Implies, entails, if \dots then, is &
 	\textbf{A} implies \textbf{B} &
 \textit{If marijuana is legal, the crime rate will rise. } \\
-\midrule
+\hline
 	$\rightarrow$ \textbf{Causes} &
 	Causes &
 	\textbf{A} causes \textbf{B} &
 \textit{Marijuana legalization causes an increase in crime rate.} \\
-\midrule
+\hline
 	\textbf{Suppresses} &
 	Similar to promotes, but negative inhibitor &
 	\textbf{A} suppresses \textbf{B} &
 	\textit{ Marijuana hurts health. } \\
-	\midrule
+	\hline
 	$\rightarrow$ \textbf{Contradicts} &
 	Does not imply, if \dots then not, is not &
 	\textbf{A} implies not \textbf{B} &
 \textit{If marijuana is legal, no crime will happen. } \\
-\midrule
+\hline
 	$\rightarrow$ \textbf{Does not cause} &
 	Does not cause &
 	\textbf{A} does not cause \textbf{B} &
 \textit{Growing marijuana at home does not stop mafia selling marijuana. } \\
-\midrule
+\hline
 	\textbf{Declaration} &
 	defines, exists &
 	\textbf{A} &
 \textit{Legalized marijuana exists.} \\
-\midrule
+\hline
 	\textbf{Comparison} & 
 	Is more than, has more, does less &
 	\textbf{A} is more than \textbf{B} by criteria \textbf{C} &
 \textit{Marijuana is less addictive than alcohol} \\
-\bottomrule
+\hline
 \end{tabular}
+\end{table}
 
-In the case of promotes, its subrelation are implies and causes. Contradicts
-and does not cause are subrelation of suppresses. Subrelation are \textbf{more specific}
+In the case of promotes, its sub relation are implies and causes. Contradicts
+and does not cause are sub relation of suppresses. Sub relation are \textbf{more specific}
 than a claim relation meaning, if there is an implies relation, it is also a
 promotes, and, if there is a contradiction or does not cause relation, it is
 also a suppresses. 
 
-\subsubsection{Step 2.2 Annotation claim relations}
+\subsubsection*{Step 2.2 Annotation claim relations}
 
 Now that you’ve recognized the claim relation and domain individuals, you need
 to add properties to a \textbf{claim individual}. We now explain how to annotate for
-each of the four claim relations and subrelations. Promotes and suppresses are
+each of the four claim relations and sub relations. Promotes and suppresses are
 binary (two domain individuals), declaration is unary (single domain
 individuals), and comparison is ternary (three domain individuals). 
 
-\subsubsection{Promotes}
+\subsubsection*{Promotes}
 
 For promotes you can choose between three options (one claim relation and two
-claim subrelations):
+claim sub relations):
 \begin{itemize}
 \item Promotes (most general) $\Rightarrow$ Promotes 
 \item Implies $\Rightarrow$ Implies
@@ -309,7 +316,7 @@ the claim tobacco implies cancer is below is in figure~\ref{fig:promotes_example
 \label{fig:promotes_example}
 \end{figure}
 
-\subsubsection{Suppresses}
+\subsubsection*{Suppresses}
 
 Suppresses is the \textbf{opposite} of promotes. Everything valid for promotes
 also applies to suppresses, but instead of causes you have
@@ -328,13 +335,13 @@ the \texttt{has\_declaration} with the appropriate domain individual (as seen in
 \label{fig:declaration_example}
 \end{figure}
 
-\subsubsection{Comparison}
+\subsubsection*{Comparison}
 
 Comparisons in debates arise when someone compares two domain individuals,
 usually (but not always) by saying one is better according to some feature
 (which is a domain individual). The comparison pattern is A is more than B by
 C. The domain individual for more is annotated with
-\texttt{comparison\_greater}, less is ith \texttt{comparison\_less} and the
+\texttt{comparison\_greater}, less is with \texttt{comparison\_less} and the
 optional property of comparison is annotated with
 \texttt{comparison\_property}. If there is no property, but an expression like
 A is better than B is made, we don’t annotate \texttt{comparison\_property}.
@@ -347,7 +354,7 @@ example annotated in the figure~\ref{fig:comparison_example}.
 	\label{fig:comparison_example}
 \end{figure}
 
-\subsubsection{Step 2.3 Negation}
+\subsubsection*{Step 2.3 Negation}
 
 If you think you need to negate the selected relation, for example in the
 sentence: \textit{Marijuana legalization does not promote crime} the author explicitly
@@ -364,7 +371,7 @@ when opting for negation, especially with double negation.
 	\label{fig:negation_example}
 \end{figure}
 
-\subsubsection{Step 3 Selecting modality}
+\subsubsection*{Step 3 Selecting modality}
 
 We recognize that claims are made in a certain modality (way which they were
 expressed with) and discern between:
@@ -384,7 +391,7 @@ expressed with) and discern between:
 After recognizing the modality, we need to add a property of \texttt{has\_modality} which
 can be one of \texttt{fact, policy, good\_value, bad\_value}. 
 
-\subsubsection{Opinion holder}
+\subsubsection*{Opinion holder}
 
 If the author mentions that his claim is made by someone else, we need to
 annotate this information. For example, the following two claims are not made
@@ -400,7 +407,7 @@ case, the opinion holder is science in claim 1). For claim 2), we don't need to
 add a property \texttt{has\_opinion\_holder}, since the default opinion holder is the
 author. 
 
-\subsubsection{Step 5 Claim annotation comments}
+\subsubsection*{Step 5 Claim annotation comments}
 
 This is an optional step if you can't annotate the claim for some reason. You
 need to annotate the claim individual with a comment if you can't get its
@@ -419,7 +426,7 @@ you can add your comment.
 	\label{fig:comment_example}
 \end{figure}
 
-\subsection{Annotation Examples}
+\subsection*{Annotation Examples}
 
 \begin{mydef}
  \textit{Marijuana legalization will increase crime rate. }

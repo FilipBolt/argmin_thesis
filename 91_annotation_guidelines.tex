@@ -1,26 +1,44 @@
 \chapter{Annotation guidlines}
 \label{chap:annotation_guidelines}
 
-- Manually annotated datasets are essential to build and evaluate argumentation 
-mining models. \\
-- high quality dataset annotation requires that annotators are well trained in the task at hand \\
-- data should be consistently annotated between indepedently working annotators \\
-- having quality labelled data is a necessary foundation to build machine learning 
-models \\
-- to ensure annotators are understand the assigment and are able to complete 
-the annotation task successfully, good annotation guidelines are required \\
-- during the annotation of data described in this thesis  
+Quality labelled annotated datasets are essential to build and evaluate argumentation
+mining models.  High quality dataset annotation requires that annotators are
+well trained in the task at hand. 
+Data should be consistently annotated between indepedently working annotators. 
+To ensure annotators understand the assigment and are able to complete 
+the annotation task successfully, good annotation guidelines are required. 
+During the annotation of data described in this thesis  
 annotators had to do a test annotation before the real one, 
-discuss differently annotated examples until resolution, and redo annotation of examples
-where there was no consensus available  \\
-- this chapter shows the annotation guidelines for \begin{enumerate}
-\item microstructures (\ref{sec:microstructure_annotation_appendix}), 
-\item argumentative segments (\ref{sec:argseg_annotation}),
-\item claim formalizations (\ref{sec:formalization_annotation}), and
-\item argument comment relationship pairs (\ref{sec:argrec_annotation}).
-%TODO find annotation guidelines for implicit premiess (I think there are none)
-%\item implicit premises (\ref{sec:arg_premises_annotation}). 
-\end{enumerate}
+discuss differences until resolution, and redo annotation of examples
+where there was no consensus. 
+Once the annotation is complete, we measure inter-annotator agreement. 
+In the case of two annotators that each classify $N$ items into $k$ mutually
+exclusive categories, we use the Cohen's kappa \citep{cohen1960coefficient}. 
+Cohen's kappa is defined as
+$$
+\kappa = \frac{p_0 - p_e}{1 - p_e}
+$$
+where $p_0$ is the relative observed agreement among annotators, and 
+$p_e$ is the hypothetical probability of chance agreement. 
+We use Fleiss' kappa to asses inter-annotator agreement when dealing with more than
+two annotators \citep{fleiss1993review}.
+Let $N$ be the number of annotators, $n$ number of ratings per subject, and
+$k$ number of categories into which assignments are made. Then $n_{ij}$ represents
+the number of annotators who assigned $i$-th subject to the $j$-th category. 
+Fleiss' kappa is defined the same as Cohen's kappa, but $p_0$ and $p_e$ are defined as:
+\begin{align*}
+p_0 &= \frac{1}{Nn(n-1)} \left( \sum_{i=1}^{N} \sum_{j=1}^{k} n_{ij}^2 - Nn \right) \\
+p_e &= \frac{1}{Nn} \sum_{j=1}^{k} \left( \sum_{i=1}^{N} n_{ij} \right)^2
+\end{align*}
+
+This chapter shows the annotation guidelines for 
+\begin{enumerate*}[label=(\arabic*)]
+\item microstructures (section~\ref{sec:microstructure_annotation_appendix}), 
+\item argumentative segments (section~\ref{sec:argseg_annotation}),
+\item prominent claim and claim relationship pairs (section~\ref{sec:argrec_annotation}),
+\item claim set similarities, (section~\ref{app:sec:argpremises_annotation}), and
+\item claim formalizations (section~\ref{sec:formalization_annotation}).
+\end{enumerate*}
 
 \input{910_microstructure_annotation.tex}
 

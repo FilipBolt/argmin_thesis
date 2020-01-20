@@ -1,29 +1,29 @@
-\section{Argumentative segment annotation}
+\section{Claim segment annotation}
 \label{sec:argseg_annotation}
 
-Annotating segments from user comments divides an
-argument into claims. The claims can be transformed into microstructures
-(as done to create the microstructure dataset described in \ref{item:microstructures_dataset} or 
-formalized structures (as done to create the argument structure 
-dataset described in \ref{item:structure_dataset}). Annotating segments 
-involves paraphrasing extracted
-segments to help streamline the annotation of segments to structures. 
+Annotating claim segments from user comments splits the comment into claims. The
+claims can be transformed into microstructures (as done to create the
+microstructure dataset described in~\ref{item:microstructures_dataset}) or
+formalized structures (as done to create the argument structure dataset
+described in~\ref{item:structure_dataset}). Annotating segments involves
+paraphrasing extracted segments to help streamline the annotation of segments
+to structures. 
 
-The task is to segment debate posts into claims. Each 
-annotator gets a sheet in a Google Sheets file with their name. 
-Column $C$ contains a user comment on the topic of \textit{Should marijuana be legal} (MA).
-The annotator needs to carefully read the user comment, determine the stance of the 
-comment along with the explicit and implicit premises upon which the comment 
-founds the expressed stance. 
+The task is to segment debate posts into claims. Each annotator gets a sheet in
+a Google Sheets file with their name.  Column $C$ contains a user comment on
+the topic of ``\textit{Should marijuana be legal}'' (MA).  The annotator needs
+to carefully read the user comment, determine the stance of the comment along
+with the explicit and implicit claims upon which the comment founds the
+expressed stance. 
 
 For each comment, the annotation involves:
 \begin{enumerate}
 \item extracting all argumentative segments of the comment as an atomic claim,
-\item label the type of extracted segments (options in section X), and
-\item create a paraphrase of the extracted segment (guidlines on creating paraphrases in section Y).
+\item labeling the type of extracted segments, and
+\item creating a paraphrase of the extracted segment.
 \end{enumerate}
 All argumentative segments should be copied to column $D$. 
-Each extracted segment needs to be marked with a integer which denotes the
+Each extracted segment needs to be marked with an integer which denotes the
 ordering of appearance in the post (segment $S1$, $S2$, $S3$, \dots)
 All text belonging to segment $S1$ needs to be copied to column $D$, whereas
 the original comment text needs to be edited to mark the segments belonging to 
@@ -55,26 +55,26 @@ paired with an end tag.
 and \texttt{<S2>}stupid\texttt{</S2>}''
 \end{itemize}
 
-\subsection{Argumentative segment type}
+\subsection*{Argumentative segment type}
 
 The extracted segment needs to have a labelled segment type in column $F$ of
 the Google sheets document. The segment needs to be classified according to two
 taxonomies. First, the segment needs to be classified as either a 
 \begin{enumerate}
-\item fact -- statement that is true or untrue,
-\item policy -- statement providing a solution or another series of questions in response to a fact,
-\item value -- judgement, appraisal or evaluation. 
+\item fact --- statement that is true or untrue,
+\item policy --- statement providing a solution or another series of questions in response to a fact,
+\item value --- judgement, appraisal or evaluation. 
 \end{enumerate}
 Second, the segment needs to be labelled as either a 
 \begin{enumerate}
-\item assertion -- explicit statement or announcement or
-\item rhetorical question -- question not expecting an answer. 
+\item assertion --- explicit statement or announcement or
+\item rhetorical question --- question not expecting an answer. 
 \end{enumerate}
 More on facts, values and policies \citep{factvaluepolicy}.
 
-\subsection{Segment paraphrase annotation}
+\subsection*{Segment paraphrase annotation}
 
-For each extracted segment, a paraphrased needs to be constructed. The paraphrase needs to
+For each extracted segment, a paraphrase needs to be constructed. The paraphrase needs to
 be assigned to column $G$ in spirit of the following principles:
 \begin{itemize}
 \item \textbf{Argumentativeness} -- Only argumentative text should be paraphrased; 
@@ -86,13 +86,13 @@ be assigned to column $G$ in spirit of the following principles:
 topical context as well as their context;
 \item \textbf{Declarativity} -- paraphrases should 
 be in declarative form;
-\item \textbf{Dereferencing} -- Pronouns andnominal  references
+\item \textbf{Dereferencing} -- Pronouns and nominal  references
 should be  resolved;  and
 \item \textbf{Explicitness} -- Only explicitly stated
 information should be paraphrased, and not whatever might be implied by the claim
 \end{itemize}
 
-\subsection{Examples of segment annotation}
+\subsection*{Examples of segment annotation}
 
 \begin{mydef}
 By banning gay adoption, children in gay couple households have no legal status
@@ -107,7 +107,7 @@ parent.   Gay couple parents without adoption rights do not benefit from the
 generous tax deductions granted to heterosexual parents.
 \end{mydef}
 
-\noindent Izdvojeni segmenti:
+\noindent Extracted segments:
 \begin{itemize}
 \item[] \textbf{Segment1:} ``By banning gay adoption, children in gay couple
 households have no legal status should something happen to the parents,
@@ -214,7 +214,7 @@ learn from them.
 \item[] \textbf{Paraphrase}: We should learn from how animals behave.
 \end{itemize}
 
-\subsubsection{Segment atomicity}
+\subsubsection*{Segment atomicity}
 
 \begin{mydef}
 I do not at all feel as God wants two men or two woman to be together, as he
@@ -238,7 +238,7 @@ therefore it should be divided into two segments:
 \item[] ``is non of my business where people put things''
 \end{itemize}
 
-\subsection{Assuming too many implicit premises}
+\subsection*{Assuming too many implicit premises}
 
 \begin{mydef}
 I do not at all feel as God wants two men or two woman to be together, as he
@@ -256,10 +256,6 @@ such that the author believes that freedom refers to the freedom of choice.
 This might be the case, but concluding so requires making assumptions based 
 derived on implicit premises. 
 
-Moze se shvatiti kako je autor htio reci da se sloboda odnosi na slobodu
-izbora. To je vrlo vjerojatno istina, ali tu se radi o implicitnom znanju, do
-kojeg moramo doci ako dodamo implicitne premise. Tako mozemo dobiti iducu
-parafrazu. Doing so leads to the following paraphrase solution:
 \begin{itemize}
 \item[] ``American ancestors fought for freedom to choose''
 \end{itemize}
@@ -270,7 +266,7 @@ paraphrased not to include implicit knowledge and paraphrase in the following wa
 \item[] ``Ancestors of current Americans fought for freedom of Americans.''
 \end{itemize}
 
-\subsection{Reusing segment parts}
+\subsection*{Reusing segment parts}
 
 \begin{mydef}
 As you say, "Marriage is something in particular." Its a legal union requiring
@@ -326,18 +322,18 @@ can be divided into three atomic segments:
 \item[] ``many people married not to have children''
 \end{itemize}
 
-\subsection{Recognizing value segments}
+\subsection*{Recognizing value segments}
 
 Value segments often involve explicitly judging the value of an object.
 Sometimes, the judgement can be made implicitly, but seeing explicit 
 expressions should be preffered. For example: 
 ``People argue Gay marriage will lead to and allow
-untraditional families.'' is a factual statement, because 
+nontraditional families.'' is a factual statement, because 
 the author expresses his views of public opinion. If the author expressed
-his personal view like ``gay marriages lead to untraditional families''
+his personal view like ``gay marriages lead to nontraditional families''
 this could be considered a value statement, with the key part being
-the word ``untraditional'' which expresses negativity towards ``gay marriages''.
-Wheter there is a another view holder can influence the segment type. 
+the word ``nontraditional'' which expresses negativity towards ``gay marriages''.
+Whether there is a another view holder can influence the segment type. 
 The segment ``The bible says Gay rights are immoral'' is considered a factual statement, 
 whereas the segment ``Gay rights are immoral'' is considered to be a 
 value segment since the segment is attributed to the author. 

@@ -1,5 +1,7 @@
-\section{ArgPremises annotation}
-\label{sec:argpremises_annotation}
+\section{Implicit claim annotation}
+\label{app:sec:argpremises_annotation}
+
+\subsection*{Annotation guidelines}
 
 %This produced the argpremises dataset similarities in the (\ref{item:argpremises}).
 
@@ -9,11 +11,11 @@ PEOPLE'S OPINIONS, not expressing your own. This is not an online survey.
 
 \noindent There is an online discussion on marijuana legalization. The topic is: ``SHOULD
 MARIJUANA BE LEGALIZED?''. You have to be familiar with of the issue: You can
-get basic information about the topic on: 
-\begin{itemize}
-\item \url{http://medicalmarijuana.procon.org/}
-\item \url{http://idebate.org/debatabase/debates/health/addiction/house-believes-cannabis-should-be-legalised}
-\end{itemize}
+get basic information about the topic 
+in the footnotes\footnote{\url{http://medicalmarijuana.procon.org/}}\footnote{
+\burl{http://idebate.org/debatabase/debates/health/addiction/
+house-believes-cannabis-should-be-legalised}
+}
 Your goal is to identify whether the two sentences offered are talking about
 the same thing. Please rate the SIMILARITY LEVEL for each pair of sentences:
 \begin{itemize}
@@ -23,7 +25,8 @@ the same thing. Please rate the SIMILARITY LEVEL for each pair of sentences:
 \item 1: not similar
 \end{itemize}
 
-\noindent Example one: \\
+\noindent Example one:
+\begin{table}[h!]
 \begin{tabular}{|@{\ }r@{\ \  }p{0.72\columnwidth}|}
 \hline
 \textbf{Sentence 1:} & \emph{Marijuana does not cause any damage to our bodies}\\
@@ -31,9 +34,12 @@ the same thing. Please rate the SIMILARITY LEVEL for each pair of sentences:
 \textbf{Similarity level} & 6 \\
 \hline
 \end{tabular}
+\end{table}
+\pagebreak
 %\caption{User claim, the matching main claim, and the implicit premises filling the gap.}
 
-\noindent Example two: \\
+\noindent Example two:
+\begin{table}[h!]
 \begin{tabular}{|@{\ }r@{\ \  }p{0.72\columnwidth}|}
 \hline
 \textbf{Sentence 1:} & \emph{If legalized, people will use marijuana and other drugs more}\\
@@ -41,8 +47,10 @@ the same thing. Please rate the SIMILARITY LEVEL for each pair of sentences:
 \textbf{Similarity level} & 1 \\
 \hline
 \end{tabular}
+\end{table}
 
-\noindent Example three: \\
+\noindent Example three:
+\begin{table}[h!]
 \begin{tabular}{|@{\ }r@{\ \  }p{0.72\columnwidth}|}
 \hline
 \textbf{Sentence 1:} & \emph{A large portion of modern music an art has been inspired by marijuana}\\
@@ -50,3 +58,4 @@ the same thing. Please rate the SIMILARITY LEVEL for each pair of sentences:
 \textbf{Similarity level} & 4 \\
 \hline
 \end{tabular}
+\end{table}

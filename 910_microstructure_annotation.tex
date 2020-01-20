@@ -1,20 +1,19 @@
 \section{Microstructure annotation guidelines}
 \label{sec:microstructure_annotation_appendix}
 
-\noindent - Microstructures represent logically structured argumentative claims
-\citep{boltuzic2017toward}. \\
-- One can expresses logically equivalent claims in language \\
-- To limit the language variation microstructures were designed to translate
-expression rich phrases to be translated to a restricted language to allow for
-easier inference \\
-- microstructures  consist of domain specific concepts, 
-connected through a finite set of argumentative relations, expressed using 
-a certain modality \\
-- microstructure annotation proceduced the microstructures data (
-see item element in \ref{item:microstructures_dataset})\\
+% Microstructures represent logically structured argumentative claims
+% \citep{boltuzic2017toward}.
+% One can expresses logically equivalent claims in language. 
+% To limit the language variation microstructures were designed to translate
+% expression rich phrases to be translated to a restricted language to allow for
+% easier inference. 
+% - microstructures  consist of domain specific concepts, 
+% connected through a finite set of argumentative relations, expressed using 
+% a certain modality \\
+% - microstructure annotation proceduced the microstructures data (
+% see item element in \ref{item:microstructures_dataset})\\
 
-\newpage
-\subsection{Cheat sheet}
+\subsection*{Cheat sheet}
 
 \begin{minted}{microstructure_lexer.py:MicroStructureLexer -x}
 viewpoint_1(
@@ -52,10 +51,9 @@ viewpoint_1(
 Use with relation in front (\texttt{not\_promotes}, \texttt{not\_suppress}, \dots) \\
  
 \noindent \textbf{Quantities} (use with concepts) \\
-Some, All, Minority, Majority \\
+- Some, All, Minority, Majority \\
           
-\noindent \textbf{Concepts} 
-\footnote{\url{https://docs.google.com/document/d/1ETobyCA4mpMmml1HXyxD7IG67EzrNK7W_2gzaIN0k_k/edit}} \\
+\noindent \textbf{Concepts}\footnote{\url{https://docs.google.com/document/d/1ETobyCA4mpMmml1HXyxD7IG67EzrNK7W_2gzaIN0k_k/edit}} \\
 
 \noindent \textbf{Quality} $\in [1, 5]$ \\
  
@@ -63,7 +61,7 @@ Some, All, Minority, Majority \\
 
 \pagebreak
 
-\subsection{Task description}
+\subsection*{Task description}
 
 In this task we annotate argumentative sentences/claims and represent them
 using a logical generative grammar language, as well as a stance. The
@@ -99,7 +97,7 @@ captures the essence of the example sentence (ex. 1). The wording is lost,
 which can mean a lot sometimes (reading between the lines), but this is
 something we’re OK with.
 
-\subsection{Language description}
+\subsection*{Language description}
 
 As said, we annotate:
 \begin{itemize}
@@ -108,7 +106,7 @@ As said, we annotate:
 \item Viewpoints
 \end{itemize}
 
-\subsubsection{Concepts}
+\subsubsection*{Concepts}
 
 Concepts are noun phrases mentioned when discussing a topic. We provide a set
 of concepts that we have previously identified for the ``gay rights'' topic\footnote{
@@ -130,7 +128,7 @@ the relation \texttt{allow} (explained in relations below) and the concept \text
 the topic we know the state can allow gay marriages, therefore we can translate
 the sentence as: \texttt{allow(state, gay marriage).}
 
-\subsubsection{Quantity}
+\subsubsection*{Quantity}
 
 Each concept can be expressed with quantity. Quantities allowed are:
 \begin{itemize}
@@ -163,7 +161,7 @@ believes(
 \end{tabular}
 \end{table}
 
-\subsubsection{Relations}
+\subsubsection*{Relations}
 
 Relations are connections between concepts. Relations are not domain-bound (one
 can use them outside of gay marriages), while concepts are tied to domain 
@@ -195,7 +193,7 @@ Attribute (what gets promoted) \\
 \textbf{A} suppresses / decreases \\ 
 likelihood / smothers / \\
 represses / puts down / \\
-vaniquishes \textbf{B} 
+vanquishes \textbf{B} 
 }
 &
 Agent (which suppresses) & 
@@ -215,7 +213,7 @@ State of affairs \\
 \midrule
 \texttt{deny(A, B)} & 
 \makecell[cl]{
-Priciple \textbf{A} \\
+Principle \textbf{A} \\
 denies / disallows /
 bans \textbf{B} } & 
 Principle & 
@@ -262,7 +260,7 @@ the existence of \textbf{B} \\\\
 % \end{table}
 \end{footnotesize}
 
-\subsubsection{Negation}
+\subsubsection*{Negation}
 %TODO proper references in table rows
 
 Relations can be negated to indicate opposite meaning. Notice how example $3.a$
@@ -270,6 +268,7 @@ is not saying it is suppressing, but just denied promoting. Example $3.b$ also c
 use contradicts since being happy does not imply you are not rich, but it does
 not imply you are.
 
+\begin{table}[h!]
 \begin{footnotesize}
 \begin{tabular}{@{}m{1.5cm} m{5cm} m{8cm}}
 \toprule
@@ -293,13 +292,15 @@ believes(
 \bottomrule
 \end{tabular}
 \end{footnotesize}
+\end{table}
 
-\subsubsection{Nested Relations}
+\subsubsection*{Nested Relations}
 
 Relations can be nested within each other. Each relation takes two arguments.
 An argument can be another relation or a concept. Make sure you are correct
 with closing the opened braces. 
 
+\begin{table}[h!]
 \begin{footnotesize}
 \begin{tabular}{@{}m{1.5cm} m{5cm} m{8cm}}
 \toprule
@@ -336,8 +337,9 @@ believes(
 \bottomrule
 \end{tabular}
 \end{footnotesize}
+\end{table}
 
-\subsubsection{Viewpoints}
+\subsubsection*{Viewpoints}
 
 Viewpoints reflect whether the a viewpoint holder thinks the claim is believed
 (fact), desired (policy), or considered right/wrong (value judgement). When not
@@ -397,13 +399,14 @@ believes(
 \caption{Viewpoint claim annotation example}
 \end{table}
 
-\subsubsection{Stance}
+\subsubsection*{Stance}
 
 Please annotate stance, which answers the question:
 \textbf{Is the sentence pro-gay or not just by looking only at the offered claim} (not
 the entire post context)? Stance $\in {-2, -1, 0, 1, 2}$.
 
 \begin{table}[!htb]
+	\centering
 \begin{tabular}{c p{10cm}}
 \toprule
 Stance Value & Explanation \\
@@ -421,6 +424,7 @@ claim (explicitly states so). Any form of discrimination is seen as against.  \\
 \end{table}
 
 \begin{table}[!htb]
+	\centering
 \begin{tabular}{c p{10cm} r}
 \toprule
 Example & Claim & Stance \\
@@ -436,15 +440,15 @@ Example & Claim & Stance \\
 \caption{Examples of stance for the gay marriages topic}
 \end{table}
 
-\subsubsection{Quality}
+\subsubsection*{Quality}
 
 Evaluate your own logical claim transformation by inputting a number $\in [1, 5]$
 rating how well does the proposed formalization suit what the person said?
 
-\subsection{Technical instructions}
+\subsection*{Technical instructions}
 
 You will be provided with an excel spreadsheet with the posts and sentences.
-Please notify us as soon as possible if you can’t use Excel - we can send you
+Please notify us as soon as possible if you can’t use Excel --- we can send you
 the annotation in another format (Google spreadsheet, etc.). 
 
 The goal is to fill up the E, F, G columns (logical representation, stance and
@@ -452,7 +456,7 @@ quality, highlighted in green) in the provided spreadsheet based on the
 argumentative sentence in column D. Feel free to ignore columns A, and C (used
 for internal tracking). Column B might be useful, if you can’t determine the
 meaning in D. If you have problems or comments about an example, feel free to
-add them in column H and raise questions with us -- we will be happy to
+add them in column H and raise questions with us --- we will be happy to
 discuss! An example row will look like in table~\ref{tab:annotation_example}
 
 \begin{table}[!htb]
@@ -479,13 +483,13 @@ The full text of the post will be relatively long.
 A syntax checking script and your annotation is packaged into a zip file.  Your goal is to
 fill column E in \texttt{annotation.xls}.
 
-\subsubsection{Checking syntax correctness (optional)}
+\subsubsection*{Checking syntax correctness (optional)}
 
 We provide a script to verify that your solutions are syntactically correct. 
 You will need to install python and a python library xlrd. Make sure to install
 \texttt{python 2.x}!
 
-If you are not familiar with python, installing them on Windows is desribed in
+If you are not familiar with python, installing them on Windows is described in
 \url{http://www.howtogeek.com/197947/how-to-install-python-on-windows/}
 Xlrd is available to install from:
 \url{http://www.lexicon.net/sjmachin/xlrd-0.6.1.win32.exe} 
