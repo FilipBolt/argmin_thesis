@@ -1,15 +1,17 @@
 \chapter{Claim Structuring}
 \label{chap:claim_structuring}
 
-In the previous chapter, we have introduced two approaches to claim
-formalizations.  Having formalized claims can help in deriving inferred claims
+In the previous chapter, we have introduced two approaches to formalize 
+claims.  Having formalized claims can help in inferring claims
 or help with related downstream tasks (such as stance classification) as it
 will be shown in chapter~\ref{chap:analysis}.
 Formalized claims can be obtained manually, applying the steps laid out in the 
 claim ontology framework in chapter~\ref{chap:formalization}. 
-In this chapter, we wish to explore how some of the steps of the framework can 
-be automatized: formalizing new claims when the rest of the framework is already setup.
-In a setting where the domain ontology has been determined (domain is
+In this chapter, we wish to explore how some of the steps of the ClaimOntology
+framework can be automatized. 
+In particular, we focus on formalizing 
+claims, assuming that the rest of the framework is already setup. 
+Thus, we work in a setting where the domain ontology has been determined (domain is
 restricted and closed) we wish to explore how feasible it is to automatically
 acquire formalized claims from raw text claims: solve the \textbf{claim structuring}
 problem.
@@ -53,6 +55,8 @@ down into four components:
 		\mathit{legalized\_marijuana}, \mathit{mafia\_bankrupt},
 		\dots\}$)
 \end{itemize}
+The \emph{count} component reflects how many object properties the claim individual
+contains (a claim with a $\mathit{has\_declaration}$ property has $\mathit{unary}$ count, etc.).
 Now, to construct a formalized claim, we use a exactly one (out of four
 possible) \emph{modality}, exactly one (out of three possible) \emph{count},
 one or more (up to three, out of 22 possible) \emph{properties}, and one
@@ -66,10 +70,10 @@ P = \{\mathit{has\_antecedent},
 $$
 
 Taking into consideration all possible combinations of components from
-annotator A1, 106 binary labels ($82 \cdot \mathit{DI} + 17 \cdot \mathit{PR} + 4\cdot
-\mathit{CNT} + 3 \cdot \mathit{MOD}$) can be assigned to a claim, from which a
+annotator A1, 107 binary labels ($82 \cdot \mathit{DI} + 17 \cdot \mathit{PR} + 4\cdot
+\mathit{CNT} + 7 \cdot \mathit{MOD}$) can be assigned to a claim, from which a
 formalized claim can be constructed.  This means that there  exists an
-exponential ($2^{106}$) number of possible formalizations, a large number of
+exponential ($2^{107}$) number of possible formalizations, a large number of
 which is invalid.  An invalid formalization example would involve both the
 \texttt{has\_declaration} and \texttt{has\_antecedent} property which is not allowed,
 since \texttt{has\_declaration} can only be assigned to a \texttt{unary} claim,
@@ -101,14 +105,54 @@ To train each independent model, we use $5 \times 3$ nested-cross validation
 and optimize hyperparameters $C$ and $\gamma$ using grid search. 
 We experiment with both the \texttt{BR} and \texttt{LP} approach.
 
+% gold labels in predictions
+% lab_id     1.000000
+% iternum    2.000000
+% foldnum    2.000000
+% prec       0.930443
+% recall     0.777855
+% f1         0.817828
+% dtype: float64
+% 11
+% lab_id     8.000000
+% iternum    2.000000
+% foldnum    2.000000
+% prec       0.706546
+% recall     0.698467
+% f1         0.698874
+% dtype: float64
+% 82
+% lab_id     47.609489
+% iternum     1.751825
+% foldnum     1.751825
+% prec        0.100942
+% recall      0.060585
+% f1          0.069552
+% dtype: float64
+% 4
+% lab_id     97.500000
+% iternum     2.000000
+% foldnum     2.000000
+% prec        0.689005
+% recall      0.700169
+% f1          0.691263
+% dtype: float64
+% lab_id     42.445055
+% iternum     1.813187
+% foldnum     1.813187
+% prec        0.258942
+% recall      0.221668
+% f1          0.229637
+
 \paragraph{Chain classification (CC). }
 To take advantage of formalization component dependencies, we adopt the chain
 classification approach, as described in
 section~\ref{sec:chain_classification}.
 First, to verify the label dependency assumption we build a chain classifier
 which uses gold  labels as input in each prediction.  
-This yields performances 
-\todo{add performance}
+This yields performances an overall performance of average of $0.23$ F1-score. 
+The domain properties prove the hardest to predict, as removing them yields
+an average of $0.71$ F1-score. 
 This promising performance is more than enough reason to adopt the
 chain classification approach for claim formalization. 
 We frame all component classifications as multi-label classification 
@@ -125,13 +169,13 @@ It is sensible to use the chain classification model only in the
 
 \paragraph{Joint model (BiLSTM-J). } 
 Apart from dependencies in the claim structure, we wish to investigate whether
-we can structure claims which aren't gold claims.  To that end, we present a
-joint model which does claim segmentation (details described in
+it is feasible to derive the claim structure directly from text. 
+To that end, we present a joint model which does claim segmentation (details described in
 chapter~\ref{chap:claim_structuring}) and claim structuring in one step. We
-draw inspiration from \citep{miwa2016end} where they use multiple consecutive
+draw inspiration from \citep{miwa2016end} where they use consecutive
 LSTM cells to predict multiple outputs. We adopt a similar approach, where we
 use two sets of BiLSTM layers: first (\texttt{BiLSTM-seg}), to predict claims, and
-second (\texttt{BiLSTM-struc}) to predict claim formalization components.  The
+second (\texttt{BiLSTM-struc}) to predict claim formalization components. The
 \texttt{BiLSTM-seg} layer is a shared, as we wish to update its parameters
 when upon incorrect formalization in addition to incorrect claim segmentation.
 
@@ -168,28 +212,61 @@ The joint model is applied for both the \texttt{BR} and
 		& OR  & PA  & OR  & PA  & OR  & PA & OR  & PA &  OR & PA \\
 		\midrule
 
-		MAJ & & & & & & & & & & \\
-		IND & & & & & & & & & & \\		
+		RAND & \multicolumn{2}{c}{0.25} & \multicolumn{2}{c}{0.32} & \multicolumn{2}{c}{0.20} & \multicolumn{2}{c}{0.04} & \\
+		IND & 0.84 & & 0.79 & &  & & & & & \\		
 		CC & & & & & & & & & & \\
 		ECC & & & & & & & & & & \\
 		BiLSTM-J & & & & & & & & & & \\
 
 		\bottomrule
 	\end{tabular}
-	\caption{F1-score comparison between 
+	\caption{
+	F1-score comparison between 
 	the independent SVM (IND), majority classifier (MAJ), chain classification (CC), 
-	ensemble chain classification (ECC), and joint model (J)
+	ensemble chain classification (ECC), and joint model (BiLSTM-J)
 	in the task of 
 	claim structuring from both original (OR) and paraphrased text claims (PA)
-	using the \emph{molecular} approach. 
+	using the \texttt{BR} approach. 
 	Results are compared on individual components
-	across modalities \texttt{MOD}, counts (\texttt{CNT}), 
+	across modalities (\texttt{MOD}), counts (\texttt{CNT}), 
 	properties (\texttt{PR}), and 
 	domain individuals (\texttt{DI}). Finally, predictions are assembled into a 
 	formalized claim and compared against the gold formalized claims (\texttt{CL}).
 	}
 	\label{tab:claim_struc_per_component}
 \end{table}
+
+
+% reltypes_binary, relation_matrix, property_matrix, fvp_binary), axis=1
+% ranges_tutta = [reltypenum, relnum, propnum, fvp_num]
+
+% random baseline
+% 3
+% prec       0.332305
+% recall     0.501794
+% f1         0.318210
+% dtype: float64
+% 11
+% prec       0.164773
+% recall     0.509829
+% f1         0.198997
+% dtype: float64
+% 82
+% prec        0.021451
+% recall      0.473581
+% f1          0.036161
+% dtype: float64
+% 4
+% prec        0.256984
+% recall      0.534768
+% f1          0.253370
+
+% global
+% dtype: float64
+% prec        0.055964
+% recall      0.480862
+% f1          0.071223
+
 
 We perform two sets of experiments. First, we wish to explore models
 that predict the formalization structure on a per-component basis (structure
