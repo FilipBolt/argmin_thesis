@@ -41,10 +41,8 @@ it may contain several claims, as well as non-argumentative text.
 In this chapter, we first introduce the \ComArg corpus in section~\ref{sec:comarg}
 which contains labelled pairs of comments with prominent claims. Next, 
 we build a model for prominent claim identification as described in 
-section~\ref{sec:argrec_model}. The model is evaluated in 
-section~\ref{sec:argrec_experiments}. Finally, we conclude in 
-section~\ref{sec:argrec_conclusion}.
-
+section~\ref{sec:argrec_model}. Finally, the model is evaluated in 
+section~\ref{sec:argrec_experiments}. 
 \begin{table}
 \centering
 {\small
@@ -694,25 +692,25 @@ but the STS model failed.
 
 % conclusion 
 
-\section{Conclusion}
-\label{sec:argrec_conclusion}
-
-This chapter has presented the prominent claim identification task. 
-It also presented the \ComArg corpus, which consists of manually annotated
-comment-prominent claim pairs. 
-On this corpus, a supervised model for three prominent claim identification 
-setups of varying difficulty has been trained. 
-The model used textual entailment and semantic textual similarity features. 
-The inter-annotator agreement  and experiments showed prominent claim identification
-is a difficult task. 
-The best models outperformed simple baselines. 
-The models achieved between 70.5\% and 81.8\% micro-averaged F1-score. 
-Outputs of the textual entailment systems combined with stance alignment proved
-to be the best features.
-The model performance is marginally affected when applied to unseen topics. 
-Here, we have seen that sometimes the prominent claim can either be implicitly/vaguely 
-(supported \textbf{s} or attacked \textbf{a}) or explicitly (supported \textbf{S} or attacked
-\textbf{A}) mentioned in the comment. Hence, we wish to explore on what implicit knowledge is
-needed to overcome the gap between two claims. 
-In the next chapter, we explore approaches of deriving implicit knowledge to overcome
-the gap --- implicit claims. 
+% \section{Conclusion}
+% \label{sec:argrec_conclusion}
+% 
+% This chapter has presented the prominent claim identification task. 
+% It also presented the \ComArg corpus, which consists of manually annotated
+% comment-prominent claim pairs. 
+% On this corpus, a supervised model for three prominent claim identification 
+% setups of varying difficulty has been trained. 
+% The model used textual entailment and semantic textual similarity features. 
+% The inter-annotator agreement  and experiments showed prominent claim identification
+% is a difficult task. 
+% The best models outperformed simple baselines. 
+% The models achieved between 70.5\% and 81.8\% micro-averaged F1-score. 
+% Outputs of the textual entailment systems combined with stance alignment proved
+% to be the best features.
+% The model performance is marginally affected when applied to unseen topics. 
+% Here, we have seen that sometimes the prominent claim can either be implicitly/vaguely 
+% (supported \textbf{s} or attacked \textbf{a}) or explicitly (supported \textbf{S} or attacked
+% \textbf{A}) mentioned in the comment. Hence, we wish to explore on what implicit knowledge is
+% needed to overcome the gap between two claims. 
+% In the next chapter, we explore approaches of deriving implicit knowledge to overcome
+% the gap --- implicit claims. 

@@ -7,7 +7,7 @@
 We will start analyzing discussions by trying to find the discussions' most
 prominent claims.
 When discussing a topic, users express claims to back up their opinion. 
-Recognizing claims in text is a challenge in online discussions due to 
+Recognizing claims in text is a challenge in internet discussions due to 
 dealing with noisy, vague, and implicit text. 
 Users use claims to form arguments. 
 Arguments can then lead to more complex 
@@ -21,14 +21,14 @@ processing and machine learning.
 In this chapter, we will first investigate on how to find 
 prominent claim candidates from text, considering the variability on how 
 claims can be expressed. Second, we investigate the possibility of 
-acquiring prominent claims from an online discussion by means of clustering, 
+acquiring prominent claims from an internet discussion by means of clustering, 
 setting a baseline for unsupervised prominent claim identification. 
 We will start by introducing the dataset used to study clustering of
 user comments to determine prominent claims in section~\ref{sec:argclu_data}.
 Next, we will introduce an unsupervised
 model for claim clustering in section~\ref{sec:argclu_model}.
-The results of the model will be analyzed in section~\ref{sec:argclu_analysis}.
-Finally, we will conclude in section~\ref{sec:argclu_conclusion}. 
+Finally, the results of the model will be analyzed and discussed 
+in section~\ref{sec:argclu_analysis}.
 
 \section{Data}
 \label{sec:argclu_data}
@@ -115,7 +115,7 @@ semantic similarity (and is also more realistic).
 \section{Claim Cluster Analysis}
 \label{sec:argclu_analysis}
 
-Using data from online discussions presented in section~\ref{sec:argclu_data}, 
+Using data from internet discussions presented in section~\ref{sec:argclu_data}, 
 we wish to cluster posts and analyze subsequent results. 
 We perform two kinds of analysis. First, we analyze different clustering models. 
 Second, we analyze clustering quality from one of the clustering models chosen. 
@@ -540,19 +540,19 @@ These could have been represented as a single prominent claim which would state:
 The dendrogram also suggests that having 10 prominent claims might not be optimal 
 for the ``Marijuana'' topic and the similarity measure. 
 
-\section{Conclusion}
-\label{sec:argclu_conclusion}
-
-In this chapter, we explored one of the first steps to performing argumentation
-mining of claims: clustering claims to determine prominent claim candidates.
-More specifically, we used hierarchical agglomerative clustering (HAC) to
-claims in online discussions by clustering semantically similar sentences.  The
-best performing clustering models achieved 0.15 to 0.30 V-measure. 
-We noticed that there seem to be differences that basic textual similarity
-can't measure, as textual similarity might be too much on the surface level technique. 
+% \section{Conclusion}
+% \label{sec:argclu_conclusion}
+% 
+% In this chapter, we explored one of the first steps to performing argumentation
+% mining of claims: clustering claims to determine prominent claim candidates.
+% More specifically, we used hierarchical agglomerative clustering (HAC) to
+% claims in internet discussions by clustering semantically similar sentences.  The
+% best performing clustering models achieved 0.15 to 0.30 V-measure. 
+% We noticed that there seem to be differences that basic textual similarity
+% can't measure, as textual similarity might be too much on the surface level technique. 
 
 Claim clustering is one possible, unstructured, approach to 
-detect prominent claims from text  
+detect prominent claims from text.
 It is unstructured, as we do not know anything, but the final result of
 prominent claims (no inference behind the final decisions is known). In
 part~\ref{part:struc} of the thesis, we will provide an
@@ -561,7 +561,7 @@ structured approach involving formalizations and reasoning. This unstructured
 approach does not allow for describing relationships between resulting
 prominent claims. Determining which are the prominent claims is one type of 
 argumentation mining analysis. Once the prominent claims are determined, we can
-search how they are expressed in online discussions. 
+search how they are expressed in internet discussions. 
 In that light, we move on the next chapter, where we will 
 explore determining the relationships between claims through the 
 prominent claim identification task. 

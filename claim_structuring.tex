@@ -20,8 +20,7 @@ First, we explain how we adopt the dataset which will be used for claim
 structuring in section~\ref{sec:claim_struc_data}.  Then we define models that
 attempt to solve the claim structuring problem in
 section~\ref{sec:claim_struc_models}.  The models are evaluated across multiple
-setups in section~\ref{sec:claim_struc_experiment}. We analyze the results of
-claim structuring and conclude in section~\ref{sec:claim_struc_conclusion}. 
+setups in section~\ref{sec:claim_struc_experiment}.  
 
 \section{Data}
 \label{sec:claim_struc_data}
@@ -155,11 +154,14 @@ The domain properties prove the hardest to predict, as removing them yields
 an average of $0.71$ F1-score. 
 This promising performance is more than enough reason to adopt the
 chain classification approach for claim formalization. 
-We frame all component classifications as multi-label classification 
-(generalizing even the multiclass count and modality prediction problems).
+We frame all component classifications as either multiclass or multi-label classification.
+We prefer to use multiclass classification where possible 
+(count and modality component prediction), since
+generalizing multiclass to multi-label classification likely degrades performance
+due to loss of information between classes. 
 SVMs models are then chained such that the prediction of one SVM is added as
-input to the following SVM model, until all labels are predicted. We randomize 
-the ordering of labels which are predicted.
+input to the following SVM model, until all labels are predicted. 
+We randomize the ordering of labels which are predicted.
 Additionally, to alleviate the influence of randomization, we 
 ensemble chain classifiers (ECC) using a majority vote. 
 To train the model, we use $5 \times 3$ nested-cross validation
@@ -175,20 +177,32 @@ chapter~\ref{chap:claim_structuring}) and claim structuring in one step. We
 draw inspiration from \citep{miwa2016end} where they use consecutive
 LSTM cells to predict multiple outputs. We adopt a similar approach, where we
 use two sets of BiLSTM layers: first (\texttt{BiLSTM-seg}), to predict claims, and
-second (\texttt{BiLSTM-struc}) to predict claim formalization components. The
+second (\texttt{BiLSTM-struc}) to perform claim formalization of the predicted claims. The
 \texttt{BiLSTM-seg} layer is a shared, as we wish to update its parameters
 when upon incorrect formalization in addition to incorrect claim segmentation.
 
 The input of the \texttt{BiLSTM-seg} layer is a sequence of tokens and their
 respective part-of-speech (POS) tags \citep{brown1957linguistic} paired \texttt{BIO}
 tags (explained in section~\ref{sec:claim_seg_problem}). 
-Each BiLSTM layer is followed up by a linear and softmax layer to produce 
-label probabilities. The output of the
-\texttt{BiLSTM-seg} is a set of claims. Then each claim is formalized via the
-\texttt{BiLSTM-struc}.  The model architecture is shown in Fig.~\ref{fig:joint_model}. 
+The \textit{BiLSTM-seg} layer produces \texttt{BIO} tags, which are then converted to textual
+claims. Then, in the \textit{BiLSTM-struc} part, component classifiers
+are hooked to the predicted input claim text. Component classifiers
+consist of a BiLSTM and a linear layer. Softmax is applied to 
+the multiclass modality and count classifiers, whereas the sigmoid function is
+applied to the multi-label to the domain individual and property classifiers in
+order to obtain label probabilities. 
+The output of the \textit{BiLSTM-struc} are class probabilities for all four 
+formalized claim components. 
+The model architecture is illustrated in Fig.~\ref{fig:joint_model}. 
 We use three sets of embeddings: word, POS embeddings, and \texttt{BIO} tag
 embeddings. We optimize using the stochastic gradient descent algorithm
 with a learning rate of $0.01$ and use L2 penalty for regularization. 
+Negative log-likelihood loss is used to calculate loss for
+\texttt{BIO} tags, formalization modality, and formalization count.
+Binary cross-entropy is used to calculate loss for formalization
+properties and formalization domain individuals, since they are used in a 
+multi-label setup). 
+The loss of the joint model is simply a sum of all individual losses. 
 We experiment with and without pretrained word embeddings. 
 The joint model is applied for both the \texttt{BR} and 
 \texttt{LP} setup. 
@@ -212,16 +226,16 @@ The joint model is applied for both the \texttt{BR} and
 		& OR  & PA  & OR  & PA  & OR  & PA & OR  & PA &  OR & PA \\
 		\midrule
 
-		RAND & \multicolumn{2}{c}{0.25} & \multicolumn{2}{c}{0.32} & \multicolumn{2}{c}{0.20} & \multicolumn{2}{c}{0.04} & \\
-		IND & 0.84 & & 0.79 & &  & & & & & \\		
-		CC & & & & & & & & & & \\
-		ECC & & & & & & & & & & \\
-		BiLSTM-J & & & & & & & & & & \\
+		RAND & \multicolumn{2}{c}{0.25} & \multicolumn{2}{c}{0.32} & \multicolumn{2}{c}{0.10} & \multicolumn{2}{c}{0.04} & \multicolumn{2}{c}{0.00} \\
+		IND & \textbf{0.84} & 0.90 & \textbf{0.79} & \textbf{0.87} & 0.11 & 0.24 & \textbf{0.05} & 0.13 & 0.00 & 0.00  \\		
+		CC & \textbf{0.84} & \textbf{0.91} & \textbf{0.79} & \textbf{0.87} & 0.14 & 0.39 & 0.03 & 0.05 & 0.02 & 0.03 \\
+		ECC & 0.80 & 0.88 & 0.77 & \textbf{0.87} & \textbf{0.15} & \textbf{0.41} & 0.04 & \textbf{0.06} & \textbf{0.03} & \textbf{0.04} \\
+		BiLSTM-J & 0.52 & / &  0.33 & / & 0.11 & / &  0.00 & / & 0.00 & / \\
 
 		\bottomrule
 	\end{tabular}
 	\caption{
-	F1-score comparison between 
+	Macro-averaged F1-score comparison between 
 	the independent SVM (IND), majority classifier (MAJ), chain classification (CC), 
 	ensemble chain classification (ECC), and joint model (BiLSTM-J)
 	in the task of 
@@ -232,41 +246,13 @@ The joint model is applied for both the \texttt{BR} and
 	properties (\texttt{PR}), and 
 	domain individuals (\texttt{DI}). Finally, predictions are assembled into a 
 	formalized claim and compared against the gold formalized claims (\texttt{CL}).
+	Best results for each setup are boldfaced.
 	}
 	\label{tab:claim_struc_per_component}
 \end{table}
 
-
 % reltypes_binary, relation_matrix, property_matrix, fvp_binary), axis=1
 % ranges_tutta = [reltypenum, relnum, propnum, fvp_num]
-
-% random baseline
-% 3
-% prec       0.332305
-% recall     0.501794
-% f1         0.318210
-% dtype: float64
-% 11
-% prec       0.164773
-% recall     0.509829
-% f1         0.198997
-% dtype: float64
-% 82
-% prec        0.021451
-% recall      0.473581
-% f1          0.036161
-% dtype: float64
-% 4
-% prec        0.256984
-% recall      0.534768
-% f1          0.253370
-
-% global
-% dtype: float64
-% prec        0.055964
-% recall      0.480862
-% f1          0.071223
-
 
 We perform two sets of experiments. First, we wish to explore models
 that predict the formalization structure on a per-component basis (structure
@@ -288,102 +274,183 @@ feasible to expect to correctly predict infrequently seen formalizations.
 Table~\ref{tab:claim_struc_per_component} shows macro averaged F1-scores for
 the majority classifiers (MAJ), independent SVM classifiers (IND), chain
 classifiers (CC), ensemble chain classifiers (ECC), and the joint segmentation
-and structuring BiLSTM model (BiLSTM-J).  We experiment with both original
-source claims (as they were written by the authors) and paraphrased claims (as
+and structuring BiLSTM model (BiLSTM-J). We experiment with both original
+source claims $OR$ (as they were written by the authors) and paraphrased claims $PA$ (as
 they were transcribed by annotators).
 Models are trained to predict components, with their predictions then assembled
 together to constitute a formalized claim, which is compared against the gold
 formalized claim.  The baseline is set using the majority 
-class for all individual components. 
+class for all individual components. The majority baseline does not work 
+based on input, therefore has the same results for both the $OR$ and $PA$ setup. 
 The joint model might not produce the same number claim formalizations, 
-so we evaluate on a post level and average across all posts. 
+so we evaluate on a comment level and average across all comments. Further, the joint
+model can not use paraphrased claims since it works with the unsegmented comment. 
 Additionally, we could have regularized the models by preventing invalid
 formalizations perhaps in the form of constraint programming, but leave this
 for future work. 
 
-\todo{comment the results}
-The results suggest that predicting components is a somewhat feasible tasks,
-but predicting a correct combination of components seems very difficult.  The
-most problematic proved predicting the correct property (\texttt{PR}), with
-model X achieving the best performance of , which is still considered low. 
-% TODO insert rest of comments on the results
+Overall, recognizing the entire formalized claim looks like an extremely
+challenging task, since the best performing model ($ECC$) manages to achieve
+only $0.03$ and $0.04$ majority F1-score
+using original and paraphrased claims, respectively. This is mainly due
+to the low performance of recognizing domain individuals in a claim.
+Recognizing domain individuals in a claim is expectedly difficult, since there
+are 75 sparsely distributed domain individuals, and only 847 claims.
+Inspecting the component outputs of the indenpedent classifier, we conclude
+that it mostly manages to correctly classify up to two components (mostly $MOD$
+and $CNT$), but never manages to identify three or all four
+components correctly, hence it never outputs the correct claim formalization. 
+Unlike the $IND$ setup, the $CC$ and $ECC$ models managed to produce fully
+accurate formalizations, and correctly predict three out of four component parts
+in roughly 25\% of cases.
+Even though the $CC$ and $ECC$ models exhibit performance drops in recognizing
+$MOD$ and $CNT$ compared to individual classifiers, overall they seem like the most
+promising options to formalize claims. 
+
+%  final BIO                                                                                                                                                                                                    
+%  ####################                                                                                                                                                                                         
+%  precision basic 188 573 0.32809773123909247                                                                                                                                                                  
+%  recall basic 188 631 0.2979397781299525                                                                                                                                                                      
+%  offset 394 573 0.68760907504363                                                                                                                                                                              
+%  offset 394 631 0.624405705229794                                                                                                                                                                             
+%  ####################                                                                                                                                                                                         
+%  final reltype                                                                                                                                                                                                
+%  ####################                                                                                                                                                                                         
+%  /home/filip/Documents/Doktorski/argontology/src/env/lib/python3.6/site-packages/sklearn/metrics/classification.py:1437: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in
+%    'precision', 'predicted', average, warn_for)                                                                                                                                                               
+%    (array([0.        , 0.56118881, 0.9543877 ]), array([0.        , 0.70549451, 0.96855346]), array([0.        , 0.62512171, 0.9614184 ]), array([ 176,  455, 3975]))                                         
+%    (0.5051921719001541, 0.5580159882046675, 0.5288467060081589, None)                                                                                                                                         
+%    ####################                                                                                                                                                                                       
+%    final fvp                                                                                                                                                                                                  
+%    ####################                                                                                                                                                                                       
+%    (array([0.58041958, 0.        , 0.        , 0.        , 0.9543877 ]), array([0.71397849, 0.        , 0.        , 0.        , 0.96855346]), array([0.64030858, 0.        , 0.        , 0.        , 0.9614184
+%    (0.3069614569862463, 0.3365063907486306, 0.3203453973489082, None)                                                                                                                                         
+%    ####################                                                                                                                                                                                       
+%    final relation                                                                                                                                                                                             
+%    ####################                                                                                                                                                                                       
+%    /home/filip/Documents/Doktorski/argontology/src/env/lib/python3.6/site-packages/sklearn/metrics/classification.py:1437: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 
+%      'precision', 'predicted', average, warn_for)                                                                                                                                                             
+%      relation avg f1: 0.03323903818953324                                                                                                                                                                     
 
 % joint model analysis
-\todo{comment joint model separately}
-In the joint model setup, we set the learning rate in all layers. 
-We also experiment with setting lower learning rates for shared layers,
-but to no significant performance boost. 
-Looking into the joint model outputs, we notice that the formalization predictions
+The joint \textit{BiLSTM-J} model performs worse than the $IND$, $CC$, and $ECC$
+models, but better than the random baseline in three out of four categories.
+This indicates that jointly extracting claims and structuring claims is an
+extremely difficult task. The joint model fails to successfully extract and
+formalize a single claim. 
+The performance of the joint model in claim segmentation is slighly better than the 
+$SVM$ model in section~\ref{sec:claim_seg_experiment} outperforming it by 
+$0.07$ and $0.06$ macro-averaged F1-score percentage points. However, this still means
+that the \textit{BiLSTM-struc} part of the joint model uses incorrect claim segments
+a large portion of the time. 
+Our suspicion that this might be causing poor performance is confirmed upon
+seeing the joint model outputs, as we notice that the formalization predictions
 are particularly bad when predicted claims are far from sensible. 
 
-\begin{table}
-	\centering
-%\renewcommand{\arraystretch}{2}%
-	\begin{tabular}{p{3cm} c c c c }
-	\toprule
-		\multirow{2}{*}{Model / Setup}
-		& \multicolumn{2}{c}{\texttt{LP}}
-		& \multicolumn{2}{c}{\texttt{BR}}
-		\\
-		& OR  & PA  & OR  & PA \\
-		\midrule
+In an attempt to improve the joint model, we experiment with setting lower
+learning rates for the shared \textit{BiLSTM-seg} layer, but to no significant
+performance boost.  We then inspect the biggest contributers to the loss during
+model training.  The highest contributor, by far, is the loss caused by $DI$
+prediction.  We then manually try to assign weights to loss functions to
+prevent a single component prediction from dominanting the total loss score.
+By weighting the loss, we do obtain slightly better performance, but consider
+this to be a solely short-term workaround. 
+Additionally, we may try to train this model in using soft parameter sharing
+ where the distance between the parameters of the
+model is regularized to encourage model parameters to be similar
+\citep{ruder2017overview}.
 
-		MAJ & & & &  \\
-		IND & & & & \\		
-		BiLSTM-J & & & & \\
+% \begin{table}
+% 	\centering
+% \renewcommand{\arraystretch}{2}%
+% 	\begin{tabular}{p{3cm} c c }
+% 	\toprule
+% 		\multirow{2}{*}{Model / Setup}
+% 		& \multicolumn{2}{c}{\texttt{LP}}
+% 		\\
+% 		& OR  & PA \\
+% 		\midrule
+% 		\textit{IND} &  0.08 & 0.14 \\		
+% 		\textit{BiLSTM-J} & & \\
+% 		\bottomrule
+% 	\end{tabular}
+% 	\caption{Claim structuring
+% 	macro-averaged F1-score using the 
+% 	binary relevance (\texttt{BR}) 
+% 	and label powerset (\texttt{LP}) 
+% 	approach for original (OR) and paraphrased (PA) claims. 
+% 	}
+% 	\label{tab:claim_struc_atomic_molecular}
+% \end{table}
 
-		\bottomrule
-	\end{tabular}
-	\caption{Claim structuring
-	F1-score using the 
-	binary relevance (\texttt{BR}) 
-	and label powerset (\texttt{LP}) 
-	approach for original (OR) and paraphrased (PA) claims. 
-	}
-	\label{tab:claim_struc_atomic_molecular}
-\end{table}
-
-\paragraph{\texttt{BR} vs. \texttt{LP} } Even though the
+\paragraph{Predicting components \texttt{BR} or entire formalizations \texttt{LP}.} 
+Even though the
 \texttt{BR} approach is the more realistic setup, we now compare it
 to the \texttt{LP} setup. For the \texttt{LP} setup
 we map each claim formalization to a label and employ a single multiclass
 classifier to predict the claim formalization from the claim text.
-Results are listed in table~\ref{tab:claim_struc_atomic_molecular}.
-% TODO compare results in general 
-\todo{compare results in general}
-In general, if we compare the best \texttt{LP} approach and
-the best \texttt{BR} approach \dots
-\todo{ compare results of assembly vs. }
+To obtain \texttt{LP} classes, first we generate all possible combinations of 
+formalization components yielding $23\,318\,832$ possible combinations.
+Then we restrict the space of possible solutions to only feasible ones
+resulting in the final $10\,652\,784$ classes, but only 384 classes
+occur in the dataset used. 
+We omit results from both the majority and random classifers since they
+perform extremely poorly ($<0.01$ macro-averaged F1-score).
+% Results are listed in table~\ref{tab:claim_struc_atomic_molecular}.
+We employ the $IND$ and \texttt{BiLSTM-J} model. The IND model achieves 
+$0.08$ and $0.14$ macro-averaged F1-score using original and
+paraphrased claims, respectively. This is significantly higher than 
+$IND$ model in the \texttt{BR} setup where the model achieved less than $0.01$
+macro-averaged F1-score percentage points in using both original and paraphrased claims.
+As for the \texttt{BiLSTM-J} model, it achieves similarly poor results as in the
+\texttt{BR} setup -- no more than $0.01$ macro-averaged F1-score. 
+We conclude that using the \texttt{LP} setup gives better results than the 
+\texttt{BR} setup. However, due to the size of the dataset and number of potential 
+classes, we expect that model performance using the \texttt{LP} frame
+will degrade in a larger and more diverse dataset. 
+
+% 279 # weighted 0.270870342083376                                                                                                                                                                                   
+% 280 # macro 0.14793585458242742                                                                                                                                                                                    
+% 281 # micro 0.3047225264695144                                                                                                                                                                                     
+% 282 #                                                                                                                                                                                                              
+% 283 # ORIG                                                                                                                                                                                                         
+% 284 # avg_score(scores_expansion_orig)                                                                                                                                                                             
+% 285 # weighted 0.15657690759197077                                                                                                                                                                                 
+% 286 # macro 0.08455041836472887                                                                                                                                                                                    
+% 287 # micro 0.18802847754654986                                                                                                                                                                                    
 
 All experiments clearly show that using paraphrases proved useful for
-\textbf{all} approaches. This clearly suggests that claim paraphrases
-proved useful for both claim understanding and for claim structuring. 
-We hypothesize this is mostly due to the reduction of noisiness and 
-vagueness of claims. 
-
-% TODO some conclusion on the joint model vs. no joint model
-
-\section{Conclusion}
-\label{sec:claim_struc_conclusion}
-
-In this chapter, we experimented with claim structuring. 
-We used the ontology formalizations are adapted them for 
-machine learning models in a binary relevance and label powerset setup. 
-We evaluate multiple models, some of them using structured prediction to obtain 
-results of \todo{add results}. From the results, it is 
-visible that \todo{add what is visible}
-We conclude that claim structuring is in general a difficult problem to solve,
-but with the help of structured approaches can achieve decent. 
-\todo{write more in the conclusion}
-%TODO give some decent number .
-Interestingly to note, results using paraphrased claims are significantly
-better across all models on average by F1-score points, which shows claim
-paraphrases make it easier to process claims for both humans and machines (each
-in their own way). 
-% TODO use paraphrased number - original average across all 
+\textbf{all} approaches.  The models that use paraphrases outperform models
+using original claims by an average of $0.08$ macro-averaged F1-score
+percentage points.  This clearly suggests that having claim paraphrases is not
+only useful for annotators when formalizing claims, but also for machine
+learning algorithms doing claim structuring.  We hypothesize this is mostly due
+to the reduction of noisiness and vagueness of claims.  In subsequent work, we wish
+to further research the advantages of claim paraphrases, in addition to 
+exploring deriving paraphrased, denoised claims from original ones. 
 
 After we have explored the feasibility of automatic claim structuring, in the
 next chapter we will explore the benefits of having formalized claims. 
 We demonstrate examples of argumentation analysis one can perform using
 formalized claims. 
 
+% TODO some conclusion on the joint model vs. no joint model
+
+% \section{Conclusion}
+% \label{sec:claim_struc_conclusion}
+% 
+% In this chapter, we experimented with claim structuring. 
+% We used the ontology formalizations are adapted them for 
+% machine learning models in a binary relevance and label powerset setup. 
+% We evaluate multiple models, some of them using structured prediction to obtain 
+% results of \todo{add results}. From the results, it is 
+% visible that \todo{add what is visible}
+% We conclude that claim structuring is in general a difficult problem to solve,
+% but with the help of structured approaches can achieve decent. 
+% \todo{write more in the conclusion}
+% %TODO give some decent number .
+% Interestingly to note, results using paraphrased claims are significantly
+% better across all models on average by F1-score points, which shows claim
+% paraphrases make it easier to process claims for both humans and machines (each
+% in their own way). 
+% % TODO use paraphrased number - original average across all 

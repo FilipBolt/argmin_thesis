@@ -9,7 +9,7 @@ linguistics conferences\footnote{According to Google Scholar
 \url{http://www.conferenceranks.com/}}, all within the past five years. The
 growth can largely be attributed to the advent of robust natural language
 processing methods and the increased availability of argumentative data sources,
-such as online debates and discussions. 
+such as internet debates and discussions. 
 
 In this chapter, first we will explain the research scope argumentation
 mining and give a short overview of its history (section~\ref{sec:definition}).
@@ -75,7 +75,7 @@ conducted in chapter~\ref{chap:analysis}.
 
 
 Fig.~\ref{fig:example_pipeline} shows an example of an argumentation mining
-pipeline. Two comments are taken from an online discussion forum on the topic
+pipeline. Two comments are taken from an internet discussion forum on the topic
 of ``\emph{Should marijuana be legalized?}''. The author of the first comment
 is \con{against} the legalization of marijuana, the author of the second
 comment is \pro{for} the legalization of marijuana.  In this example, we use an
@@ -250,7 +250,7 @@ argumentation mining. Extensive research has then been conducted that mainly
 adopted the \emph{structured argumentation} approach.
 
 Within the scope of this thesis, we are interested in \emph{monological},
-\emph{structured argumentation}.  We wish to analyze online discussions without
+\emph{structured argumentation}.  We wish to analyze internet discussions without
 accounting for the dialogical component, but merely the content of the
 discussion. Structured argumentation is also the focus of our interest, as we
 wish to grasp the semantics of arguments and claims, instead of treating them
@@ -314,7 +314,7 @@ to detect argument component boundaries.
 \emph{Genre of the input text} is defined by the type of input data processed.
 Usually, a single genre of documents is explored within an argumentation
 pipeline, such as legal documents \citep{palau2009argumentation}, scientific
-articles \citep{teufel2009towards}, or online discussion forums
+articles \citep{teufel2009towards}, or internet discussion forums
 \citep{hasan2014you, boltuzic2014back, habernal2017argumentation}.  In
 \citep{budzynska2014towards} they show how dialogue-agnostic and
 context-agnostic models perform poorly.  Similar performance is shown in
@@ -345,7 +345,7 @@ Within the scope of this thesis, we will work on paragraph, sentence, and
 sub-sentence \emph{granularity of input text}, with the emphasis on
 sub-sentence level. We will define claims on a sub- and intra-sentence level as
 part of the claim segmentation problem (chapter~\ref{chap:claim_segmentation}).
-The \emph{genre of input} will be, as the title suggests, online discussions.
+The \emph{genre of input} will be, as the title suggests, internet discussions.
 We define our own \emph{argumentation model} in
 chapter~\ref{chap:formalization} which is inspired by Freeman's model and the
 work of \citet{hashimoto2012excitatory}.
@@ -370,7 +370,7 @@ in more detail.
 %go to the intra-sentence level and detect argument component boundaries \\
 
 % \noindent - the genre aspect defines the type of input data, such as legal/law, 
-% online discussions, news, essays, etc. \\
+% internet discussions, news, essays, etc. \\
 % - existing approaches have mainly considered a single genre \\
 % - for example, \citep{budzynska2014towards} shows how AM need
 % context, a dialogue-agnostic models do not work \\
@@ -554,7 +554,7 @@ chapter~\ref{chap:claim_segmentation} for claim segmentation.
 % in one claim, but not the other makes a claim completely different as
 % context is lost \\
 % - we also don't wish to rely on text containing subjects or predictes as 
-% texts in online discusses are often times ungrammatical \\
+% texts in internet discusses are often times ungrammatical \\
 % - this means that we consider that utterances
 % \textit{Yes, definitely!} and \textit{Marijuana should definitely be allowed}
 % can both claims of the same meaning, given the context they are made in. \\
@@ -801,8 +801,10 @@ argumentation mining, such as the argument search engine \emph{args}
 \citep{wachsmuth2017building}.
 
 In this thesis, we work with monological, structured argumentation set in the
-online discussion genre.  We set no specific practical application as a goal,
-but wish to explore general insights in argumentation in online discussions. 
-Understanding what are the most frequent claims and how are they 
-stated, as well as deriving implicit thoughts and opinions from text 
+internet discussion genre.  We set no specific practical application as a goal 
+(such as improving english writing skills or policy making),
+but wish to explore general insights in argumentation in internet discussions. 
+Understanding what are the most frequent claims in a discussion, how the semantically 
+the same claim can be stated in a multitude of ways,  
+as well as deriving speakers' beliefs and implicit opinions from text 
 are examples of insights we hope to uncover. 

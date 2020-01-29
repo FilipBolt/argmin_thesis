@@ -1,19 +1,10 @@
 \chapter{Introduction}
 
-- altenratively \\
-- argument and debate form cornerstones of civilised society and 
-intellectual life \\
-- argumentation runs governments, structure scientific endeavour and 
-frame religious belief \\
-- recognizing and understanding argument are central to decision-making \\
-- why rationality is one of the definining human characteristics \\
-
-We argue every day;
-Whether it is a domestic discussion which color the bathroom should 
-be painted with, a political TV show debate on how will the latest tax increase 
-impact small businesses, or a discussion at work on which text editor makes
-code editing the fastest, arguments are used to convince the other discussion 
-participant(s) to adhere to a single opinion.
+We argue every day; whether it is a domestic discussion on which color the
+bathroom should be painted with, a political TV show debate discussing how will
+the latest tax increase impact small businesses, or an office discussion about
+which text editor makes code editing the fastest, arguments are used to
+convince the other discussion participant(s) to adhere to a single opinion.
 More formally, a dialogue or a conversation is defined as a goal-directed
 conventional framework in which two partners reason 
 together in an orderly way, 
@@ -23,75 +14,91 @@ engaged in \citep{walton1998new}.
 From a cooperative and productive argumentative discussion, 
 an informed, critically evaluated decision can be made. 
 Being able to make important decisions only further 
-underlines the importance of argumenation. 
+underlines the importance of argumentation. 
 Understanding public opinion on controversial topics, such as 
-\textit{marijuana legalization}, \textit{gay marriage legalization}, 
-\textit{euthanazia legalization}, and many more is important for
+``\textit{marijuana legalization}'', ``\textit{gay rights}'', 
+``\textit{abortion abolition}'', and many more, is important for
 policy making. 
-- knowing merely stance (whether someone is pro or con on the topic)
+With respect to the their position towards a topic, 
+discussion participants are usually divided into two groups: 
+proponents (pro) and opponents (con). The position towards a topic is denoted as
+\emph{stance}. But, knowing only the stance of a person
 is only surface level information, as arguments behind that stance are
-crucial to understance where that stance comes from \\
-- analyzing argumentation boils down to understanding and logically connecting
-claims into arguments \\
-% TODO add claim definition from argonotlogy paper
-% - we wish to explore computational methods of 
-- we wish to computationally ease the process of analyzing arguments for a 
-specific discussion topic \\
+crucial to understand where that stance comes from. Arguments
+are formed by logically connecting \emph{claims} -- the building blocks of argumentation. 
+Claims represent facts and
+individual beliefs within a specific domain. When arguing, claims are backed up
+with other claims -- justifications. For example, the sentence ``\emph{my
+argument states that abortion is morally wrong because it deprives the fetus of
+a valuable future}'' has two claims ``\emph{abortion is morally wrong}'' and,
+``\emph{because it deprives the fetus of a valuable future}'' which pinpoint
+the speakers' stance.  To determine claims behind a certain  stance, it is
+often required to go beyond written text. 
 
-%- defining argumentation goes back to Aristotle \\
-%- interest in argumentation started with computational argumentation, 
-%roughly with \citep{dung1995acceptability} \\
+Reading between the lines is a skill humans naturally attain mainly through
+reading experience and social interaction. While reading internet discussion
+comments, in an effort to understand the intent of a writer, the reader is
+often biased by numerous small, albeit important, cues, such as the nickname
+of the speaker, (speaker named \emph{MarleyForever} is likely to be pro
+``\emph{marijuana legalization}'') or the groups that speaker belongs to
+(speaker belonging to \emph{vegetarian tips}
+ is more likely to be con ``\emph{gun legalization}'').
+All these biases heavily influence how the reader perceives the speakers' comment. 
+By doing so, the reader infers additional statements that have to hold
+in order to make the argumentation of the comment logically consistent. 
+Determining stance and arguments behind the stance thus require 
+fully understanding the context in which opinion of the speaker
+is made, as well as implicit information which the speaker 
+(intentionally or unintentionally) omits. 
+Before analyzing argumentation (and acting on it), it is essential to
+understand stance, arguments, and underlying implicit assumptions of the speaker. 
 
-\noindent - computational analysis of arguments started with formalizing arguments, more
-specifically, the area of computational argumentation \\
-- field of computational argumentation developed formal, logic-based 
-accounts of arguments \\
-- argumentation is formed in language and therefore related to the field
-of computational linguistics \\
-- argumentation research has mostly relied on knowledge and 
-logic-based solutions, whereas computational lingustics has adopted a 
-more , especially with the advent of machine learning \\
-- scalability issues limit the application reasoning, logic based
-approaches, whereas data-driven approaches often yield non-logical
-solutions \\
-- one argument towards logic-based approaches 
-is that a well-known problem such as POS tagging seems to have reached its
-apex with 97\% performance and that rule-based approaches may improve it 
-\citep{manning2011part} \\
-- we wish to combine logic, reasoning-basec approaches with data-driven ones \\
+The amount of internet discussions is growing rapidly, particularly in social
+media, as 65\% of adults in the US use social media \citep{perrin2015social}. 
+To handle the growth of argumentation content, two research areas have profiled
+thus far: \textit{computational argumentation} and \emph{argumentation mining}.
+Computational argumentation uses formal, logic-based accounts of arguments. In
+computational argumentation users input formalized arguments in order to
+perform various argumentation analysis, such as deriving the set of accepted
+(logically consistent) arguments.
+On the other hand, argumentation mining works with raw text.  It is founded on
+the premise that argumentation is formed in language, therefore it adopts a
+computational linguistics approach. 
+Argumentation mining usually employs natural language processing methods to extract
+argumentation from text. 
 
-\noindent - our goal is to allow for argument analysis from raw text \\
-- the text is expected to be from online discussions, more specifically internet 
-discussions, which carry have their own set of rules and conventions \\
-- we wish to work on problems to extract claims, group claims into arguments, and analyze 
-claims, potentially deriving new claims (premises) \\
+In this thesis, we combine reasoning-based approaches from
+computational argumentation and natural language processing methods
+from argumentation mining to define a framework for the 
+argumentative analysis of claims in internet discussions. 
+The goal of the framework is to provide argumentation analysts 
+an overview of the prominent claims upon a set of discussion comments. 
 
 % - in this work we wish to balance between formalized and unformalized approaches \\
 % - we aim to use non-formalized approaches to identify and extract claims from text, then use
 % formalized and structured approaches to derive arguments from claims along with their
 % underlying premises of arguments \\
 
-\section{Argumentation Mining of Claims}
-
-- argument analysis is performed from many angles \\
-- computational argumentation starts with predefined claims and connects them 
-with (support or attack) relations to form arguments and networks of arguments \\
-- these argument networks (graphs) are then usually analyzed in terms of acceptability \\
-- however, this approach can be rather expensive, as no automatic methods currently exist
-to determine claims \\
-- argumentation mining relies on natural language processing techniques to
-extract claims from text, recognize relations between claims and then analyze them
-by means of clustering on deriving extra claims (or premises) from 
-extracted ones \\
-- we wish to walk the line between argumentation mining and computational argumentation 
-by extracting claims by means of natural language processing, after which we 
-experiment with both structured and unstructured approaches of claim analysis \\
+% \section{Argumentation Mining of Claims}
+% 
+% - argument analysis is performed from many angles \\
+% - computational argumentation starts with predefined claims and connects them 
+% with (support or attack) relations to form arguments and networks of arguments \\
+% - these argument networks (graphs) are then usually analyzed in terms of acceptability \\
+% - however, this approach can be rather expensive, as no automatic methods currently exist
+% to determine claims \\
+% - argumentation mining relies on natural language processing techniques to
+% extract claims from text, recognize relations between claims and then analyze them
+% by means of clustering on deriving extra claims (or premises) from 
+% extracted ones \\
+% - we wish to walk the line between argumentation mining and computational argumentation 
+% by extracting claims by means of natural language processing, after which we 
+% experiment with both structured and unstructured approaches of claim analysis \\
 
 \section{Contributions}
 
-% TODO this is from the javni razgovor document
-The research aims to improve the state of
-the art in argumentation mining by means of claim structuring and the
+The research aims to explore structured approaches to
+argumentation mining by means of claim structuring and the
 development of a computer system prototype for claim analysis, which would
 allow for better understanding of argumentation in internet discussions. 
 The prospective original scientific contribution consists of: 
@@ -109,5 +116,27 @@ structuring, and the analysis of claims.
 
 \section{Thesis structure}
 
-The thesis is structured as follows. Finally, chapter~\numberstringnum{\getrefnumber{chap:conclusion}}
-concludes the thesis and gives directions for future work. 
+The thesis is divided into four parts. In part~\ref{part:background}, 
+we position the research work of this thesis within related work in 
+argumentation mining (chapter~\ref{chap:argmin}). We briefly introduce
+main methods and tools that will be used throughout the thesis in 
+chapter~\ref{chap:methods}. Part~\ref{part:unstruc} describes three 
+pre-research studies in which unstructured approaches to 
+claim clustering (chapter~\ref{chap:argclu}), 
+prominent claim identification (chapter~\ref{chap:argrec}), and 
+deriving implicit claims (chapter~\ref{chap:deriving_implicit}) are presented. 
+In part~\ref{part:struc} we then explore structured approaches to argumentation mining. 
+First, we demonstrate claim segmentation in chapter~\ref{chap:claim_segmentation}.
+Then, we propose the microstructure and ontology-based formalizations 
+in chapter~\ref{chap:formalization}. Deriving formalizations from 
+claim segments automatically is explored in chapter~\ref{chap:claim_structuring}.
+To showcase some of the advantages of structured argumentation mining of claims,
+we present example argumentation analysis in chapter~\ref{chap:analysis}.
+We conclude and provide future work directions in chapter~\ref{chap:conclusion}.
+Appendices with datasets produced as part of this thesis 
+and their respective annotation
+guidelines are listed in part~\ref{part:appendix}. 
+
+% Finally,
+% chapter~\numberstringnum{\getrefnumber{chap:conclusion}} concludes the thesis
+% and gives directions for future work. 

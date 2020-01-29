@@ -128,6 +128,7 @@
 \setlist{nolistsep}   % setting for itemize lists
 
 \usepackage[toc,page]{appendix}
+\setcounter{tocdepth}{1}
 
 %\renewcommand{\thefootnote}{\fnsymbol{footnote}}  % to get unnumbered footnotes
 \renewcommand{\arraystretch}{1.5} % stretching row height
@@ -242,7 +243,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%% POGLAVLJA / CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \include{01_introduction}
-\part{Background and methods}
+
+\part{Background and methods}\label{part:background}
 
 \input{area_description}
 
@@ -292,6 +294,7 @@
 \renewcommand{\thechapter}{\Alph{chapter}}%  Letters as 'counters'
 %\part{\appendixname}
 \part{Appendices}
+	\label{part:appendix}
 
 \input{90_datasets}
 

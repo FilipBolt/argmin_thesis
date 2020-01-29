@@ -8,7 +8,7 @@ in user comments. This was modelled in the task of prominent claim
 identification, but now we wish to explore the implicit knowledge required
 to state that a prominent claim is indeed supported or attacked by a comment.
 To this end, we shall investigate how and when are two claims
-(in the setting of online discussions) considered equivalent. 
+(in the setting of internet discussions) considered equivalent. 
 
 To make two claims semantically equivalent, sometimes \textbf{implicit knowledge} is
 required to bridge the gap between the two claims. 
@@ -97,7 +97,7 @@ Claim pair & Annotation            \\
 
 As a starting point, we use the dataset created by
 \citet{hasan2014you}. 
-The dataset contains posts from a two-side online unmoderated discussion platform 
+The dataset contains posts from a two-side internet unmoderated discussion platform 
 on four topics: ``\emph{Marijuana}'' (MA), ``\emph{Gay Rights}'' (GR), 
 ``\emph{Abortion}'' (AB), and ``\emph{Obama}'' (OB).
 Each post from the discussion is assigned a stance label (\pro{pro} or \con{con}) 
@@ -322,7 +322,7 @@ Based on that conclusion, we expect to reduce the size of the gap if we start
 including implicit claims in the computations. 
 We make a preliminary study on the use of implicit claims in prominent claim
 identification.
-This study is motivated to identify prominent claims in online discussions in
+This study is motivated to identify prominent claims in internet discussions in
 general.
 Given the users claim , the task is to find the prominent claim from a set of 
 prominent claims which matches the user's claim the best. 
@@ -638,29 +638,29 @@ dev.~set (upper part) and test set (lower part); macro-avg.~F1-score.}
 \end{center}
 \end{table}
 
-\section{Conclusion}
-\label{sec:argpremise_conclusion}
-
-We addressed the problem of prominent claim matching of user claims to prominent claims
-using implicit claims.
-The gap between user and prominent claims introduces a gap that is 
-easily filled by humans, but difficult to bridge for natural language processing 
-methods. 
-First, we compiled a dataset of implicit claims between matched claims from 
-online discussions.
-We showed considerable variation in the way how human annotators fill the gap
-with implicit claims and they use implicit claims of various types. 
-Also, we showed that similarity between claims, as judged by humans, negatively
-correlates with the size of the gap, 
-expressed in the number of implicit claims needed to fill it. 
-Second, we experimented with computational models for prominent claim identification 
-which used implicit claims. 
-We showed that using gap filling implicit claims effectively reduces similarity gap between claims 
-and improves prominent claim identification. 
-We showed that implicit claim sets generalize to certain extents, as prominent claim matching was
-improved on unseen user claims. 
-Finally, we made a preliminary study on how to retrieve gap-filling implicit
-claim sets automatically.
+% \section{Conclusion}
+% \label{sec:argpremise_conclusion}
+% 
+% We addressed the problem of prominent claim matching of user claims to prominent claims
+% using implicit claims.
+% The gap between user and prominent claims introduces a gap that is 
+% easily filled by humans, but difficult to bridge for natural language processing 
+% methods. 
+% First, we compiled a dataset of implicit claims between matched claims from 
+% internet discussions.
+% We showed considerable variation in the way how human annotators fill the gap
+% with implicit claims and they use implicit claims of various types. 
+% Also, we showed that similarity between claims, as judged by humans, negatively
+% correlates with the size of the gap, 
+% expressed in the number of implicit claims needed to fill it. 
+% Second, we experimented with computational models for prominent claim identification 
+% which used implicit claims. 
+% We showed that using gap filling implicit claims effectively reduces similarity gap between claims 
+% and improves prominent claim identification. 
+% We showed that implicit claim sets generalize to certain extents, as prominent claim matching was
+% improved on unseen user claims. 
+% Finally, we made a preliminary study on how to retrieve gap-filling implicit
+% claim sets automatically.
 
 There is a great deal of usefulness in implicit claims, helping prominent claim
 identification is just one small aspect of it. But, as we have shown in this chapter,

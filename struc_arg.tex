@@ -24,10 +24,13 @@ demonstrating the applications of formalized claims.  More specifically, we
 demostrate the benefits of formalized claims by analyzing the ``\emph{Gay
 Rights}'' and the ``\emph{Marijuana}'' topics. 
 We use microstructures to do stance classification in
-section~\ref{sec:stance_micro} and analyze most frequently used
-claims in section~\ref{sec:implicit_formalization}. Finally, we provide 
-conclusions and guidelines for other types of analysis that could be 
-conducted with formalized claims in section~\ref{sec:struc_conclusion}. 
+section~\ref{sec:stance_micro}, analyze most frequently used
+claims, and provide guidelines for other types
+of analysis in section~\ref{sec:implicit_formalization}. 
+
+% Finally, we provide 
+% conclusions and guidelines for other types of analysis that could be 
+% conducted with formalized claims in section~\ref{sec:struc_conclusion}. 
 
 \section{Stance Classification using Microstructures}
 \label{sec:stance_micro}
@@ -372,7 +375,7 @@ shouldn't be legalized} from 35 to 39 and 22 to 37 respectively.  This
 indicates that negative stance is implicit much more often than positive
 stance. 
 
-\subsection{Task \rom{4}: Herd-Inferred Claims}
+\subsection{Task \rom{4}: Collective-Inferred Claims}
 
 \begin{table*}[t]
 	\tiny{
@@ -586,34 +589,46 @@ making the claim \emph{marijuana is not a drug} the speaker is closer to the
 claims more often expressed by supporters of marijuana legalization.  Finally,
 the speaker expresses their \pro{pro} stance with the claim \emph{marijuana
 should be legalized} removing any doubt. Having more claims usually leads to
-better understanding of the speakers' opinion. Also, claims (statements) are
-sometimes expressed through some argument model, which is a study we leave for
-future work. 
+better understanding of the speakers' opinion. 
 
-\section{Conclusion}
-\label{sec:struc_conclusion}
-
-In this chapter, we showed two useful applications of formalizations.  First,
-we showed how microstructures can be used to solve the stance classification
-problem. A simple onehot encoding of microstructures yielded notable
-performance improvements over baselines (up to 50\% macro-averaged F1-score
-improvement), indicating that microstructures may capture the argumentative
-gist of the claim.
-Second, we demonstrated four analysis using ontology
-formalizations. In the first three analysis, we focused on claim frequencies in a
-domain dependent in domain independent setup. In those three analysis, we 
-showed how implicit premises may be derived from the ontology hierarchy or from 
-expert axioms. In the fourth and final analysis, we 
-showed how we can infer implicit claims based on groups of speakers that 
-share claims. 
-
-These applications of formalizations. We have analyzed argumentation only at the 
+Note that we have analyzed argumentation only at the 
 claim-level, but the most interesting analysis are usually at the levels above. 
 Making connections between claims, forming argumentation structures would allow
 for analyzing patterns of argumentation, which can lead to 
 more practical applications
-than stance classification or claim frequency counting. Some applications could then 
+than stance classification or claim frequency counting. 
+Some applications could then 
 be logical fallacy detection or integration in the Argument Web standard
-\citep{rahwan2007laying}.
+\citep{rahwan2007laying}. We leave this for future work.
+
+% Also, claims (statements) are
+% sometimes expressed through some argument model, which is a study we leave for
+% future work. 
+
+% \section{Conclusion}
+% \label{sec:struc_conclusion}
+% 
+% In this chapter, we showed two useful applications of formalizations.  First,
+% we showed how microstructures can be used to solve the stance classification
+% problem. A simple onehot encoding of microstructures yielded notable
+% performance improvements over baselines (up to 50\% macro-averaged F1-score
+% improvement), indicating that microstructures may capture the argumentative
+% gist of the claim.
+% Second, we demonstrated four analysis using ontology
+% formalizations. In the first three analysis, we focused on claim frequencies in a
+% domain dependent in domain independent setup. In those three analysis, we 
+% showed how implicit premises may be derived from the ontology hierarchy or from 
+% expert axioms. In the fourth and final analysis, we 
+% showed how we can infer implicit claims based on groups of speakers that 
+% share claims. 
+% 
+% These applications of formalizations. We have analyzed argumentation only at the 
+% claim-level, but the most interesting analysis are usually at the levels above. 
+% Making connections between claims, forming argumentation structures would allow
+% for analyzing patterns of argumentation, which can lead to 
+% more practical applications
+% than stance classification or claim frequency counting. Some applications could then 
+% be logical fallacy detection or integration in the Argument Web standard
+% \citep{rahwan2007laying}.
 
 
