@@ -1,3 +1,18 @@
+\documentclass{article}
+% main document, called main.tex
+\usepackage{tikz}
+\usetikzlibrary{external}
+
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{shapes.geometric, arrows, arrows.meta}
+\usepackage{varwidth}% http://ctan.org/pkg/varwidth
+\usetikzlibrary{shadows,trees, mindmap}
+\usetikzlibrary{matrix}
+\usetikzlibrary{fit}
+
+\tikzexternalize % activate!
+\begin{document}
 \begin{tikzpicture}[node distance=1.5cm]
 \tikzstyle{lstm} = 
 [rectangle, minimum width=1cm, minimum height=0.5cm, text
@@ -69,7 +84,7 @@ centered, draw=black, fill=orange!10, rounded corners, text width=2.5cm]
 
 %\node (struc) [above=0.8cm of hidden_8] {};
 \node (c_marijuana) [concept, above left=1.25 cm and 0.5cm of hidden_8] {marijuana consumption };
-\node (c_health) [concept, above right=1cm and 0.5cm of hidden_8] {negative health problems};
+\node (c_health) [concept, above right=1.25cm and 0.5cm of hidden_8] {negative health problems};
 \draw[-latex] (hidden_8) -- ($(c_marijuana.east) + (1, 0) $);
 
 \draw[-latex, red] (c_marijuana) -- (c_health) node[midway, above] {causes};
@@ -178,4 +193,7 @@ centered, draw=black, fill=orange!10, rounded corners, text width=2.5cm]
 \draw[-latex] (hidden_6) -- (hidden_8);
 
 \end{tikzpicture}
+
+\end{document}
+
 

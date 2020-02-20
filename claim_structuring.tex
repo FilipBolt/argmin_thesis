@@ -79,7 +79,7 @@ since \texttt{has\_declaration} can only be assigned to a \texttt{unary} claim,
 whereas \texttt{has\_antecedent} can only be assigned to \texttt{binary} claim. 
 
 \begin{figure}
-	\input{joint_tikz.tex}
+	\includegraphics{joint_tikz-figure0.pdf}
 	\caption{Joint BiLSTM model for both claim segmentation and claim 
 	structuring. }
 	\label{fig:joint_model}
@@ -236,7 +236,7 @@ The joint model is applied for both the \texttt{BR} and
 	\end{tabular}
 	\caption{
 	Macro-averaged F1-score comparison between 
-	the independent SVM (IND), majority classifier (MAJ), chain classification (CC), 
+	the independent SVM (IND), randomized classifier (RAND), chain classification (CC), 
 	ensemble chain classification (ECC), and joint model (BiLSTM-J)
 	in the task of 
 	claim structuring from both original (OR) and paraphrased text claims (PA)
@@ -255,9 +255,8 @@ The joint model is applied for both the \texttt{BR} and
 % ranges_tutta = [reltypenum, relnum, propnum, fvp_num]
 
 We perform two sets of experiments. First, we wish to explore models
-that predict the formalization structure on a per-component basis (structure
-prediction, \texttt{LR}). 
-Second, we investigate how does per-component prediction (\texttt{BR}) compare to 
+that predict the formalization structure on a per-component basis (\texttt{BR}). 
+Second, we investigate how does per-component prediction (\texttt{BR}) compares to 
 the label powerset (\texttt{LP}) approach.
 We execute all experiments using original and paraphrased claims, since we're
 also interested in the practical uses of claim paraphrases.
@@ -272,15 +271,15 @@ label powerset approach, we can expect that the
 distribution of observed formalizations is long tailed, therefore it is not
 feasible to expect to correctly predict infrequently seen formalizations.
 Table~\ref{tab:claim_struc_per_component} shows macro averaged F1-scores for
-the majority classifiers (MAJ), independent SVM classifiers (IND), chain
+the randomized classifiers (RAND), independent SVM classifiers (IND), chain
 classifiers (CC), ensemble chain classifiers (ECC), and the joint segmentation
 and structuring BiLSTM model (BiLSTM-J). We experiment with both original
 source claims $OR$ (as they were written by the authors) and paraphrased claims $PA$ (as
 they were transcribed by annotators).
 Models are trained to predict components, with their predictions then assembled
 together to constitute a formalized claim, which is compared against the gold
-formalized claim.  The baseline is set using the majority 
-class for all individual components. The majority baseline does not work 
+formalized claim.  The baseline is set using the randomized 
+class for all individual components. The randomized baseline does not work 
 based on input, therefore has the same results for both the $OR$ and $PA$ setup. 
 The joint model might not produce the same number claim formalizations, 
 so we evaluate on a comment level and average across all comments. Further, the joint
@@ -291,7 +290,7 @@ for future work.
 
 Overall, recognizing the entire formalized claim looks like an extremely
 challenging task, since the best performing model ($ECC$) manages to achieve
-only $0.03$ and $0.04$ majority F1-score
+only $0.03$ and $0.04$ macro-averaged F1-score
 using original and paraphrased claims, respectively. This is mainly due
 to the low performance of recognizing domain individuals in a claim.
 Recognizing domain individuals in a claim is expectedly difficult, since there

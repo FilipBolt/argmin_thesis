@@ -228,38 +228,7 @@ section~\ref{sec:for_microstructures}).
 \begin{figure}
 	\centering
 	\footnotesize
-	\begin{tikzpicture}[
-concept/.style={shape=rectangle, rounded corners,
-draw, align=center,
-top color=white, bottom color=orange!20},
-node distance=5cm,
-]
-\node[concept] (claim) {claim};
-\node[concept, below of=claim] (modality) {modality};
-\node[concept, right of=claim] (speaker) {speaker};
-\node[concept, left=4cm  of modality] (domain) {domain\_topic};
-
-\draw[-Latex] (speaker) -- (claim) 
-	node [midway, below] {has claim}; 
-
-\draw[-Latex, densely dashed, color=olive] (claim) -- (modality)
-	node [midway, right] {has modality}; 
-
-\draw [-Latex] (claim) .. controls ($(claim.west) + (-4cm,
--0.2cm)$) ..  ($(domain.north)$) node [sloped, above, near end] {has\_declaration}; 
-
-\draw [-Latex] (claim) .. controls ($(claim.west) + (-3cm,
--1.1cm)$) ..  ($(domain.north)$) node [sloped, above, midway] {has\_antecedent}; 
-
-\draw [-Latex] (claim) --  ($(domain.north)$) node [above, sloped, midway] {has\_opinion\_holder}; 
-
-\draw [-Latex, densely dashed, color=olive] (claim) .. controls ($(claim.west) + (-1cm,
--2.2cm)$) ..  ($(domain.north)$) node [sloped, above, midway] {promotes / suppresses}; 
-
-\draw [-Latex, densely dashed, color=olive] (claim) .. controls ($(claim.west) + (-1cm,
--3.2cm)$) ..  ($(domain.north)$) node [sloped, above, midway] {comparison}; 
-
-\end{tikzpicture}
+	\includegraphics{formalizations_main_classes-figure0.pdf}
 \caption{Main classes and properties of ClaimOntology. Dashed lines indicate
 	semantic properties, full lines structural properties. 
 	indicate. Arrow orientation indicates the
@@ -322,9 +291,9 @@ The \texttt{promotes / suppresses} property is used to represent the claim
 consequent as either a \texttt{promotes} or \texttt{suppresses} property
 (inspired by \citet{hashimoto2012excitatory}). It is always paired with
 the \texttt{has\_antecedent} structural property. The \texttt{promotes}
-property has subproperties with \texttt{causes} and \texttt{implies}
+property has subproperties with \texttt{implies} and \texttt{causes}
 properties, whereas the \texttt{suppresses} property has 
-subproperties \texttt{implies} and \texttt{does\_not\_cause}.
+subproperties \texttt{contradicts} and \texttt{does\_not\_cause}.
 The claim \texttt{claim\_x} made by \texttt{speaker\_x}
 \emph{smoking marijuana hurts your lungs} can then be formalized as triplets:
 \begin{align*}
@@ -333,13 +302,16 @@ The claim \texttt{claim\_x} made by \texttt{speaker\_x}
 	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{suppresses}, \hspace{0.1cm}
 	\mathit{lung\_health} > 
 \end{align*}
-Alternatively, it may also be formalized in a negation fashion as:
+where \texttt{lung\_health} and \texttt{marijuana\_consumption} are 
+domain individuals. 
+Alternatively, it may also be formalized using different properties:
 \begin{align*}
 	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{has\_antecedent}, \hspace{0.1cm}
 	\mathit{marijuana\_consumption} > \\
 	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{causes}, \hspace{0.1cm}
 	\mathit{lung\_damage} > 
 \end{align*}
+where \texttt{lung\_damage} is a domain individual. 
 The \texttt{comparison} property is used to formalize a comparison of 
 two domain concepts. There are three comparison object properties (each with the
 \texttt{domain\_topic} as the object individual): \texttt{comparison\_greater},
@@ -519,34 +491,10 @@ close to the state-of-the-art on the widely used SNLI dataset \citep{bowman2015l
 
 \begin{figure}
 	\centering
-\begin{tikzpicture}
-
-\path [small mindmap, grow cyclic, level 1/.append style={sibling angle=360/12},
-root /.append style={font=\scriptsize},
-every node/.append style={scale=0.8},
-concept color=orange!40,
-]
-node [concept] {domain \\ topic}[clockwise from=0]
-	child { node[concept] {religion}}
-	child { node [concept]{plant}}
-	child { node[concept] {war}}
-	child { node[concept] {organization}}
-	child { node[concept] {human being}}
-	child { node[concept]  {human rights}}
-  child {  node[concept] {status behavior}}
-  child {  node[concept] {economic cost}}
-  child {  node[concept] {drug}}
-  child {  node[concept] {crime}}
-  child {  node[concept] {science}}
-  child {  node[concept] {disease}};
-  child {  node[concept] {society effect}};
-	
-\end{tikzpicture}
-
-\caption{Marijuana legalization domain ontology classes}
+	\includegraphics{formalizations_mindmap-figure0.pdf}
+\caption{Marijuana legalization domain ontology top-level classes}
 \label{fig:marijuana_domain_ontology}
 \end{figure}
-
 
 Now, we wish to apply the ClaimOntology to the ``\emph{Marijuana}'' topic in
 two steps.  First, we construct a domain ontology ``\emph{Marijuana
@@ -578,33 +526,7 @@ that covers all linguistic realizations in text, such as \emph{government tribut
 \begin{figure}
 	\centering
 	\footnotesize
-	\begin{tikzpicture}[
-concept/.style={shape=rectangle, rounded corners,
-draw, align=center,
-top color=white, bottom color=orange!20},
-node distance=5cm,
-]
-\node [concept] (human) {human being};
-\node [concept, below right of=human] (domain) {domain topic};
-\node [concept, above left of=human] (disease) {disease};
-\node [concept, below left of=human] (status) {status behavior};
-\node [concept, above right of=human] (drug) {drug};
-
-\draw[densely dashed, color=olive] (human) -- (domain);
-\draw[densely dashed, color=olive] (disease) .. controls ($(human) + (-1.3cm,
-		-1.3cm)$) .. (domain); 
-\draw[densely dashed, color=olive] (status) -- (domain); 
-\draw[densely dashed, color=olive] (drug) -- (domain); 
-\draw[densely dashed, color=olive] (human) -- (domain); 
-
-\draw [-Latex] (human.north) .. controls ($(human.north) + (0cm,
-3cm)$) ..  (drug) node [sloped, above, near end] {buys drugs}; 
-\draw [-Latex] (human.north) .. controls ($(human) + (3.5cm, 1cm)$)
-..  (drug) node [sloped, above, near start] {consumes drugs}; 
-\draw [-Latex] (human) -- (status) node [below, midway, sloped] {has behavior}; 
-\draw [-Latex] (human) -- (disease) node [below, midway, sloped] {has disease}; 
-
-\end{tikzpicture}
+	\includegraphics{formalizations_marijuana_main_classes-figure0.pdf}
 \caption{Main classes and properties of the \textit{marijuana} domain 
 ontology. 
 Dashed lines indicate subclasses, full lines indicate object properties. 
@@ -632,41 +554,7 @@ Fig.~\ref{fig:drug_domain_individuals} shows the hierarchy classes and
 individuals stemming from the drug class. 
 
 \begin{figure}
-\begin{tikzpicture}
-[grow'=right,
-level 1/.style={sibling distance=1.5cm, level distance=2cm},
-level 2/.style={sibling distance=1.5cm, level distance=3cm, },
-level 3/.style={
-sibling distance=1cm, level distance=5.5cm},
-concept/.style=
-{shape=rectangle, rounded corners,
-draw, align=center,
-top color=white, bottom color=orange!20},
-individual/.style={rectangle, rounded corners=1mm, draw, top color=white, bottom color=blue!50,
-text centered}
-	]
-	\node (root) [concept] {domain topic}
-	child  { node [concept] {drug}
-	child  { node [concept] {soft drug} 
-	child { node [individual] {medical marijuana}}
-	child { node [individual] {illegal marijuana}}
-	child { node [individual] {legalized marijuana}}
-	child { node [individual] {legalized  medical marijuana}}
-	child { node [individual] {tobacco}}
-	child { node [individual] {marijuana}}
-    }
-    child [missing]
-    child [missing]
-    child [missing]
-    child {node  [concept]{hard drug}
-	child {node [individual] {cocaine}}
-	child {node [individual] {methamphetamine}}
-	child {node [individual] {morphine}}
-	child {node [individual] {heroin}}
-    }
-};
-	
-\end{tikzpicture}
+\includegraphics{formalizations_drug_hierarchy-figure0.pdf}
 \caption{Marijuana legalization domain ontology drug individuals. 
 	Classes/entities and orange and individuals are blue. }
 	\label{fig:drug_domain_individuals}
@@ -682,7 +570,7 @@ There are multiple reasons on why a claim is not suitable to be formalized.
 For one, a claim may be lacking appropriate domain individuals, such as in the claim
 \emph{tobacco odors dissipate quickly} where we \emph{tobacco odor} is a concept
 not seen when building the domain individuals. Other non-formalized claims
-deemed to abstract in meaning, an example being \emph{nothing can bring 
+deemed too abstract in meaning, an example being \emph{nothing can bring 
 world peace}. In 243 out of 920 claims, the same formalization was produced 
 by all three annotators, whereas for 325 two out of three annotators agreed. 
 Upon manually checking formalizations at random, we observe that some

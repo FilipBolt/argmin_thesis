@@ -207,8 +207,6 @@ the ``\emph{Gay Rights}'' topic split into segmented and paraphrased claims.
 \label{tab:multi-label_segment_example}
 \end{table}
 
-
-
 Now, since the dataset is defined, we will mathematically formalize this
 problem.  Let $\mathbf{x} = (x_1, \dots, x_N)$ represent a sentence of size $N$
 as a vector of tokens where the index $i$ represents the position of the token in
@@ -224,7 +222,8 @@ can eventually lead to addiction to heroin, cocaine and other harder
 % TODO actually is 25 tokens
 drugs.}''
 \end{quote}
- is tokenized into 24 tokens. It contains three segments: 
+is tokenized into 24 tokens (tokens are space separated for simplicity reasons). 
+It contains four segments: 
 \begin{enumerate}[label=(\arabic*)]
 \item ``\emph{Marijuana is believed to be a stepping-stone drug}'', 
 \item ``\emph{that can eventually lead to addiction to heroin,}'',
@@ -260,7 +259,8 @@ for& world& peace
 	& 1 & 1 & 1 & 1 & 1 \\
 
 \end{tabular}
-	\caption{Binary relevance Multi-label (BR) and \texttt{BIO} labelling of comment with three segments: 
+	\caption{Binary relevance Multi-label (BR) and \texttt{BIO} labelling
+	of comment with three segments: 
 	``\textit{Nothing can bring peace to this world}'', 
 	``\textit{Its a great idea to try and push for world peace}'', and
 	``\textit{but it will never happen}''. 
@@ -273,7 +273,7 @@ shows $\mathbf{x}$ and $\mathbf{Y}$ of those tokens.
 Mapping $\mathbf{x}$ to $\mathbf{Y}$ can be framed as multi-label classification since
 each $y \in \mathbf{Y}$ can contain up to $N$ labels, yielding a total of $2^{N}$ 
 possible combinations per element. 
-We frame this problem as multi-label classification 
+Thus, we frame claim segmentation as multi-label classification 
 (solving multi-label classification problems is described in section
 \ref{sec:chain_classification}). 
 One option to approach the multi-label classification setup is to apply the
@@ -366,50 +366,7 @@ figure~\ref{fig:segment_example_bio_multi-label} and an example of a comment wit
 and discontiguous segments in shown in table~\ref{tab:multi-label_segment_example}.
 
 \begin{figure}
-\scriptsize
-\begin{tikzpicture}[node distance=1mm]
-\node (s1) {Marijuana is believed to be a stepping-stone drug};
-\node (s234) [right=of s1]{that can eventually lead to additiction to};
-	\node (s2) [right=of s234]{heroin\textcolor{white}{y}};
-	\node (s3) [right=of s2.east]{cocaine\textcolor{white}{y}};
-	\node (o) [right=of s3] {and\textcolor{white}{y}};
-	\node (s4) [right=of o] {other\textcolor{white}{y}harder drugs.};
-
-\node (s1lab) [below=of s1] {\textcolor{red}{Segment 1}};
-\node (s2lab) [below=of s2, xshift=-1.7cm, yshift=-2.5mm] {\textcolor{blue}{Segment 2}};
-\node (s3lab) [below left=1cm of s3, xshift=1mm, yshift=-1mm] {\textcolor{green}{Segment 3}};
-\node (s4lab1) [below=of s234, xshift=-0.6cm, yshift=1mm] {\textcolor{orangegreen}{Segment 4}};
-\node (s4lab2) [below=of s4] {\textcolor{orangegreen}{Segment 4}};
-
-\draw [-]
-($(s1.east) - (0.5mm, 0)$)
--- ++(0, -.2)
--| ($(s1.west) $);
-
-% S4 segment
-\draw [-]
-($(s234.east) $)
--- ++(0, -0.2)
--| ($(s234.west) - (0, 0) $);
-
-% S2 segment
-\draw [-]
-($(s234.west) - (0.5mm, 0)$)
--- ++(0, -0.6)
-	-| ($(s2.east) - (0.5mm, 0) $);
-
-% S3 segment
-\draw [-]
-($(s234.west) - (1mm, 0)$)
--- ++(0, -1.0)
--| ($(s3.east) $);
-
-% other S4 segment
-\draw [-]
-($(s4.west) $)
--- ++(0, -.2)
--| ($(s4.east) $);
-\end{tikzpicture}
+	\includegraphics[width=\textwidth]{claim_segmentation_split-figure0.pdf}
 	\caption{An example of comment made in the ``Marijuana'' topic. 
 	\textcolor{red}{Claim 1} is a regular segment. 
 	\textcolor{blue}{Claim 2} and \textcolor{green}{Claim 3} are mutually overlapping.
@@ -536,9 +493,10 @@ opinion there is no war .......
 there never was ...
 } \\
 \bottomrule
-\caption{Example of heuristic algorithm output. }
-\label{tab:heuristic_example}
 \end{tabular}
+	\caption{An example of how the heuristic algorithm handles input (left column) to produce 
+	segmented output (right column). }
+\label{tab:heuristic_example}
 \end{table}
 
 \paragraph{SVM. } 
