@@ -1,29 +1,19 @@
-% This is the main file for the template for doctoral thesis at
-% University of Zagreb, Faculty of Electrical Engineering and Computing
-% in Zagreb, Croatia.
-% Initial version was created in April 2013, last update was in July 2014.
-
-% Author: Jelena Bozek, jelena.bozek@fer.hr
-% Contributor: Vedran Miletic, vmiletic@inf.uniri.hr
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%% POSTAVKE / SETTINGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt,oneside, a4paper]{book}
+
 \usepackage{etex}
+
 %\usepackage{xcolor}
 \usepackage[pdftex]{graphicx}
 \usepackage{rotating}
 \usepackage{epsfig}
 \usepackage{epstopdf}
+
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
-\usepackage{tikz}
-\usetikzlibrary{positioning}
-\usetikzlibrary{calc}
-\usetikzlibrary{shapes.geometric, arrows, arrows.meta}
+% needed -shell-escape because of this
+\usepackage{minted}
 \usepackage{varwidth}% http://ctan.org/pkg/varwidth
-\usetikzlibrary{shadows,trees, mindmap}
-\usetikzlibrary{matrix}
-\usetikzlibrary{fit}
+
 % required for printing index
 % use \index{name} in text
 %\usepackage{makeidx}
@@ -39,8 +29,9 @@
 \usepackage{cmap}
 \usepackage[english]{babel}
 \usepackage{ae}
-\PassOptionsToPackage{hyphens}{url}
+
 \usepackage[unicode, hidelinks]{hyperref}
+\PassOptionsToPackage{hyphens}{url}
 \usepackage{url}
 \usepackage{breakurl}
 \usepackage{mathptmx}
@@ -111,7 +102,6 @@
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \rfoot{\thepage}
 
-\usepackage{minted}
 \usepackage{listings}
 \usepackage{hhline}
 %\usepackage{enumerate}
@@ -214,6 +204,8 @@
 % i don't want splitting footnotes
 \interfootnotelinepenalty=10000
 
+% load this last
+
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -242,40 +234,40 @@
 \include{00_toc}
 %%%%%%%%%%%%%%%%%%%%%%%% POGLAVLJA / CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\include{01_introduction}
+\include{1-introduction}
 
 \part{Background and methods}\label{part:background}
 
-\input{area_description}
+\input{2-area_description}
 
-\include{keytechniques}
+\include{3-keytechniques}
 
 \part{Unstructured argumentation mining of claims}
 \label{part:unstruc}
 
-\input{argclu.tex}
+\input{4-argclu.tex}
 
-\input{argrec.tex}
+\input{5-argrec.tex}
 
-\input{argpremises.tex}
+\input{6-argpremises.tex}
 
 \part{Structured argumentation mining of claims}
 \label{part:struc}
 
-\input{claim_segmentation.tex}
+\input{7-claim_segmentation.tex}
 
 % microstructure vs. ontologies
-\input{formalizations.tex}
+\input{8-formalizations.tex}
 
-\input{claim_structuring.tex}
+\input{9-claim_structuring.tex}
 
 % analysis 
-\input{struc_arg.tex}
+\input{10-struc_arg.tex}
 
 \bookmarksetup{startatroot}
 \addtocontents{toc}{\bigskip}% perhaps as well
 
-\input{conclusion.tex}
+\input{11-conclusion.tex}
 
  
 % \include{datasets}
