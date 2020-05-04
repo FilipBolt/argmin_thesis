@@ -12,23 +12,25 @@
 \usetikzlibrary{fit}
 
 \tikzexternalize % activate!
+
 \begin{document}
-	\begin{tikzpicture}[
+
+\begin{tikzpicture}[
 concept/.style={shape=rectangle, rounded corners,
 draw, align=center,
 top color=white, bottom color=orange!20},
 node distance=5cm,
 ]
 \node[concept] (claim) {claim};
-\node[concept, below of=claim] (modality) {modality};
+\node[concept, below of=claim] (type) {type};
 \node[concept, right of=claim] (speaker) {speaker};
-\node[concept, left=4cm  of modality] (domain) {domain\_topic};
+\node[concept, left=4cm  of type] (domain) {domain\_topic};
 
 \draw[-Latex] (speaker) -- (claim) 
 	node [midway, below] {has claim}; 
 
-\draw[-Latex, densely dashed, color=olive] (claim) -- (modality)
-	node [midway, right] {has modality}; 
+\draw[-Latex, densely dashed, color=olive] (claim) -- (type)
+	node [midway, right] {has type}; 
 
 \draw [-Latex] (claim) .. controls ($(claim.west) + (-4cm,
 -0.2cm)$) ..  ($(domain.north)$) node [sloped, above, near end] {has\_declaration}; 
@@ -47,5 +49,3 @@ node distance=5cm,
 \end{tikzpicture}
 
 \end{document}
-
-

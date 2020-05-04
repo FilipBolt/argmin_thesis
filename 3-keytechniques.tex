@@ -3,40 +3,40 @@
 
 This chapter serves as an overview of methods used in the rest of the thesis.
 Models of argumentation mining are mostly built on supervised machine learning,
-which is introduced in section~\ref{sec:unstruc_machine_learning}.  How we
+which is introduced in Section~\ref{sec:unstruc_machine_learning}.  How we
 train and evaluate supervised machine learning models is explained in
-section~\ref{sec:selection}.  Then, in section~\ref{sec:struc_machine_learning}
+Section~\ref{sec:selection}.  Then, in Section~\ref{sec:struc_machine_learning}
 we focus on a subarea of machine learning, structured prediction, as structured
 prediction is key in understanding the methods described in
-part~\ref{part:struc} of the thesis. We also describe unsupervised machine
+Part~\ref{part:struc} of the thesis. We also describe unsupervised machine
 learning methods and how they are evaluated in
-section~\ref{sec:unsupervised_machine_learning}.  As argumentation mining is a
+Section~\ref{sec:unsupervised_machine_learning}.  As argumentation mining is a
 subarea of natural language processing, a brief introduction to the field,
 along with some relevant natural language processing tasks are explained in
-section~\ref{sec:natural_language_processing}. Finally, since 
-part~\ref{part:struc} of the thesis
+Section~\ref{sec:natural_language_processing}. Finally, since 
+Part~\ref{part:struc} of the thesis
 also introduces formalized representations for claims, a
 brief summary of ontologies in the context of computer science is
-explained in section~\ref{sec:knowledge_representation}. 
+explained in Section~\ref{sec:knowledge_representation}. 
 
 \section{Supervised Machine Learning}
 \label{sec:unstruc_machine_learning}
 
 Machine learning algorithms are statistical tools that rely on patterns in data
 instead of specific instructions. Machine learning is considered a subarea of
-artificial intelligence. \citep{russell2016artificial, bishop2006pattern} offer
-a comprehensive overviews of machine learning.  In this work, we discern between
+artificial intelligence. In \citep{russell2016artificial, bishop2006pattern} one can
+find comprehensive overviews of machine learning.  In this work, we discern between
 supervised and unsupervised machine learning depending on using labelled or
 unlabelled data.  
 Supervised machine learning algorithms fit a set of $N$
 samples of input data $\textbf{X}^N \in \mathbb{R}^d$ to the set of their
 corresponding labels $y^N $. When the labels are discrete $y \in \{1, 2, \dots ,
 V\}$ supervised learning is called \emph{classification} (of $V$ classes), whereas
-learning to fit continuous values ($y \in \mathbb{R}$) is denoted \emph{regression}. 
+learning to fit continuous values ($y \in \mathbb{R}$) is \emph{regression}. 
 Classification is further split into binary (two classes) and multiclass (more
 than two classes).  Unsupervised machine learning algorithms use only input
 data $\textbf{X}^N \in \mathbb{R}^d$ and return clusters (groups) of input data
-which has been determined to be related. 
+which have been determined to be related. 
 
 \subsection{Support Vector Machines}
 \label{sec:svm}
@@ -91,18 +91,18 @@ stochastic optimization \citep{wang2012breaking}.
 \begin{figure}
 \includegraphics[scale=0.23]{lstm_2.png}
 \caption{Long short-term memory network cell diagram. The cell consists of the 
-	cell, input gate, forget gate and output gate. The LSTM receives
+	cell, input gate, forget gate, and output gate. The LSTM receives
 	the hidden state at the previous time step ($h_{t - 1}$) and $x_t$
-	and outputs the hidden state $h_{t}$
+	and outputs the hidden state $h_{t}$.
 	Adopted from 
-\citep{graves2013hybrid} }
+\citep{graves2013hybrid}. }
 \label{fig:lstm_arch}
 \end{figure}
 
 Long short-term memory (LSTM) is a recurrent neural network
 designed to process sequences of data 
 \citep{gers1999learning}. A unit of LSTM consists of 
-a cell, an input gate, an output gate and a forget gate.
+a cell, an input gate, an output gate, and a forget gate.
 The cell stores information over time intervals and the
 gates control which data will be passed on the cell 
 or not. Fig.~\ref{fig:lstm_arch} shows a LSTM cell.
@@ -125,13 +125,13 @@ cell state ($c_t$) and next hidden state ($h_t$) can be calculated as:
 \begin{align*}
 	\mathbf{\hat{c_t}} &= tanh(\mathbf{w_c} [\mathbf{x_t}, \mathbf{h_{t - 1}}] + b_c) \\
 	\mathbf{c_t} &= \mathbf{f_t} \cdot \mathbf{c_{t - 1}} + \mathbf{i_t} \cdot \mathbf{\hat{c_t}} \\
-	\mathbf{h_t} &= \mathbf{o_t} \cdot \mathit{tanh}(\mathbf{c_t}) \\
+	\mathbf{h_t} &= \mathbf{o_t} \cdot \mathit{tanh}(\mathbf{c_t})
 \end{align*}
 where $\mathit{tanh}$ represents the hyperbolic tangent function. The sigmoid
 and $\mathit{tanh}$ function are often replaced by similar easier to compute functions 
 such as the leaky linear unit (ReLU) function \citep{agostinelli2014learning}. 
 
-The advantage over regular recurrent neural networks, which don't posses any
+The advantage over regular recurrent neural networks, which do not posses any
 gating mechanisms, is to stop the vanishing \citep{hochreiter1998vanishing} and
 exploding gradient problems \citep{pascanu2012understanding}.  The gradients
 from backpropagation can either vanish or explode when training neural networks
@@ -181,11 +181,11 @@ and test set (used to asses model performance after training).
 
 
 Another technique to partition datasets into training and test datasets
-is cross validation \citep{arlot2010survey} (illustrated in~\ref{fig:kfold})
+is cross validation \citep{arlot2010survey} (illustrated in Figure~\ref{fig:kfold})
 The training dataset is then used to train the model, and the remaining
 test dataset is used to evaluate the resulted trained model. 
 \textit{K-fold} cross-validation is the most commonly used
-cross-validation technique in which the dataset is partitioned into 
+cross-validation technique, in which the dataset is partitioned into 
 $k$ equally sized samples called folds. One of the $k$ folds is
 used as a test dataset, the rest comprise the training dataset. This
 procedure is repeated $k$ times (usually $k \in [4, 10] \cap k \in Z$).
@@ -227,7 +227,7 @@ is usually evaluated by calculating precision, recall, and F-score.
 In a binary classification setting, we compare bit vectors ($1$ represents the
 positive class) of predicted and gold labels. Element-wise comparison will
 always give one of four combinations in a confusion matrix (shown in
-Tab.~\ref{tab:conf_mat}). Accuracy, precision, recall, and F-score between 
+Table~\ref{tab:conf_mat}). Accuracy, precision, recall, and F-score between 
 a gold vector $\mathbf{a} = (a_0, a_1, \dots, a_n | i \in \{0..n\},  a_i \in \{0, 1\})$ 
 and a predicted vector 
 $\mathbf{b} = (b_0, b_1, \dots, b_n | \forall i \in \{0..n\}, b_i \in \{0, 1\})$
@@ -264,8 +264,8 @@ programming, structured SVMs, Markov logic networks and others.  See
 \citep{smith2011linguistic} for an excellent overview of applying structure
 prediction in computational linguistics.  In this section we focus on
 conditional random fields and chain classification as they are used in
-part~\ref{part:struc} of the thesis. Before going into  conditional random
-fields, we explain the hidden markov model and Viterbi algorithm since they are
+Part~\ref{part:struc} of the thesis. Before going into  conditional random
+fields, we explain the Hidden Markov Model and Viterbi algorithm, since they are
 prerequisites for understanding how conditional random fields work.
 
 \subsection{Hidden Markov Model}
@@ -373,10 +373,10 @@ Conditional random fields (CRF) is a framework for building probabilistic
 models to segment and label sequence data \citep{wallach2004conditional}.
 When trying to predict a vector of random variables $\mathbf{Y} = \{y_0, \dots, y_t\}$
 given an observed feature vector $\mathbf{X} = \{x_0, \dots, x_t\}$. 
-the typical supervised classification approach would be 
+The typical supervised classification approach would be 
 to learn independent classifiers to map $\forall i,  x \to y_i$
 \citep{sutton2012introduction}.
-However, this approach doesn't take into account possible dependencies
+However, this approach does not take into account possible dependencies
 that may exist between labels, example being that neighboring 
 regions in an image tend to have similar labels. 
 Including made predictions in future predictions leads to 
@@ -449,7 +449,7 @@ where each $\mathbf{x}^{(i)} = \{x_{1}^{(i)}, \dots, x_{T}^{(i)}\}$
 is a sequence of inputs
 and $\mathbf{y}^{(i)} = \{y_{1}^{(i)}, \dots, y_{T}^{(i)}\}$ is 
 a sequence of labels. To estimate parameters, we
-minimize log likelihood expressed as a function of parameters $\theta$:
+minimize log-likelihood expressed as a function of parameters $\theta$:
 
 $$
 \theta^{*} = \argmin_{\theta} \sum_{i=1}^{N} \log p(\mathbf{y}^{(i)} | \mathbf{x}^{(i)} ; \theta)
@@ -466,13 +466,13 @@ $$
 \frac{\partial }{\partial \theta_k} = \sum_{i=1}^{N} \sum_{t=1}^{T} f_k (y_{t}^{(i)}, y_{t - 1}^{(i)} x_{t}^{(i)}) 
 - \sum_{i=1}^{N} \sum_{t=1}^{T} \sum_{y, y'} f_k (y, y', x_{t}^{(i)}) p(y, y'|x^{(i)}) - \frac{\theta_k}{\sigma^2}
 $$
-The result is a concave function (which is useful since we're looking for the 
+The result is a concave function (which is useful since we are looking for the 
 maximum) since it is of the form $\log \sum_i \exp x_i$, thus can be optimized by
 any hill climbing technique, with the 
 Broyden-Fletcher-Goldfarb-Shanno algorithm \citep{liu1989limited} being a popular 
 choice. 
 
-CRFs, particularly linear-chain CRFs
+CRFs, particularly linear-chain CRFs,
 have been widely applied in natural language processing in tasks such as
 named entity recognition \citep{liu2011recognizing}, shallow parsing \citep{sha2003shallow}, 
 extracting syntax from text \citep{taskar2004max}, 
@@ -526,12 +526,12 @@ we recommend an introductory, but comprehensive tutorial on CRFs
 	\label{fig:bilstm_crf}
 \end{figure}
 
-As mentioned in section~\ref{sec:lstm}, LSTM networks do a very good job of
+As mentioned in Section~\ref{sec:lstm}, LSTM networks do a very good job of
 encoding sentences by preserving relevant content for subsequent classification
 (or regression).  However, LSTM networks do not take predicted neighboring
-label information which has proved a strong feature when solving sequence
+label information, which has proved a strong feature when solving sequence
 tagging problems (such as named entity recognition \citep{nadeau2007survey}).
-Conditional random fields (see section~\ref{sec:crf}) allow for modeling label
+Conditional random fields (see Section~\ref{sec:crf}) allow for modeling label
 level dependencies and can work with arbitrary features, which have usually
 been handcrafted.
 Therefore, using an LSTM layer to encode words as features can be an input to a
@@ -560,7 +560,7 @@ details can be found in \citep{huang2015bidirectional}.
 Multi-label classification is a classification problem where 
 a single instance may be assigned more than one class, making it 
 a generalization of multiclass classification (multiclass classification briefly 
-explained in section~\ref{sec:unstruc_machine_learning}).
+explained in Section~\ref{sec:unstruc_machine_learning}).
 Formally, multi-label classification is the problem of finding 
 a model that maps input $x$ to a set $\mathbf{y} = \{y_1, \dots, y_n | y_i \in
 L, L \in \{1, 2, \dots, N\}, i \in \{1 \dots n\} \}$, where $L$ represents the
@@ -574,7 +574,7 @@ The binary relevance method transforms multi-label classification
 into multiple binary problems; one problem for each label, such that each
 binary classification model is trained to predict the relevance of one of the labels
 \citep{read2011classifier}. This method trains $|L|$ binary classifiers
-$C_1, \dots, C_{|L|}$ where each classifier $C_j$ predicts the $0/1$ association
+$C_1, \dots, C_{|L|}$, where each classifier $C_j$ predicts the $0/1$ association
 for each corresponding label $l_j \in |L|$ \citep{read2011classifier}.
 Transforming from multi-label to binary with the BR method, label correlations
 that might exist in training data are ignored, therefore predicted labels might
@@ -629,14 +629,14 @@ Classifiers are chained such that each classifier deals with
 a single binary relevance problem $l_j \in L$ using an extended feature space of 
 previous classifiers 
 forming a chain of classifiers \citep{read2011classifier}.
-The training phase is demonstrated by algorithm~\ref{alg:train_chain_classifier}. 
+The training phase is demonstrated by Algorithm~\ref{alg:train_chain_classifier}. 
 Each classifier $C_j$ in the chain is responsible for predicting 
 the binary association of label $l_j$ using all prior 
 binary relevance predictions in the chain $l_1, \dots, l_{j - 1}$.
 The classification starts with $C_1$ determining 
 $prediction(l_1 | x)$ propagating along the chain
 to predict $prediction(l_j | x_i, l_1, \dots, l_{j-1})$, outlined 
-in figure~\ref{alg:test_chain_classifier}
+in Figure~\ref{alg:test_chain_classifier}
 \citep{read2011classifier}.
 The idea of the chaining method is to overcome the label independence problem
 inherent to BM, retaining lower complexity advantages
@@ -661,7 +661,7 @@ to reach a final verdict based on the number of votes
 \label{sec:unsupervised_machine_learning}
 
 As opposed to supervised machine learning (described in
-section~\ref{sec:unstruc_machine_learning}), unsupervised machine learning
+Section~\ref{sec:unstruc_machine_learning}), unsupervised machine learning
 has no access to labeled data. The goal of unsupervised machine learning,
 often denoted as \textit{clustering} is to separate 
 a finite unlabeled dataset into a finite and discrete set of 
@@ -670,7 +670,7 @@ Evaluating resulting clusters can be subjective, as there is a mere
 requirement that patterns in the same cluster should be similar to each
 other, more than patterns in other clusters. More formally, 
 given a set of input patterns $X = \{x_1, \dots, x_N\}$, where
-$x_j = (x_{j1}, \dots, x_{jd})$ partitioning (clustering) can 
+$x_j = (x_{j1}, \dots, x_{jd})$, partitioning (clustering) can 
 be performed in two ways \citep{xu2005survey}:
 \begin{description}
 \item[Hard clustering] seeks to partition $X$ into $K$ partitions $C=\{C_1,
@@ -791,7 +791,7 @@ Silhouette score reflects how tightly grouped all data points in the cluster are
 	\label{tab:adjusted_rand}
 \end{table}
 
-\textit{Rand Index} is a measure of similarity between two clusters. \citep{santos2009use}
+\textit{Rand Index} is a measure of similarity between two clusters \citep{santos2009use}.
 Given a dataset $X = \{x_1, \dots, x_N\}$ partitioned into two clustering results
 $C = \{C_1, \dots, C_r\}$ and $D = \{D_1, \dots, D_s\}$ consisting of $r$ and $s$ clusters
 respectively, define:
@@ -806,7 +806,8 @@ Rand index is then defined as:
 	R = \frac{a + b}{a + b + c + d} = \frac{a + b}{\binom{n}{2}}
 \end{equation}
 where $a + b$ and $c + d$ reflects similarity and dissimilarity of two clusterings respectively.  
-$\binom{n}{2}$ reflect the chance that two clusterings will randomly agree on a chosen pair. 
+The chance of two clusterings
+randomly agreeing on a chosen pair is  $\binom{n}{2}$.
 The Rand Index ($0 \leq R \leq 1$) value reflect how well two clusterings agree, with 
 $0$ indicating complete disagreement and $1$ signaling exactly same clusterings. 
 \textit{Adjusted Rand Index} (ARI) is derived from Rand Index, but it is corrected for chance
@@ -815,7 +816,7 @@ given a dataset $X = \{x_1, \dots, x_N\}$ partitioned into two clustering
 results $C = \{C_1, \dots, C_r\}$ and $D = \{D_1, \dots, D_s\}$ consisting of
 $r$ and $s$ clusters, calculates the number of objects $n_{ij}$ common for every
 $C_i$ and $D_j$, $t_{ij} = |C_i \cap D_j|$. Then row and column sums are calculated 
-as shown in table~\ref{tab:adjusted_rand} using which ARI is calculated as:
+as shown in Table~\ref{tab:adjusted_rand}, using which ARI is calculated as:
 \begin{equation}\label{eq:adjusted_rand_index}
 	ARI = \frac{\sum_{ij} \binom{t_{ij}}{2}- \left[ \sum_i \binom{t_{i.}}{2} \sum_j \binom{t_{.j}}{2} \right] / \binom{N}{2}}
 	{\frac{1}{2} \left[ \sum_i \binom{t_{i.}}{2} + \sum_j \binom{t_{.j}}{2} \right] - 
@@ -840,8 +841,8 @@ where
 	H(C | K) &= - \sum_{k=1}^{|K|}\sum_{c=1}^{|C|} \frac{t_{ck}}{N}\log \frac{t_{ck}}{\sum_{c=1}^{|C|} t_{ck}} \\
 	H(C) &= - \sum_{c=1}^{|C|} \frac{\sum_{k=1}^{K} t_{ck}}{n} \log \frac{\sum_{k=1}^{|K|} t_{ck}}{n}
 \end{align*}
-where $t_{ck}$ is a value in the contingency table between two clusterings as shown in table~
-\ref{tab:adjusted_rand}.
+where $t_{ck}$ is a value in the contingency table between two clusterings as shown in 
+Table~\ref{tab:adjusted_rand}.
 To satisfy the \textit{completeness} criteria, a clustering must assign all 
 members of a single class to a single class, making it symmetrical to 
 homogeneity, calculated through conditional entropy of the proposed clustering
@@ -855,7 +856,7 @@ H(K | C) &= - \sum_{c=1}^{|C|}\sum_{k=1}^{|K|} \frac{t_{ck}}{N} \log \frac{t_{ck
 H(K) &= - \sum_{k=1}^{|K|} \frac{\sum_{c=1}^{C} t_{ck}}{n} \log \frac{\sum_{c=1}^{|C|} t_{ck}}{n}
 \end{align*}
 where $t_{ck}$ is a value in the contingency table between two clusterings as shown in 
-table~\ref{tab:adjusted_rand}.
+Table~\ref{tab:adjusted_rand}.
 Now, through homogeneity $h$ and completeness $c$, we define V-measure as:
 \begin{equation}\label{eq:v-measure}
 	V = (1 + \beta) \cdot \frac{h \cdot c}{\beta \cdot h + c}
@@ -884,11 +885,11 @@ mining is considered to closely related to natural language processing
 \citep{lippi2015argument}, as it uses commonly used natural language processing
 techniques to solve problems from social sciences to analyze argumentation.
 In the rest of this section, we give an introduction on various word representations
-in subsections~\ref{sec:bow},~\ref{sec:tf-idf}, and~\ref{sec:embedding}, 
+in Subsections~\ref{sec:bow},~\ref{sec:tf-idf}, and~\ref{sec:embedding}, 
 then we introduce two 
 semantics-related NLP problems used in this thesis: 
-textual entailment in subsection~\ref{sec:textual_entailment}
-and semantic textual similarity in subsection~\ref{sec:sts}.
+textual entailment in Subsection~\ref{sec:textual_entailment}
+and semantic textual similarity in Subsection~\ref{sec:sts}.
 
 \subsection{Bag-of-words}
 \label{sec:bow}
@@ -928,7 +929,7 @@ would then be: $x_4 = [1, 1, 1, 0, 1, 0, 0, 1, 0, 1]$
 The \textbf{n-gram} document representation is a generalization of the BoW
 approach. The n-gram model
 can use multiple words ($n$) to represent a document preserving spatial information.
-The bigram model ($n = 2$) uses pairs of words to represent a document
+The bigram model ($n = 2$) uses pairs of words to represent a document.
 The document $D_4$ using a bigram model would then consist of the following 
 elements:
 \emph{``it was'', ``was the'', ``the age'', ``age of'', ``of foolishness''}.
@@ -1003,7 +1004,7 @@ Architectures of both models are shown in Fig.~\ref{fig:skip_gram_cbow}.
 Models are then trained on large corpora, such as the Google Books corpus 
 \citep{lin2012syntactic}. 
 More details on training the models is available in the original word2vec papers
-\citep{mikolov2013distributed, mikolov2013efficient}, as well as follow up papers
+\citep{mikolov2013distributed, mikolov2013efficient}, as well as follow-up papers
 \citep{goldberg2014word2vec, rong2014word2vec}.
 FastText is another word embedding procedure which is an extension on word2vec
 \citep{bojanowski2017enriching}. In fastText each word is represented as a
@@ -1018,20 +1019,20 @@ never seen during the model training period.
 \label{sec:textual_entailment}
 
 \textit{Textual entailment} (TE) is defined as a directional relationship
-between pairs of text expressions, denoted by $T$ --- the entailing ``Text'',
-and $H$ --- the entailed ``Hypothesis''. We say that $T$ entails $H$ if,
+between pairs of text expressions, denoted by $T$ -- the entailing ``Text'',
+and $H$ -- the entailed ``Hypothesis''. We say that $T$ entails $H$ if,
 typically, a human reading $T$ would infer that $H$ is most likely true 
 \citep{dagan2005pascal}.  This definition assumes common human understanding of
 language as well as common background knowledge. Examples of textual entailment
 are in
-table~\ref{tab:te_examples}.  
+Table~\ref{tab:te_examples}.  
 Recognizing textual entailment was established as
 a popular natural language processing problem with the start of the
 \textit{Recognising Textual Entailment} (RTE) challenge. The challenge involved
 teams producing models to solve the TE problem on multiple datasets. A dataset
 instance contained two sentences and a label whether entailment holds or not
 ($\mathit{True}$ or $\mathit{False}$).
-Follow up challenges were also organized \citep{bar2006second, giampiccolo2007third}.
+Follow-up challenges were also organized \citep{bar2006second, giampiccolo2007third}.
 
 \begin{table}
 	\centering
@@ -1064,12 +1065,12 @@ where each pair of sentences can be assigned one of three possible labels:
 \begin{enumerate*}
 	\item entailment, 
 	\item neutral, and
-	\item contradiction
+	\item contradiction,
 \end{enumerate*} 
 making it more general than the TE challenge. 
 The most used dataset of NLI is the Stanford Natural Language Inference dataset
-\citep{bowman2015large} which contains 570K pairs of labelled sentence pairs. 
-Examples of the dataset are available in table~\ref{tab:snli_examples}.
+\citep{bowman2015large}, which contains 570K pairs of labelled sentence pairs. 
+Examples of the dataset are available in Table~\ref{tab:snli_examples}.
 
 \begin{table}
 	\centering
@@ -1095,8 +1096,8 @@ Examples of the dataset are available in table~\ref{tab:snli_examples}.
 
 Some of the most successful attempts in solving NLI on the SNLI dataset have involved
 an enhanced LSTM model \citep{chen2016enhanced} and 
-an attention based model \citep{parikh2016decomposable}. 
-The enhanced LSTM model (basic LSTM described in section~\ref{sec:lstm}) 
+an attention-based model \citep{parikh2016decomposable}. 
+The enhanced LSTM model (basic LSTM described in Section~\ref{sec:lstm}) 
 uses an BiLSTM module to encode the text and hypothesis after which they calculate 
 soft alignment between hidden representations of the text and hypothesis to model the
 text--hypothesis interaction. Further, in parallel they use a Tree-LSTM to encode 
@@ -1142,19 +1143,21 @@ used as input to machine learning models fitted on such data
 for a more detailed overview. 
 
 TakeLab's STS system by \citet{vsaric2012takelab} first preprocesses two input
-texts (removing stopwords, hypens, slashes, \dots), after which they calculate
+texts (removing stopwords, hypens, slashes, etc.), after which they calculate
 a set of syntactic, n-gram overlap, and named entity features.  Finally, they
 frame the problem as a supervised regression problem and train a LIBSVM model
 \citep{chang2011libsvm} using grid search and cross-validation (grid search and
 cross-validation are described in
-section~\ref{sec:selection}) to obtain optimal hyperparameters.
+Section~\ref{sec:selection}) to obtain optimal hyperparameters.
 
 \section{Ontology}
 \label{sec:knowledge_representation}
 
+According to \citep{gruber2009ontology}, 
+an ontology is ``a specification of a conceptualization''.
 An ontology defines a set of representational primitives with which to model 
 a domain of knowledge or discourse. The primitives are classes, attributes
-(or properties) and relationships (relations among class instances). 
+(or properties), and relationships (relations among class instances). 
 Definitions of the primitives include information about their
 meaning and constraints on their logically consistent application
 \citep{gruber2009ontology}.

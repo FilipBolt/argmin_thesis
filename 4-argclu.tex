@@ -24,11 +24,12 @@ claims can be expressed. Second, we investigate the possibility of
 acquiring prominent claims from an internet discussion by means of clustering, 
 setting a baseline for unsupervised prominent claim identification. 
 We will start by introducing the dataset used to study clustering of
-user comments to determine prominent claims in section~\ref{sec:argclu_data}.
+user comments to determine prominent claims in Section~\ref{sec:argclu_data}.
 Next, we will introduce an unsupervised
-model for claim clustering in section~\ref{sec:argclu_model}.
+model for claim clustering in Section~\ref{sec:argclu_model}.
 Finally, the results of the model will be analyzed and discussed 
-in section~\ref{sec:argclu_analysis}.
+in Section~\ref{sec:argclu_analysis}.
+This work is based on \citep{boltuzic2015identifying}.
 
 \section{Data}
 \label{sec:argclu_data}
@@ -71,21 +72,21 @@ We use BoW as it has been shown to be a powerful baseline for semantic
 similarity \citep{ramage2009random}. 
 Using weighing by inverse sentence frequency is similar to the motivation 
 of inverse-document frequency in tf-idf (tf-idf is described in
-section~\ref{sec:tf-idf} and by Eq.~\ref{eq:idf}). We expect tf-idf 
+Section~\ref{sec:tf-idf} and by Eq.~\ref{eq:idf}). We expect tf-idf 
 to model our intuition that frequently used words are less
 specific to a prominent claim. 
 Distributed representations were chosen since they represent individual words 
 very well (as shown in \citep{mikolov2013efficient, mikolov2013distributed}).
 To build a sentence vector, we simply sum up the distributed vector representations 
-of words\footnote{we use pretrained vectors from \url{https://code.google.com/archive/p/word2vec/}}
+of words.\footnote{we use pretrained vectors from \url{https://code.google.com/archive/p/word2vec/}}
 For both representations, we remove stopwords before building vectors. 
 Similarity between sentences is computed as cosine similarity between 
 respective sentence vectors. 
-As described in section~\ref{sec:sts} we use TakeLab's STS, which we feed our pairs
+As described in Section~\ref{sec:sts}, we use TakeLab's STS, which we feed our pairs
 of claims to acquire a similarity score. 
 
 For clustering we use the hierarchical agglomerative clustering (HAC) algorithm
-(described in section~\ref{sec:hierarhical_clustering}). 
+(described in Section~\ref{sec:hierarhical_clustering}). 
 There are three main reasons to use HAC: 
 \begin{enumerate*}
 \item HAC allows us to work directly with similarities
@@ -115,7 +116,7 @@ semantic similarity (and is also more realistic).
 \section{Claim Cluster Analysis}
 \label{sec:argclu_analysis}
 
-Using data from internet discussions presented in section~\ref{sec:argclu_data}, 
+Using data from internet discussions presented in Section~\ref{sec:argclu_data}, 
 we wish to cluster posts and analyze subsequent results. 
 We perform two kinds of analysis. First, we analyze different clustering models. 
 Second, we analyze clustering quality from one of the clustering models chosen. 
@@ -124,8 +125,8 @@ hypothesized clusters against target clusters.
 We use argument labels from \citet{hasan2014you} as target clusters. 
 As a metric of measurement, we use two metrics: 
 adjusted rand index (ARI) 
-\citep{steinley2004properties}, and V-measure \citep{rosenberg2007v}
-(methods described in section~\ref{sec:clus_evaluation}, more specifically by 
+\citep{steinley2004properties} and V-measure \citep{rosenberg2007v}
+(methods described in Section~\ref{sec:clus_evaluation}, more specifically by 
 equations~\ref{eq:adjusted_rand_index} and~\ref{eq:v-measure}). 
 
 \begin{table*}[t]
@@ -198,7 +199,7 @@ STS (Complete) & .11 & .11 & .11 & .02 & .05 & .05 & .05 & .03	& .05 & .05 & .05
 \paragraph{Analysis \rom{1}} 
 For the first analysis, we cluster sentences from four topics separately. 
 and use the gold number of clusters for each topic. 
-Results are shown in table~\ref{tab:external-eval}. 
+Results are shown in Table~\ref{tab:external-eval}. 
 Overall, the best model is the skip-gram model with Ward's linkage 
 outperforming others in both ARI and V-measure. 
 That model also produces best clusters in terms of homogeneity and 
@@ -470,7 +471,7 @@ We manually attempt to match resulting clusters from
 the skip-gram model with Ward's linkage for the ``Marijuana'' topic configured
 to produce 10 clusters (which is the number of gold prominent claims). 
 We do matching on the majority basis, which matches 6 gold classes. 
-Results are shown in table~\ref{tab:cluster-class}. 
+Results are shown in Table~\ref{tab:cluster-class}. 
 We list top three gold classes (and the percentage of sentences in the dataset) 
 in each predicted cluster and top three
 (and the percentage of sentences) in each of the gold classes. 
@@ -516,7 +517,7 @@ be \$5.00/pack imagine what we could tax pot for!}
 
 In the previous analysis we used the gold number of prominent claims to compare
 against. However, we note that claim granularity is something arbitrary. 
-We exemplify this with example~\ref{fig:dendrogram} where the last 15 steps of
+We exemplify this with example~\ref{fig:dendrogram}, where the last 15 steps of
 hierarchical agglomerative clustering are shown. 
 Looking at the dendrogram point \emph{CD} there is a split between clusters
 represented by medoids with: 
@@ -553,9 +554,9 @@ for the ``Marijuana'' topic and the similarity measure.
 
 Claim clustering is one possible, unstructured, approach to 
 detect prominent claims from text.
-It is unstructured, as we do not know anything, but the final result of
+It is unstructured, as we do not know anything but the final result of
 prominent claims (no inference behind the final decisions is known). In
-part~\ref{part:struc} of the thesis, we will provide an
+Part~\ref{part:struc} of the thesis, we will provide an
 alternative perspective on clustering claims to derive prominent claims: a
 structured approach involving formalizations and reasoning. This unstructured
 approach does not allow for describing relationships between resulting

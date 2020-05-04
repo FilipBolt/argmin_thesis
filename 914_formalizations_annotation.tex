@@ -7,7 +7,7 @@
 \begin{itemize}
 \item Domain individuals 
 \item Claim relation
-\item Modality
+\item Type
 \item (Opinion holder)
 \end{itemize}
 
@@ -85,7 +85,7 @@ less than, more than, greater than \\
 \end{tabular}
 \end{table}
 
-\noindent \textbf{Modality} $\Rightarrow$ \texttt{has\_modality + fact/good\_value/bad\_value/policy} \\
+\noindent \textbf{Type} $\Rightarrow$ \texttt{has\_type + fact/good\_value/bad\_value/policy} \\
 
 \noindent \textbf{Opinion holder} $\Rightarrow$ \texttt{has\_opinion\_holder + domain\_individual} \\
 
@@ -153,7 +153,7 @@ from legalizing marijuana'' made on the topic of \textit{Drug legalization} by a
 named \textit{Fred}, we wish to transform it into logical form which would be: \\
 
 \noindent \texttt{
-author(Fred) $\wedge$ has\_claim(Fred, c) $\wedge$ has\_modality(c, fact) 
+author(Fred) $\wedge$ has\_claim(Fred, c) $\wedge$ has\_type(c, fact) 
 $\wedge$ has\_antecedent(c, marijuana\_legalization) 
 $\wedge$ implies(c, government\_profit)
 } \\
@@ -196,7 +196,7 @@ steps to annotate a natural language claim:
 \begin{enumerate}[label=\textbf{Step \arabic*.}, leftmargin=2cm]
 \item select which domain individuals from a predefined list are used in the claim,
 \item recognize which claim relation is used in the claim individual, 
-\item which modality was used for the claim (\texttt{fact/value/policy}), and 
+\item which type was used for the claim (\texttt{fact/value/policy}), and 
 \item identify the claim opinion holder. 
 \end{enumerate}
 
@@ -308,7 +308,7 @@ When you’re \textbf{unsure} which one to choose, but see a general pattern of 
 promotes B, A stimulates B \dots) choose promotes as a more general term.
 In the case of promotes (and suppresses) you also need to specify the
 \texttt{has\_antecedent} property (domain individual A in A promotes B). An example for
-the claim tobacco implies cancer is below is in figure~\ref{fig:promotes_example}
+the claim tobacco implies cancer is below is in Figure~\ref{fig:promotes_example}
 
 \begin{figure}
 	\includegraphics{promotes.png}
@@ -326,7 +326,7 @@ also applies to suppresses, but instead of causes you have
 
 A declaration is simply a claim stating a domain concept either exists, should
 be done or is good/bad. The claim \textit{mafia sells marijuana} is annotated by adding
-the \texttt{has\_declaration} with the appropriate domain individual (as seen in figure
+the \texttt{has\_declaration} with the appropriate domain individual (as seen in Figure
 \ref{fig:declaration_example}). 
 
 \begin{figure}
@@ -346,7 +346,7 @@ optional property of comparison is annotated with
 \texttt{comparison\_property}. If there is no property, but an expression like
 A is better than B is made, we don’t annotate \texttt{comparison\_property}.
 The claim \textit{Alcohol is more influential on the mind than marijuana} is an
-example annotated in the figure~\ref{fig:comparison_example}.
+example annotated in the Figure~\ref{fig:comparison_example}.
 
 \begin{figure}
 	\includegraphics[scale=0.7]{comparison.png}
@@ -362,7 +362,7 @@ states that one domain individual \textbf{does not promote} another. As not prom
 not always} the same as suppresses, we allow you to add negation to any
 relation to reflect that. To add negation, simply select ``Negative object
 property assertions'' instead of ``Object property assertions'' along with your
-relation. Example on the figure \ref{fig:negation_example}. Be \underline{very careful}
+relation. Example on the Figure \ref{fig:negation_example}. Be \underline{very careful}
 when opting for negation, especially with double negation.
 
 \begin{figure}
@@ -371,9 +371,9 @@ when opting for negation, especially with double negation.
 	\label{fig:negation_example}
 \end{figure}
 
-\subsubsection*{Step 3 Selecting modality}
+\subsubsection*{Step 3 Selecting type}
 
-We recognize that claims are made in a certain modality (way which they were
+We recognize that claims are made in a certain type (way which they were
 expressed with) and discern between:
 
 \begin{itemize}
@@ -388,7 +388,7 @@ expressed with) and discern between:
 	\item Judging of bad (example: \textit{Marijuana sucks})
 	\end{itemize}
 \end{itemize}
-After recognizing the modality, we need to add a property of \texttt{has\_modality} which
+After recognizing the type, we need to add a property of \texttt{has\_type} which
 can be one of \texttt{fact, policy, good\_value, bad\_value}. 
 
 \subsubsection*{Opinion holder}
@@ -440,7 +440,7 @@ might be a good place to start.
 2.1. You can narrow down the choice between promotes, implies and
 causes as one thing supports another (\textit{marijuana legalization}
 and \textit{crime rate}).  
-\item To get the modality expressed you can work by elimination. Is there an
+\item To get the type expressed you can work by elimination. Is there an
 estimation if this is good or bad (if so, then value). Is there a
 proposal of something that should be done? (if so, policy).
 		Otherwise, it’s a factual information. 
@@ -454,7 +454,7 @@ proposal of something that should be done? (if so, policy).
 \item Enter ``Object property assertions'' depending on the claim pattern identified 
 \item Enter: \texttt{has\_antecedent} \texttt{legalized\_marijuana} (Step 1 \& 2)
 \item Enter: \texttt{promotes any\_crime} (Step 1 \& 2)
-\item Enter: \texttt{has\_modality fact} (Step 3)
+\item Enter: \texttt{has\_type fact} (Step 3)
 \end{enumerate}
 
 \begin{mydef}
@@ -477,5 +477,5 @@ Protege steps
 \item Enter “Object property assertions”
 \item Enter \texttt{has\_antecedent marijuana\_farmer} (Step 1\&2)
 \item Enter \texttt{does\_not\_cause mafia\_not\_selling\_marijuana} (Step 1\&2)
-\item Enter \texttt{has\_modality fact} (Step 3)
+\item Enter \texttt{has\_type fact} (Step 3)
 \end{enumerate}

@@ -1,4 +1,4 @@
-\chapter{Formalizing claims}
+\chapter{Formalizing Claims}
 \label{chap:formalization}
 
 In the previous chapter we have explored how to identify claims in text.
@@ -20,7 +20,7 @@ according to which one cannot understand the meaning of a single word without
 all essential knowledge that relates to the word \citep{fillmore2006frame}.
 A semantic frame can then be defined as a coherent structure of related concepts,
 such that without knowledge of all of them, one does not have complete knowledge
-of any one. An example semantic frames is ``buy''  which is 
+of any one. An example semantic frames is ``buy'',  which is 
 enriched with actor entities (``buyer'', ''seller'', etc.).
 Formalizing claims is closely related to the task of semantic parsing, as the
 goal is to derive a machine-understandable, logical representation of a claim.
@@ -30,13 +30,13 @@ The argumentative structure of a claim should mainly involve the modality of the
 claim speaker and the form of a claim (implication, contradiction). 
 
 This chapter is divided into two main parts.  In the first part, the
-microstructures are introduced (section~\ref{sec:for_microstructures}).
-In the second part (section~\ref{sec:ontology_formalization}), we introduce a a
+microstructures are introduced (Section~\ref{sec:for_microstructures}).
+Microstructures are based off on work described in \citep{boltuzic2017toward}.
+In the second part (Section~\ref{sec:ontology_formalization}), we introduce a a
 formalization based on ontologies. To demonstrate examples of both formalization
 standards, we first take the dataset of claims and their respective paraphrases
-described in section~\ref{sec:claim_seg_data}. We then formalize claims 
+described in Section~\ref{sec:claim_seg_data}. We then formalize claims 
 according to the microstructure and ontology standard.
-Finally, we conclude in section~\ref{sec:formalization_conclusion}.
 
 \section{Microstructures}
 \label{sec:for_microstructures}
@@ -52,7 +52,8 @@ Finally, we conclude in section~\ref{sec:formalization_conclusion}.
 Microstructures are structures expressing relations between the domain-specific
 concepts, reflecting beliefs, value judgements, or desired policies of the claim
 author. Their purpose is to capture the gist of the claim. 
-They stemmed from as many claims could be expressed as a \emph{relation}
+They were constructed in a data driven process
+from many claims one could express as a \emph{relation}
 between \emph{concepts} using a certain \emph{modality}. 
 Figure~\ref{fig:structures_flowchart} shows a claim microstructure bringing three elements 
 together. 
@@ -73,7 +74,7 @@ For ease of access, they can be arranged into a small, domain specific taxonomy 
 For instance ``gay marriage'', ``heterosexual marriage'' and ``religious marriage''
 all belong under the concept of ``marriage''. 
 The taxonomic relations could also be useful for later computational processing. 
-Concepts are domain dependent and need to defined for each topic anew
+Concepts are domain dependent and need to defined for each topic anew.
 
 \paragraph{Modalities. }
 We observe that claims are expressed under different modalities. 
@@ -81,7 +82,7 @@ They can be roughly categorized into \textit{beliefs, value judgements, and poli
 We formalize this via unary relations `believes', `approves', `disapproves',
 and `desires' corresponding 
 to beliefs (factual, religious, and opinion-based), positive value judgements, negative value 
-judgements, and desired policy (desired state of affairs) respectively. 
+judgements, and desired policy (desired state of affairs), respectively. 
 The three modalities act as a wrapper on the propositional content of the claim, 
 effectively modulating what is being claimed. 
 For instance, `\texttt{believes(purpose(love, procreation))}' expresses the belief 
@@ -122,7 +123,7 @@ By convention, the opinion holder of the first modality is always the author of 
 \label{tab:microstructures_relations}
 \end{table}
 
-\paragraph{Microstructure formalization. }$\mathcal{R}, \mathcal{C}$, and
+\paragraph{Microstructure formalization. } Let $\mathcal{R}, \mathcal{C}$, and
 $\mathcal{M}$ denote the set of relations, concepts and
 modalities, respectively. 
 Formally, we define a claim microstructure as a quadruple 
@@ -135,15 +136,55 @@ $r = (t, c_1, c_2) \in \mathcal{R}$ is the (possibly higher order) relation
 between two concepts or relations $c_1, c_2 \in \mathcal{C} \cup \mathcal{R}$
 conveyed by the relation type $t$.
 Table~\ref{tab:microstructures_relations} lists all possible relation types. 
-In chapter~\ref{chap:analysis} we will show
+In Chapter~\ref{chap:analysis} we will show
 how this microstructure formalization can be used. 
 Now that we have formally defined microstructures, we move on to another
 formal claim representation. 
 
+\begin{table*}[t]
+\begin{center}
+{\footnotesize
+	\begin{tabular}{@{}p{0.17\linewidth} p{0.25\linewidth} p{0.55\linewidth}@{}}
+\toprule
+\textbf{User post} & \textbf{Claim segment} & 
+	%	\textbf{Claim paraphrase} & 
+		\textbf{Claim microstructure}       \\
+\midrule
+\multirow{3}{*}{\parbox{2.6cm}{
+		\emph{Men should fall in love with women that's why they where
+		created and women should get married to men because it makes
+		everything easier. }
+}}
+&  
+\emph{Men should fall in love with women.}
+%& \emph{People of opposite sex should fall in love.}
+&
+		\texttt{desires(entails(OppositeSex, FallingInLove))}
+\\
+\cmidrule{2-3}
+& \emph{that's why they where created} 
+	%	& \emph{Men and women are created to pair.}
+ & 
+		\texttt{believes(purpose(MenAndWomen, Procreation))}
+ \\
+\cmidrule{2-3}
+& \emph{women should get married to men because it makes everything easier.} 
+%		&  \emph{Heterosexual marriages make everything easier.}
+ &
+ \texttt{believes(entails(HeterosexualMarriage, Normal)) } \\
+ \bottomrule
+\end{tabular}}
+\end{center}
+\caption{An example of a user post segmented into three claim segments, each
+	translated into the corresponding claim
+	microstructure.}
+\label{microstruc:tab:post_segments}
+\end{table*}
+
 \paragraph{Data annotation. }
-We use the dataset defined in chapter~\ref{chap:claim_segmentation}
+We use the dataset defined in Chapter~\ref{chap:claim_segmentation}
 and single out the ``\emph{Gay Rights}'' topic. We end with 100 
-posts (50 \pro{pro} and 50 \con{con}) which break down into 920 claims and their
+posts (50 \pro{pro} and 50 \con{con}), which break down into 920 claims and their
 respective paraphrases. We ask two annotators (A1 and A2) to translate each of 
 the 920 claims into claim microstructures. The annotators were provided 
 with a domain-specific taxonomy on ``\emph{Gay Rights}'', compiled 
@@ -153,9 +194,9 @@ were instructed to use the existing concepts from the taxonomy, and
 introduce new ones only if they could not find a suitable one in the
 taxonomy. They were also instructed not to use microstructures of order higher 
 than two. Full annotation guidelines are listed in
-appendix~\ref{sec:microstructure_annotation_appendix}.
+Appendix~\ref{sec:microstructure_annotation_appendix}.
 Out of 920 claims, annotator A1 managed to translate 882 claims into 707
-distinct microstructures while annotator A2 translated 842 claims into
+distinct microstructures, while annotator A2 translated 842 claims into
 767 distinct microstructures. The average annotation effort was 33 hours. 
 The number of claims for which both provided an identical microstructure is only
 58 (6.3\%). The annotators introduced 157 new concepts, indicating that the initial 
@@ -170,13 +211,14 @@ A2 made a more balanced use of relations, with the top two being \emph{has} (21\
 and \emph{entails} (15\%). The concepts most frequently used by A1 were
 \emph{homosexuality}, \emph{homosexual people}, and \emph{marriage}, while for A2
 these are \emph{the Bible}, \emph{homosexual people}, and \emph{government interest}. 
+Example annotated microstructures are listed in Table~\ref{microstruc:tab:post_segments}. 
 
 \section{Ontology-based formalization}
 \label{sec:ontology_formalization}
 
 Microstuctures provide a claim structure which can then be used 
 to ``compress'' the claim for subsequent argumentation tasks
-(see application to stance classification in section~\ref{sec:stance_micro}).
+(see application to stance classification in Section~\ref{sec:stance_micro}).
 However, microstructures do not inherently support any
 well-established computer science standard. 
 Hence, we turn to ontologies. Using ontologies not only allows for 
@@ -192,7 +234,7 @@ The ontology itself is built on two levels:
 \item the upper and 
 \item the domain ontology 
 (the motivation behind using two-level ontologies in general is described in
-		section~\ref{sec:knowledge_representation}). 
+		Section~\ref{sec:knowledge_representation}). 
 \end{enumerate*}
 The upper ontology formalizes abstract patterns in argumentative
 claims as object properties. The domain-level ontology conceptualizes 
@@ -214,13 +256,13 @@ involve
 \end{enumerate*}
 Completing these steps allows users of the formalization framework
 to do deep domain claim analysis for the domain of interest. 
-An example of a deep domain analysis is in chapter~\ref{chap:analysis}.
+An example of a deep domain analysis can be found in Chapter~\ref{chap:analysis}.
 
 Apart from modeling domain concepts and the relationships amongst them, we also
-wish to formalize the \emph{modality} of how the claim was expressed: as facts,
+wish to formalize the \emph{type} of how the claim was expressed: as facts,
 policies, and positive or negative value statements (see definition in
 \citep{rieke1997argumentation} and microstructure
-section~\ref{sec:for_microstructures}). 
+Section~\ref{sec:for_microstructures}). 
 
 \subsection{ClaimOntology}
 \label{subsec:claimontology}
@@ -240,15 +282,15 @@ The upper ontology represents general argumentation patterns, mostly on the
 claim level.  The concepts and relations are used across different domains.
 The central object of the upper ontology is the claim class. We are interested
 in extracting as much as possible claims from a single topic. We leave the
-levels above the claim (argument) for future work. The proposed ontology is an
+levels above the claim (argument) is out of the thesis scope. The proposed ontology is an
 OWL second-order description logic (2DL) ontology built using the
 Prot\'{e}g\'{e} software \citep{gennari2003evolution}. The four main concepts
 of the upper ontology are:
 \begin{itemize}
 	\item \texttt{claim}, corresponding to any argumentative statement,
 	\item \texttt{speaker},  denoting the author of the claim
-		(one speaker may be associated with $N$ \texttt{claims})
-	\item \texttt{modality}, which is one of fact, value, or policy, and
+		(one speaker may be associated with $N$ \texttt{claims}),
+	\item \texttt{type}, which is one of fact, value, or policy, and
 	\item \texttt{domain\_topic}, representing any individual from the domain ontology.
 \end{itemize}
 
@@ -275,17 +317,17 @@ the existence of the domain individual \emph{marijuana consumption}.
 The \text{has\_antecedent} property indicates the presence of an 
 antecedent in a claim. The antecedent is always paired with some
 form of a consequent, which is a semantic property. To indicate
-there is a second opinion holder the \texttt{has\_opinion\_holder}
+there is a second opinion holder, the \texttt{has\_opinion\_holder}
 property is used. The role of the \texttt{has\_opinion\_holder}
 property is equivalent to the second opinion holder in the microstructure
-formalization (see section~\ref{sec:for_microstructures}). Finally, the speaker
+formalization (see Section~\ref{sec:for_microstructures}). Finally, the speaker
 who made the claim is attributed using the \texttt{has\_claim} property.
 
 We discern between three different types of \emph{semantic properties}:
 \begin{itemize}
 \item \texttt{promotes / suppresses},
 \item \texttt{comparison}, and
-\item \texttt{has\_modality}
+\item \texttt{has\_type}
 \end{itemize}
 The \texttt{promotes / suppresses} property is used to represent the claim
 consequent as either a \texttt{promotes} or \texttt{suppresses} property
@@ -327,13 +369,13 @@ be formalized as:
 	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{comparison\_property}, \hspace{0.1cm}
 	\mathit{health} > 
 \end{align*}
-The \texttt{has\_modality} property reflects in which modality the claim was made. 
+The \texttt{has\_type} property reflects in which modality the claim was made. 
 Claims \emph{marijuana should be legalized} and \emph{marijuana is legalized} 
-can be formalized to have different modalities for the same domain concepts
+can be formalized to have different types for the same domain concepts
 (\emph{marijuana\_legalization}). 
 
 The main classes and properties of ClaimOntology are visualized in 
-figure~\ref{fig:claimontology}. The domain ontology defines 
+Figure~\ref{fig:claimontology}. The domain ontology defines 
 claim individuals as claims made by speakers of the
 \texttt{domain\_individual} type. Thus, the domain individuals need to be
 defined before making claim individuals. Now, we show a full formalization 
@@ -349,13 +391,13 @@ More formally, we define \texttt{claim\_x} to contain properties:
 	\mathit{industry} > \\
 	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{does\_not\_cause}, \hspace{0.1cm}
 	\mathit{climate\_change} >  \\
-	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{has\_modality}, \hspace{0.1cm}
+	< & \mathit{claim\_x}, \hspace{0.1cm} \mathit{has\_type}, \hspace{0.1cm}
 	\mathit{fact} > 
 \end{align*}
 
-We define claims as done in section~\ref{sec:claim_seg_data}, also 
+We define claims as done in Section~\ref{sec:claim_seg_data}, also 
 abiding by nine principles. We reuse the claims and their paraphrases 
-annotated in section~\ref{sec:claim_seg_data} to formalize in ClaimOntology. 
+annotated in Section~\ref{sec:claim_seg_data} to formalize in ClaimOntology. 
 
 \begin{algorithm}[t]
 	\footnotesize{
@@ -459,10 +501,10 @@ To validate how well the formalized claims represent the original claims
 made by the speakers, we propose measuring textual entailment between the formalized 
 and the original claim. Textual Entailment (\textbf{TE}) models take a pair 
 of sentences and predict whether the facts in the first sentence necessarily imply
-facts in the second sentence (see section~\ref{sec:textual_entailment} for a
+facts in the second sentence (see Section~\ref{sec:textual_entailment} for a
 a short introduction to textual entailment). Textual entailment expects 
 sentences, so we have to translate the formalized claim back to natural language. 
-For that purpose, we build algorithm~\ref{alg:formalization_to_sentence} which 
+For that purpose, we use Algorithm~\ref{alg:formalization_to_sentence}, which 
 very roughly produces natural language sentences from formalizations. 
 We acknowledge that produced sentences may not always be grammatical (depending on the
 domain ontology). Using algorithm~\ref{alg:formalization_to_sentence} on the claim 
@@ -474,7 +516,7 @@ domain ontology). Using algorithm~\ref{alg:formalization_to_sentence} on the cla
 	\mathit{marijuana} >  \\
 	< & \mathit{claim\_y}, \hspace{0.1cm} \mathit{comparison\_property}, \hspace{0.1cm}
 	\mathit{mind\_influental} >  \\
-	< & \mathit{claim\_y}, \hspace{0.1cm} \mathit{has\_modality}, \hspace{0.1cm}
+	< & \mathit{claim\_y}, \hspace{0.1cm} \mathit{has\_type}, \hspace{0.1cm}
 	\mathit{fact} > 
 \end{align*}
 produces the sentence \emph{alcohol is more than marijuana by being mind influental}.
@@ -483,7 +525,7 @@ textual entailment models. Textual entailment estimates how well
 formalized claims represent original claims. To calculate
 textual entailment between the (original or paraphrased) claim and reconstructed
 formalized claim, we use the decomposable attention model \citep{parikh2016decomposable}
-(available via Allennlp \citep{gardner2018allennlp}) which performs
+(available via Allennlp \citep{gardner2018allennlp}), which performs
 close to the state-of-the-art on the widely used SNLI dataset \citep{bowman2015large}.
 
 \subsection{Use-case: ``Marijuana'' }
@@ -512,7 +554,7 @@ After completing those two steps, the ontology can be used in a claim analysis.
 
 A domain ontology conceptualizes the specific domain of the online discussion. 
 It is usually recommended to have some central terms around which to build
-around (i.e. \emph{person}). We inspect claims in the ``\emph{Marijuana}'' topic,
+around (i.e., \emph{person}). We inspect claims in the ``\emph{Marijuana}'' topic,
 using noun phrases as likely candidates for classes. We introduce
 data properties mainly for noun phrases with some varying nuance relevant to
 the domain. One example of using a data property would be to disambiguate between
@@ -540,7 +582,7 @@ object \texttt{drug}.
 
 The ``\emph{Marijuana legalization}'' domain ontology is built by experts over
 several iterations with reviews in-between rounds. The end result proposes 
-\texttt{domain\_topic} concepts, properties, and individuals. The resulted
+\texttt{domain\_topic} concepts, properties, and individuals. The 
 domain ontology produced a diverse set of concepts, such as states (\texttt{war}),
 people (\texttt{drug\_consumer}), or general abstract events (\texttt{society\_effect}). 
 The top level classes of the ontology are displayed in 
@@ -564,11 +606,11 @@ individuals stemming from the drug class.
 The ontology with domain individuals can now be merged with the upper ontology. 
 Next, we move on to annotating claim individuals. Three expert annotators
 formalize 920 claims from the ``\emph{Marijuana}'' topic. A few annotation
-examples are listed in table~\ref{tab:ontology_annotation}.
+examples are listed in Table~\ref{tab:ontology_annotation}.
 They fail to formalize 56, 53, and 60 claims, which makes about 6\% of the dataset. 
 There are multiple reasons on why a claim is not suitable to be formalized. 
 For one, a claim may be lacking appropriate domain individuals, such as in the claim
-\emph{tobacco odors dissipate quickly} where we \emph{tobacco odor} is a concept
+\emph{tobacco odors dissipate quickly}, where we \emph{tobacco odor} is a concept
 not seen when building the domain individuals. Other non-formalized claims
 deemed too abstract in meaning, an example being \emph{nothing can bring 
 world peace}. In 243 out of 920 claims, the same formalization was produced 
@@ -604,7 +646,7 @@ marijuana consumer promotes death \\
 \caption{Annotation examples. Original represents the unedited speakers' claim.
 	Paraphrased represents the from canonical claim made by the annotators.
 	Formalized is the text version  of the formalized claim (obtained by
-	applying algorithm~\ref{alg:formalization_to_sentence} on a formalized
+	applying Algorithm~\ref{alg:formalization_to_sentence} on a formalized
 	claim)
 	}
 \label{tab:ontology_annotation}
@@ -627,16 +669,17 @@ measure by setting the claim as both the text and hypothesis.
 
 Measuring entailment across all three annotators, we observe 2591 pairs of claims
 and formalizations. The entailment decision was made in 1323 (51\%), 1031 (40\%)
-were neutral, whereas contradiction was found in the fewest number of pairs, 
+were neutral, and contradiction was found in the fewest number of pairs, 
 237 (9\%). We compare this a randomized baseline where claims were 
 paired with a randomly selected formalized claim. 
 We obtain that the entailment decision was made in 
+35\% of the cases in the randomized baseline. 
 %TODO add numbers for random decisions
 We manually inspect some of the examples to determine why were some 
 pairs labelled as contradictions or neutral. 
 % TODO add examples on false positives
 Since the evaluation showed entailment decisions in 
-% percent more 
+15\% percent more 
 than the randomized baseline, and that the contradiction-labelled examples 
 seem to be hard to capture by the entailment system, we feel confident for this ontology
 to pass the entailment validation step. 
@@ -664,8 +707,8 @@ to pass the entailment validation step.
 Microstructure and ontology formalizations represent first steps towards
 sub-claim formalizations. Both model the linguistic argumentation patterns
 joined with the the domain knowledge.  Having formalized claims will allow us
-various applications in argumentation mining. In chapter~\ref{chap:analysis},
+various applications in argumentation mining. In Chapter~\ref{chap:analysis},
 we will use microstructures in stance classification, and claim ontologies to
 deriving implicit claims.  Additionally, in
-chapter~\ref{chap:claim_structuring} we will explore how feasible it is to
+Chapter~\ref{chap:claim_structuring} we will explore how feasible it is to
 automatically acquire formalized claims directly from text.  

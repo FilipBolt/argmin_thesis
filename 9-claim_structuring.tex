@@ -4,11 +4,11 @@
 In the previous chapter, we have introduced two approaches to formalize 
 claims.  Having formalized claims can help in inferring claims
 or help with related downstream tasks (such as stance classification) as it
-will be shown in chapter~\ref{chap:analysis}.
+will be shown in Chapter~\ref{chap:analysis}.
 Formalized claims can be obtained manually, applying the steps laid out in the 
-claim ontology framework in chapter~\ref{chap:formalization}. 
+claim ontology framework in Chapter~\ref{chap:formalization}. 
 In this chapter, we wish to explore how some of the steps of the ClaimOntology
-framework can be automatized. 
+framework can be automated. 
 In particular, we focus on formalizing 
 claims, assuming that the rest of the framework is already setup. 
 Thus, we work in a setting where the domain ontology has been determined (domain is
@@ -17,24 +17,25 @@ acquire formalized claims from raw text claims: solve the \textbf{claim structur
 problem.
 
 First, we explain how we adopt the dataset which will be used for claim
-structuring in section~\ref{sec:claim_struc_data}.  Then we define models that
+structuring in Section~\ref{sec:claim_struc_data}.  Then we define models that
 attempt to solve the claim structuring problem in
-section~\ref{sec:claim_struc_models}.  The models are evaluated across multiple
-setups in section~\ref{sec:claim_struc_experiment}.  
+Section~\ref{sec:claim_struc_models}.  The models are evaluated across multiple
+setups in Section~\ref{sec:claim_struc_experiment}.  
 
 \section{Data}
 \label{sec:claim_struc_data}
 
 We use the ontology formalizations from the 
-``\emph{Marijuana}'' topic built in section~\ref{sec:usecase_ontology} and 
+``\emph{Marijuana}'' topic built in Section~\ref{sec:usecase_ontology} and 
 want to see how feasible it is to obtain them automatically from raw text.
-We focus on claim individual formalizations which we obtain by exporting
+We focus on claim individual formalizations, which we obtain by exporting
 the integrated upper and domain ontology populated with claim individuals. 
 The ontology contains a total of 920 claims. Out of those 920, three annotators 
 A1, A2, and A3 manage to formalize 864, 867, and 860 claims respectively.
-We take formalizations from annotator A1. 
+We sample a few claim formalizations from each annotator, and then 
+decide to use formalizations from annotator A1 in the rest of this chapter. 
 Next, we attempt to formulate claim structuring as a supervised learning
-problem.  Two basic approaches are considered: predicting components of the
+problem. Two basic approaches are considered: predicting components of the
 formalization then putting them together (binary relevance, \texttt{BR}), or
 predicting the entire formalization (label powerset, \texttt{LP}). 
 Using components corresponds to a more realistic scenario, as it reflects 
@@ -44,35 +45,35 @@ Following the \texttt{BR} approach, a formalized ontology claim can be broken
 down into four components:
 \begin{itemize}
 	% TODO add mathematical notation from ontology section
-	\item \emph{modality} ($\mathit{MOD} \in \{\mathit{fact},
+	\item \emph{type} ($\mathit{TYP} \in \{\mathit{fact},
 		\mathit{good\_value}, \mathit{bad\_value}, \mathit{policy}\}$), 
-	\item \emph{count} ($\mathit{CNT} \in \{\mathit{unary},
+	\item \emph{arity} ($\mathit{ARI} \in \{\mathit{unary},
 		\mathit{binary},  \mathit{ternary}\}$),
 	\item \emph{properties} ($\mathit{PR} \in \{\mathit{has\_antecedent},
-		\mathit{has\_declaration}, \mathit{implies}, \dots\}$)
+		\mathit{has\_declaration}, \mathit{implies}, \dots\}$), and
 	\item \emph{domain individuals} ($\mathit{DI} \in \{\mathit{marijuana},
 		\mathit{legalized\_marijuana}, \mathit{mafia\_bankrupt},
-		\dots\}$)
+		\dots\}$).
 \end{itemize}
-The \emph{count} component reflects how many object properties the claim individual
-contains (a claim with a $\mathit{has\_declaration}$ property has $\mathit{unary}$ count, etc.).
+The \emph{arity} component reflects how many object properties the claim individual
+contains (a claim with a $\mathit{has\_declaration}$ property has $\mathit{unary}$ arity, etc.).
 Now, to construct a formalized claim, we use a exactly one (out of four
-possible) \emph{modality}, exactly one (out of three possible) \emph{count},
+possible) \emph{type}, exactly one (out of three possible) \emph{arity},
 one or more (up to three, out of 22 possible) \emph{properties}, and one
 or more (out of 82 possible) \emph{domain individuals} (one for each property). 
 We could have had negation as an extra component of the formalized claim, but
 since only properties may be negated, we construct the properties set $PR$ as a
 union of properties and their respective negations: 
 $$
-P = \{\mathit{has\_antecedent}, 
+PR = \{\mathit{has\_antecedent}, 
 \mathit{negated\_has\_antecedent}, \mathit{implies}, \mathit{not\_implies}\, \dots\}
 $$
 
 Taking into consideration all possible combinations of components from
-annotator A1, 107 binary labels ($82 \cdot \mathit{DI} + 17 \cdot \mathit{PR} + 4\cdot
-\mathit{CNT} + 7 \cdot \mathit{MOD}$) can be assigned to a claim, from which a
+annotator A1, 106 binary labels ($82 \cdot \mathit{DI} + 17 \cdot \mathit{PR} + 3 \cdot
+\mathit{ARI} + 4 \cdot \mathit{TYP}$) can be assigned to a claim, from which a
 formalized claim can be constructed.  This means that there  exists an
-exponential ($2^{107}$) number of possible formalizations, a large number of
+exponential ($2^{106}$) number of possible formalizations, a large number of
 which is invalid.  An invalid formalization example would involve both the
 \texttt{has\_declaration} and \texttt{has\_antecedent} property which is not allowed,
 since \texttt{has\_declaration} can only be assigned to a \texttt{unary} claim,
@@ -80,7 +81,7 @@ whereas \texttt{has\_antecedent} can only be assigned to \texttt{binary} claim.
 
 \begin{figure}
 	\includegraphics{joint_tikz-figure0.pdf}
-	\caption{Joint BiLSTM model for both claim segmentation and claim 
+	\caption{BiLSTM-J model for both claim segmentation and claim 
 	structuring. }
 	\label{fig:joint_model}
 \end{figure}
@@ -146,8 +147,8 @@ We experiment with both the \texttt{BR} and \texttt{LP} approach.
 \paragraph{Chain classification (CC). }
 To take advantage of formalization component dependencies, we adopt the chain
 classification approach, as described in
-section~\ref{sec:chain_classification}.
-First, to verify the label dependency assumption we build a chain classifier
+Section~\ref{sec:chain_classification}.
+First, to verify the label dependency assumption, we use a chain classifier
 which uses gold  labels as input in each prediction.  
 This yields performances an overall performance of average of $0.23$ F1-score. 
 The domain properties prove the hardest to predict, as removing them yields
@@ -156,7 +157,7 @@ This promising performance is more than enough reason to adopt the
 chain classification approach for claim formalization. 
 We frame all component classifications as either multiclass or multi-label classification.
 We prefer to use multiclass classification where possible 
-(count and modality component prediction), since
+(arity and type component prediction), since
 generalizing multiclass to multi-label classification likely degrades performance
 due to loss of information between classes. 
 SVMs models are then chained such that the prediction of one SVM is added as
@@ -173,8 +174,8 @@ It is sensible to use the chain classification model only in the
 Apart from dependencies in the claim structure, we wish to investigate whether
 it is feasible to derive the claim structure directly from text. 
 To that end, we present a joint model which does claim segmentation (details described in
-chapter~\ref{chap:claim_structuring}) and claim structuring in one step. We
-draw inspiration from \citep{miwa2016end} where they use consecutive
+Chapter~\ref{chap:claim_structuring}) and claim structuring in one step. We
+draw inspiration from \citep{miwa2016end}, where they use consecutive
 LSTM cells to predict multiple outputs. We adopt a similar approach, where we
 use two sets of BiLSTM layers: first (\texttt{BiLSTM-seg}), to predict claims, and
 second (\texttt{BiLSTM-struc}) to perform claim formalization of the predicted claims. The
@@ -183,22 +184,22 @@ when upon incorrect formalization in addition to incorrect claim segmentation.
 
 The input of the \texttt{BiLSTM-seg} layer is a sequence of tokens and their
 respective part-of-speech (POS) tags \citep{brown1957linguistic} paired \texttt{BIO}
-tags (explained in section~\ref{sec:claim_seg_problem}). 
-The \textit{BiLSTM-seg} layer produces \texttt{BIO} tags, which are then converted to textual
-claims. Then, in the \textit{BiLSTM-struc} part, component classifiers
+tags (explained in Section~\ref{sec:claim_seg_problem}). 
+The \texttt{BiLSTM-seg} layer produces \texttt{BIO} tags, which are then converted to textual
+claims. Then, in the \texttt{BiLSTM-struc} part, component classifiers
 are hooked to the predicted input claim text. Component classifiers
 consist of a BiLSTM and a linear layer. Softmax is applied to 
-the multiclass modality and count classifiers, whereas the sigmoid function is
+the multiclass type and arity classifiers, whereas the sigmoid function is
 applied to the multi-label to the domain individual and property classifiers in
 order to obtain label probabilities. 
-The output of the \textit{BiLSTM-struc} are class probabilities for all four 
+The output of the \texttt{BiLSTM-struc} are class probabilities for all four 
 formalized claim components. 
 The model architecture is illustrated in Fig.~\ref{fig:joint_model}. 
 We use three sets of embeddings: word, POS embeddings, and \texttt{BIO} tag
 embeddings. We optimize using the stochastic gradient descent algorithm
 with a learning rate of $0.01$ and use L2 penalty for regularization. 
 Negative log-likelihood loss is used to calculate loss for
-\texttt{BIO} tags, formalization modality, and formalization count.
+\texttt{BIO} tags, formalization type, and formalization arity.
 Binary cross-entropy is used to calculate loss for formalization
 properties and formalization domain individuals, since they are used in a 
 multi-label setup). 
@@ -216,8 +217,8 @@ The joint model is applied for both the \texttt{BR} and
 	\begin{tabular}{p{3cm} c c c c  c  c c c  @{\hspace{1.5em}}c@{}  @{\hspace{1em}}c@{}  }
 	\toprule
 		\multirow{2}{*}{Model / Setup}
-		& \multicolumn{2}{c}{\texttt{MOD}} 
-		& \multicolumn{2}{c}{\texttt{CNT}} 
+		& \multicolumn{2}{c}{\texttt{TYP}} 
+		& \multicolumn{2}{c}{\texttt{ARI}} 
 		& \multicolumn{2}{c}{\texttt{PR}}
 		& \multicolumn{2}{c}{\texttt{DI}} 
 		& \multicolumn{2}{c}{\texttt{CL}}
@@ -230,7 +231,7 @@ The joint model is applied for both the \texttt{BR} and
 		IND & \textbf{0.84} & 0.90 & \textbf{0.79} & \textbf{0.87} & 0.11 & 0.24 & \textbf{0.05} & 0.13 & 0.00 & 0.00  \\		
 		CC & \textbf{0.84} & \textbf{0.91} & \textbf{0.79} & \textbf{0.87} & 0.14 & 0.39 & 0.03 & 0.05 & 0.02 & 0.03 \\
 		ECC & 0.80 & 0.88 & 0.77 & \textbf{0.87} & \textbf{0.15} & \textbf{0.41} & 0.04 & \textbf{0.06} & \textbf{0.03} & \textbf{0.04} \\
-		BiLSTM-J & 0.52 & / &  0.33 & / & 0.11 & / &  0.00 & / & 0.00 & / \\
+		BiLSTM-J & 0.52 & -- &  0.33 & -- & 0.11 & -- &  0.00 & -- & 0.00 & -- \\
 
 		\bottomrule
 	\end{tabular}
@@ -242,10 +243,10 @@ The joint model is applied for both the \texttt{BR} and
 	claim structuring from both original (OR) and paraphrased text claims (PA)
 	using the \texttt{BR} approach. 
 	Results are compared on individual components
-	across modalities (\texttt{MOD}), counts (\texttt{CNT}), 
-	properties (\texttt{PR}), and 
-	domain individuals (\texttt{DI}). Finally, predictions are assembled into a 
-	formalized claim and compared against the gold formalized claims (\texttt{CL}).
+	across types (TYP), arities (ARI), 
+	properties (PR), and 
+	domain individuals (DI). Finally, predictions are assembled into a 
+	formalized claim and compared against the gold formalized claims (CL).
 	Best results for each setup are boldfaced.
 	}
 	\label{tab:claim_struc_per_component}
@@ -256,9 +257,9 @@ The joint model is applied for both the \texttt{BR} and
 
 We perform two sets of experiments. First, we wish to explore models
 that predict the formalization structure on a per-component basis (\texttt{BR}). 
-Second, we investigate how does per-component prediction (\texttt{BR}) compares to 
+Second, we investigate how does per-component prediction (\texttt{BR}) compare to 
 the label powerset (\texttt{LP}) approach.
-We execute all experiments using original and paraphrased claims, since we're
+We execute all experiments using original and paraphrased claims, since we are
 also interested in the practical uses of claim paraphrases.
 
 \paragraph{Claim structuring feasibility. }
@@ -268,42 +269,43 @@ structuring task. We use the \texttt{BR} since we believe it corresponds
 to a more realistic scenario, particularly in the scenario where the number
 of properties or domain individuals grows. In that scenario, using the
 label powerset approach, we can expect that the
-distribution of observed formalizations is long tailed, therefore it is not
-feasible to expect to correctly predict infrequently seen formalizations.
+distribution of observed formalizations is long-tailed, therefore it is not
+feasible to expect correct predictions of infrequently seen formalizations.
 Table~\ref{tab:claim_struc_per_component} shows macro averaged F1-scores for
 the randomized classifiers (RAND), independent SVM classifiers (IND), chain
 classifiers (CC), ensemble chain classifiers (ECC), and the joint segmentation
 and structuring BiLSTM model (BiLSTM-J). We experiment with both original
-source claims $OR$ (as they were written by the authors) and paraphrased claims $PA$ (as
+source claims OR (as they were written by the authors) and paraphrased claims PA (as
 they were transcribed by annotators).
 Models are trained to predict components, with their predictions then assembled
 together to constitute a formalized claim, which is compared against the gold
 formalized claim.  The baseline is set using the randomized 
 class for all individual components. The randomized baseline does not work 
-based on input, therefore has the same results for both the $OR$ and $PA$ setup. 
+based on input, therefore has the same results for both the OR and PA setup. 
 The joint model might not produce the same number claim formalizations, 
 so we evaluate on a comment level and average across all comments. Further, the joint
-model can not use paraphrased claims since it works with the unsegmented comment. 
-Additionally, we could have regularized the models by preventing invalid
-formalizations perhaps in the form of constraint programming, but leave this
-for future work. 
+model can not use paraphrased claims since the paraphrases are unknown 
+before claim segmentation.  
+% Additionally, we could have regularized the models by preventing invalid
+% formalizations perhaps in the form of constraint programming, but leave this
+% for future work. 
 
 Overall, recognizing the entire formalized claim looks like an extremely
-challenging task, since the best performing model ($ECC$) manages to achieve
+challenging task, since the best performing model (ECC) manages to achieve
 only $0.03$ and $0.04$ macro-averaged F1-score
 using original and paraphrased claims, respectively. This is mainly due
 to the low performance of recognizing domain individuals in a claim.
 Recognizing domain individuals in a claim is expectedly difficult, since there
 are 75 sparsely distributed domain individuals, and only 847 claims.
 Inspecting the component outputs of the indenpedent classifier, we conclude
-that it mostly manages to correctly classify up to two components (mostly $MOD$
-and $CNT$), but never manages to identify three or all four
+that it mostly manages to correctly classify up to two components (mostly \texttt{TYP}
+and \texttt{ARI}), but never manages to identify three or all four
 components correctly, hence it never outputs the correct claim formalization. 
-Unlike the $IND$ setup, the $CC$ and $ECC$ models managed to produce fully
+Unlike the IND setup, the CC and ECC models managed to produce fully
 accurate formalizations, and correctly predict three out of four component parts
 in roughly 25\% of cases.
-Even though the $CC$ and $ECC$ models exhibit performance drops in recognizing
-$MOD$ and $CNT$ compared to individual classifiers, overall they seem like the most
+Even though the CC and ECC models exhibit performance drops in recognizing
+\texttt{TYP} and \texttt{ARI} compared to individual classifiers, overall they seem like the most
 promising options to formalize claims. 
 
 %  final BIO                                                                                                                                                                                                    
@@ -332,22 +334,22 @@ promising options to formalize claims.
 %      relation avg f1: 0.03323903818953324                                                                                                                                                                     
 
 % joint model analysis
-The joint \textit{BiLSTM-J} model performs worse than the $IND$, $CC$, and $ECC$
+The joint BiLSTM-J model performs worse than the IND, CC, and ECC
 models, but better than the random baseline in three out of four categories.
 This indicates that jointly extracting claims and structuring claims is an
 extremely difficult task. The joint model fails to successfully extract and
 formalize a single claim. 
-The performance of the joint model in claim segmentation is slighly better than the 
-$SVM$ model in section~\ref{sec:claim_seg_experiment} outperforming it by 
+The performance of the joint model in claim segmentation is slightly better than the 
+SVM model in Section~\ref{sec:claim_seg_experiment}, outperforming it by 
 $0.07$ and $0.06$ macro-averaged F1-score percentage points. However, this still means
-that the \textit{BiLSTM-struc} part of the joint model uses incorrect claim segments
+that the \texttt{BiLSTM-struc} part of the joint model uses incorrect claim segments
 a large portion of the time. 
-Our suspicion that this might be causing poor performance is confirmed upon
+The suspicion that this might be causing poor performance is confirmed upon
 seeing the joint model outputs, as we notice that the formalization predictions
 are particularly bad when predicted claims are far from sensible. 
 
 In an attempt to improve the joint model, we experiment with setting lower
-learning rates for the shared \textit{BiLSTM-seg} layer, but to no significant
+learning rates for the shared \texttt{BiLSTM-seg} layer, but to no significant
 performance boost.  We then inspect the biggest contributers to the loss during
 model training.  The highest contributor, by far, is the loss caused by $DI$
 prediction.  We then manually try to assign weights to loss functions to
@@ -355,7 +357,7 @@ prevent a single component prediction from dominanting the total loss score.
 By weighting the loss, we do obtain slightly better performance, but consider
 this to be a solely short-term workaround. 
 Additionally, we may try to train this model in using soft parameter sharing
- where the distance between the parameters of the
+where the distance between the parameters of the
 model is regularized to encourage model parameters to be similar
 \citep{ruder2017overview}.
 
@@ -396,12 +398,12 @@ occur in the dataset used.
 We omit results from both the majority and random classifers since they
 perform extremely poorly ($<0.01$ macro-averaged F1-score).
 % Results are listed in table~\ref{tab:claim_struc_atomic_molecular}.
-We employ the $IND$ and \texttt{BiLSTM-J} model. The IND model achieves 
+We employ the IND and BiLSTM-J model. The IND model achieves 
 $0.08$ and $0.14$ macro-averaged F1-score using original and
 paraphrased claims, respectively. This is significantly higher than 
-$IND$ model in the \texttt{BR} setup where the model achieved less than $0.01$
+IND model in the \texttt{BR} setup, where the model achieved less than $0.01$
 macro-averaged F1-score percentage points in using both original and paraphrased claims.
-As for the \texttt{BiLSTM-J} model, it achieves similarly poor results as in the
+As for the BiLSTM-J model, it achieves similarly poor results as in the
 \texttt{BR} setup -- no more than $0.01$ macro-averaged F1-score. 
 We conclude that using the \texttt{LP} setup gives better results than the 
 \texttt{BR} setup. However, due to the size of the dataset and number of potential 
@@ -424,9 +426,10 @@ using original claims by an average of $0.08$ macro-averaged F1-score
 percentage points.  This clearly suggests that having claim paraphrases is not
 only useful for annotators when formalizing claims, but also for machine
 learning algorithms doing claim structuring.  We hypothesize this is mostly due
-to the reduction of noisiness and vagueness of claims.  In subsequent work, we wish
-to further research the advantages of claim paraphrases, in addition to 
-exploring deriving paraphrased, denoised claims from original ones. 
+to the reduction of noisiness and vagueness of claims.  
+% In subsequent work, we wish
+% to further research the advantages of claim paraphrases, in addition to 
+% exploring deriving paraphrased, denoised claims from original ones. 
 
 After we have explored the feasibility of automatic claim structuring, in the
 next chapter we will explore the benefits of having formalized claims. 

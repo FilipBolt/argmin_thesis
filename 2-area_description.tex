@@ -4,21 +4,21 @@
 The area of argumentation mining is a relatively new field established as a
 subarea of computational linguistics.  At the time of the writing, there have
 been seven workshops and two tutorials co-located with top ranked computational
-linguistics conferences\footnote{According to Google Scholar
+linguistics conferences,\footnote{According to Google Scholar
 \url{https://scholar.google.com} and Conference Ranks
-\url{http://www.conferenceranks.com/}}, all within the past five years. The
+\url{http://www.conferenceranks.com/}} all within the past five years. The
 growth can largely be attributed to the advent of robust natural language
 processing methods and the increased availability of argumentative data sources,
 such as internet debates and discussions. 
 
 In this chapter, first we will explain the research scope argumentation
-mining and give a short overview of its history (section~\ref{sec:definition}).
+mining and give a short overview of its history (Section~\ref{sec:definition}).
 Then, a systematic summary of argumentation mining tasks is provided
-(section~\ref{sec:problems}). Applications and corpora for argumentation mining 
-are listed in section~\ref{sec:applications}. 
+(Section~\ref{sec:problems}). Applications and corpora for argumentation mining 
+are listed in Section~\ref{sec:applications}. 
 Finally, we reflect on criticisms of argumentation mining
 and position this thesis within current research on argumentation mining
-(section~\ref{sec:area_discussion}).
+(Section~\ref{sec:area_discussion}).
 
 \section{Definition}
 \label{sec:definition}
@@ -39,15 +39,15 @@ both names interchangeably.  Argumentation mining combines elements of
 section~\ref{sec:natural_language_processing}) and \emph{knowledge
 representation and reasoning} \citep{cabrio2018five}.  Typically, natural
 language processing techniques are first used to extract arguments and
-structure a debate or discussion. Then, once as the argumentative parts of a
+structure a debate or discussion. Then, once the argumentative parts of a
 debate or discussion have been extracted and structured, they are provided as
 input to knowledge representation and reasoning systems.  Knowledge
 representation and reasoning systems are usually in charge of providing various
-argumentation analysis, examples being: determining prevailing stance,
+argumentation analysis, examples being: determining stance,
 detecting logical fallacies, or finding most frequently used claims.
 
-To get from raw text to structured arguments a pipeline-like architecture
-is usually employed (shown in figure~\ref{fig:pipeline}). 
+To get from raw text to structured arguments, a pipeline-like architecture
+is usually employed (shown in Figure~\ref{fig:pipeline}). 
 Raw (natural language) text is input to an argument extraction module. This module
 extracts elementary \textbf{argument components} from raw text. 
 Once argument components are extracted, they are connected and structured 
@@ -58,7 +58,7 @@ The output of the structuring module is usually some form of an argument graph.
 %is elaborated further. 
 In this thesis, we will mostly discuss extracting and structuring argumentative
 portions of a textual debate. We will briefly showcase how a analysis can be
-conducted in chapter~\ref{chap:analysis}. 
+conducted in Chapter~\ref{chap:analysis}. 
 
 \subsection{Example}
 
@@ -73,7 +73,7 @@ Premises and conclusions are singled out in the first step of the pipeline.
 The second step of the pipeline detects relationships between extracted
 argument components and forms argumentation structures. In this case, the
 argumentation structure is defined by the Freeman's model
-\citep{freeman2011argument} which defines premises and conclusions with attack
+\citep{freeman2011argument}, which defines premises and conclusions with attack
 or support relations amongst them. 
 
 This example is from a dataset built by \citet{hasan2014you}. It demonstrates
@@ -100,14 +100,14 @@ problem.
 
 \subsection{History}
 
-Argumentation has roots in dialectics and philosophy where it was a branch of
+Argumentation has roots in dialectics and philosophy, where it was a branch of
 knowledge dedicated to the study and analysis of how assertions are proposed
 and debated, and how conflicts between opposing opinions are resolved
 \citep{bench2007argumentation}.  Argumentation has been an essential part of
 numerous areas, such as logic, rhetoric, jurisprudence, and computer science. 
 Argumentation in computer science started with 
-the work of \citep{dung1995acceptability} who explored knowledge representation
-of argumentation. \citet{dung1995acceptability} and subsequent work on argumentation
+the work of \citep{dung1995acceptability}, who explored knowledge representation
+of argumentation. Subsequent related work on argumentation
 knowledge representation led to the development of 
 the area now known as \emph{computational argumentation}. 
 
@@ -128,7 +128,7 @@ structured argumentation proposes some internal structure for each argument,
 described through some representation formalism or model. 
 Argumentation mining typically follow the structured argumentation
 school. In structured argumentation it is common to annotate text data according to
-a defined (usually established on some argumentation theory) formalism which is
+a defined (usually established on some argumentation theory) formalism, which is
 then followed by building models to automatically derive argumentation
 structure directly from text. There are many approaches in structured
 argumentation, therefore there is no universally accepted definition of a
@@ -142,10 +142,10 @@ argumentation models \citep{lippi2016argumentation}.
 
 Independently of the development of computational argumentation and argumentation
 mining, the area of \emph{opinion mining} (also referred to as sentiment
-analysis) has developed as part of computational linguistics especially in the
+analysis) has developed as part of computational linguistics, especially in the
 2000s. Opinion mining identifies the emotional tone of a body of text
 \citep{pang2008opinion}.  It attempts to identify sentiment (positive, neutral,
-or negative) and emotional state (happy, sad, angry, \dots) of the author of
+or negative) and emotional state (happy, sad, angry, etc.) of the author of
 the text.  Identifying opinions towards different (usually divisive) issues has
 been researched as part of \emph{stance classification}
 \citep{walker2012stance, hasan2013stance}.  Both sentiment analysis and stance
@@ -209,8 +209,8 @@ from either extracted argument components or directly from text
 Extracting argumentative components and producing argumentative
 structure both make various assumptions about the data and downstream
 applications. 
-Extracting argumentative components from text can be done on different levels:
-the sentence or the paragraph level, whereas structuring arguments can use
+Extracting argumentative components from text is usually done in either
+the sentence or paragraph level. Structuring arguments mostly adopts either 
 Toulmin's or Freeman's model.
 More specifically, problems in argumentation mining can
 usually be specified by five dimensions \citep{lippi2016argumentation}: 
@@ -237,20 +237,20 @@ articles \citep{teufel2009towards}, or internet discussion forums
 \citep{hasan2014you, boltuzic2014back, habernal2017argumentation}.  In
 \citep{budzynska2014towards} they show how dialogue-agnostic and
 context-agnostic models perform poorly.  Similar performance is shown in
-\citep{daxenberger2017essence} where they also attempt to design cross-genre
+\citep{daxenberger2017essence}, where they also attempt to design cross-genre
 methods. Genre-specific research is explored more comprehensively in 
-section~\ref{sec:applications}.
+Section~\ref{sec:applications}.
 
 Argumentation is structured through different \emph{argument models}.  The
 argumentation model usually defines a formalism of argument components and
 relationships between argument components.  Specific argument models are
-described in section~\ref{sec:area_arg_struc_pred}.
+described in Section~\ref{sec:area_arg_struc_pred}.
 
 Similarly to the granularity of the input, the \emph{granularity of the output}
 varies. The lowest possible granularity of output is a specific argument
-component, such as claim, evidence or premise. Argument components form arguments
+component, such as claim, evidence, or premise. Argument components form arguments,
 which are of more coarse granularity. Some even go beyond the level of arguments, 
-and attempt to output \emph{argumentation schemes} \citep{feng2011classifying} which
+and attempt to output \emph{argumentation schemes} \citep{feng2011classifying}, which
 define the interactions across arguments, making them even coarser than arguments. 
 
 Finally, the \emph{goal of analysis} describes the motivation behind solving
@@ -263,10 +263,10 @@ of the extracted argumentation structure, etc.
 Within the scope of this thesis, we will work on paragraph, sentence, and
 sub-sentence \emph{granularity of input text}, with the emphasis on
 sub-sentence level. We will define claims on a sub- and intra-sentence level as
-part of the claim segmentation problem (chapter~\ref{chap:claim_segmentation}).
+part of the claim segmentation problem (Chapter~\ref{chap:claim_segmentation}).
 The \emph{genre of input} will be, as the title suggests, internet discussions.
 We define our own \emph{argumentation model} in
-chapter~\ref{chap:formalization} which is inspired by Freeman's model and the
+Chapter~\ref{chap:formalization} which is inspired by Freeman's model and the
 work of \citet{hashimoto2012excitatory}.
 The \emph{goal of analysis} of the thesis is claim extraction.
 Next, we describe elementary problems of argumentation mining
@@ -344,8 +344,8 @@ givon1983topic}, sentences \citep{polanyi1996linguistic}, or
 prosodic units \citep{sacks1978simplest}. All these approaches agree an EDU
 should be a non-overlapping atomic unit of text. Another strand of research defines
 an \textit{Argumentative Discourse Unit} (ADU) as a minimal unit of discourse
-\citep{peldszus2013argument} which can be composed of multiple EDUs, but ADUs
-can overlap. As \citep{lawrence2019argument} points out, there are multiple
+\citep{peldszus2013argument}, which can be composed of multiple EDUs, but ADUs
+can overlap. As \citet{lawrence2019argument} point out, there are multiple
 issues with with defining the rules to constitute an argument building block.
 In the scope of this thesis, we will use the term \emph{argument
 component}, and define argument components as a generalization of
@@ -369,7 +369,7 @@ setups by either using:
 \begin{enumerate}
 \item a binary classifier trained to distinguish argumentative from 
 	non-argumentative sentences, leaving the task of identifying component type
-	(claim, premise, \dots) to some other system, 
+	(claim, premise, etc.) to some other system, 
 \item a multi-class classifier trained to discriminate all argument components that
 	exist in the adopted argument model; this assumes a sentence can contain at most
 	one argument component, or 
@@ -378,7 +378,7 @@ setups by either using:
 		more than one argument component (conceptually, as this is
 		multi-label classification, it could be achieved using any
 		viable multi-label classification method, some described in 
-		section~\ref{sec:chain_classification}).
+		Section~\ref{sec:chain_classification}).
 \end{enumerate}
 Different classification tools have been employed,  
 some of them being Logistic Regression, Maximum Entropy, Decision
@@ -396,7 +396,7 @@ used feature sets are bag-of-words BoW (described in section~\ref{sec:bow}) and
 \emph{tf-idf} (described in section~\ref{sec:tf-idf}). Other features rely on
 third-party grammatical information, such as constituency and dependency parser
 outputs. These provide features like part-of-speech (POS) tags
-\citep{manning2011part} which describe the token role in a sentence (noun,
+\citep{manning2011part}, which describe the token role in a sentence (noun,
 verb, adjective, etc.).
 Some features have been designed specifically for dataset in hand, such as verb
 tense information \citep{palau2009argumentation, stab2014identifying}, or
@@ -410,7 +410,7 @@ language which provide reliable cues to detect structural patterns. Similarly,
 in \citep{levy2014context, rinott2015show} they show that providing topic
 information when extracting argumentative components is helpful. Providing domain
 specific information is called \emph{context dependent detection}. On the other
-hand, \citep{lippi2015context} attempt to develop develop \emph{context independent
+hand, \citet{lippi2015context} attempt to develop develop \emph{context independent
 detection} methods and features. They exploit structured kernels based on
 constituency parse trees to capture the rhetorical structure of a sentence. 
 
@@ -429,9 +429,9 @@ multiple things to consider:
 \end{itemize}
 In sentence level detection, mapping exactly to a sentence is always assumed
 \citep{palau2009argumentation, levy2014context}. 
-In \citet{habernal2014argumentation} annotation study they report
+In \citep{habernal2014argumentation} annotation study they report
 that the average claim (argument component) spans 1.1 sentences and an average
-premise spans 2.2 sentences on a sample size of ${\sim}4,000$ sentences 
+premise spans 2.2 sentences on a sample size of ${\sim}4,000$ sentences,
 indicating that a single argument component 
 rarely maps to a single sentence. In the IBM dataset \citep{levy2014context},
 they discern between different argument components: claims are short texts
@@ -452,7 +452,7 @@ in sections~\ref{sec:crf}, and~\ref{sec:hmm}).  In argumentation mining, this
 approach has been used in \citep{goudas2014argument, sardianos2015argument,
 park2015conditional}.  They use conditional random fields to segment boundaries
 of argument components.  We will use a similar approach in
-chapter~\ref{chap:claim_segmentation} for claim segmentation. 
+Chapter~\ref{chap:claim_segmentation} for claim segmentation. 
 
 %This can be done on a sub-sentence level \citep{habernal2014argumentation}. 
 
@@ -544,7 +544,7 @@ highly unlikely this grammar would generalize to other genres.
 \label{sec:applications}
 
 Argumentation mining has been researched with a specific application in mind.
-Conducted research has been designed to help education, law, politics, decision
+Research in argumentation mining has been designed to help education, law, politics, decision
 making and other many other areas. 
 
 \paragraph{Education.} In education, the goal may be to improve critical
@@ -563,9 +563,9 @@ argumentation mining system to get from raw text to argumentation structures.
 Similarly, \citet{nguyen2018argument} implement an end-to-end system on
 persuasive essays, but their end product is argumentative features they deem
 valuable for other argumentation mining tasks. \citet{peldszus2015joint}
-create another corpus of English-German essays microtexts\footnote{Corpus of
+create another corpus of English-German essays microtexts.\footnote{Corpus of
 English-German microtexts available at
-\url{https://github.com/peldszus/arg-microtexts}}. They jointly predict
+\url{https://github.com/peldszus/arg-microtexts}} They jointly predict
 different aspects of argumentation structure by combining different sub-task
 prediction and create an evidence graph. On the evidence graph they apply the
 Minimum Spanning Tree decoding algorithm \citep{raidl2000weighted}.  They
@@ -575,11 +575,11 @@ challenger to model argumentation structure.
 \paragraph{Wikipedia.} IBM has funded argumentation research projects that are
 dedicated to Wikipedia data. \citet{levy2014context} introduce a dataset based
 on Wikipedia on which they perform the task of automatically detecting
-\emph{context dependent claims} CDC.  They define a CDC as a concise statement
+\emph{context dependent claims} (CDC).  They define a CDC as a concise statement
 that directly supports or contests the given topic discussed in the debate. As
 a follow up, \citet{rinott2015show} attempt to automatically detect evidence of
 a given claim from Wikipedia.  They call this \emph{context dependent evidence
-detection}.  The continue their work in \citep{bar2017stance} where they
+detection}.  They continue their work in \citep{bar2017stance} where they
 perform stance classification by decomposing it into the detection of: 
 \begin{enumerate*}[label=(\arabic*)]
 	\item targets given the topic and the claim,
@@ -614,7 +614,7 @@ a Dataset of ARgumentative Tweets (DART) and build models to distinguish argumen
 vs. non-argumentative tweets on topics ranging from Brexit and Grexit to 
 the release of the new Apple Watch. 
 \citet{habernal2016argument} study internet resources and 
-focuses on argument persuasion to study when
+focus on argument persuasion to study when
 an argument in more convincing than another argument. 
 
 \paragraph{Legal documents. } 
@@ -721,9 +721,9 @@ argumentation mining, such as the argument search engine \emph{args}
 
 In this thesis, we work with monological, structured argumentation set in the
 internet discussion genre.  We set no specific practical application as a goal 
-(such as improving english writing skills or policy making),
+(such as improving English writing skills or policy making),
 but wish to explore general insights in argumentation in internet discussions. 
-Understanding what are the most frequent claims in a discussion, how the semantically 
-the same claim can be stated in a multitude of ways,  
+Understanding what are the most frequent claims in a discussion, how semantically 
+same claims can be stated in a multitude of ways,  
 as well as deriving speakers' beliefs and implicit opinions from text 
 are examples of insights we hope to uncover. 

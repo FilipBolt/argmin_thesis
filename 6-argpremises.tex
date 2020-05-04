@@ -9,6 +9,7 @@ identification, but now we wish to explore the implicit knowledge required
 to state that a prominent claim is indeed supported or attacked by a comment.
 To this end, we shall investigate how and when are two claims
 (in the setting of internet discussions) considered equivalent. 
+This contents of this chapter are largely influenced by \citep{boltuzic2016fill}.
 
 To make two claims semantically equivalent, sometimes \textbf{implicit knowledge} is
 required to bridge the gap between the two claims. 
@@ -16,7 +17,7 @@ Having this implicit knowledge might improve performance in the
 prominent claim identification problem. 
 Many factors contribute to the gap between two claims: linguistic variation,
 implied commonsense knowledge, or implicit claims from beliefs and value
-judgements of the person making the claim. In table~\ref{tab:premise_example} we
+judgements of the person making the claim. In Table~\ref{tab:premise_example} we
 give an example from the dataset of~\citet{hasan2014you}. 
 In the example, the user comment: 
 \emph{Now it is not taxed, and those who sell it are usually criminals of some sort.}
@@ -114,7 +115,7 @@ Given a pair of previously matched claims (user comment and
 prominent claim), we ask annotators to provide implicit claims that bridge the gap 
 between the two claims. 
 No further instructions were given to the annotators (this is contrary to all other
-annotation tasks where guidelines were usually very detailed, examples can be seen in appendix
+annotation tasks where guidelines were usually very detailed, examples can be seen in Appendix
 ~\ref{chap:annotation_guidelines}). 
 We hoped they would resort to common-sense reasoning and effectively 
 reconstruct the deductive steps needed to entail the prominent claim from the user
@@ -128,8 +129,8 @@ The order of claims is randomized for each annotator.
 We annotate 125 claim pairs for each topic, yielding a total of 500 gap-filling
 \textbf{implicit claim sets}. 
 Table~\ref{tab:argpremise_topic_distribution} shows the prominent claim distribution per topic. 
-An excerpt from the dataset is in table~\ref{tab:argpremises_example}. 
-We make the dataset freely available.\footnote{Available under the CC BY-SA-NC license from
+An excerpt from the dataset is in Table~\ref{tab:argpremises_example}. 
+The dataset is freely available. \footnote{Available under the CC BY-SA-NC license from
 \url{http://takelab.fer.hr/argpremises}}
 
 \section{Implicit Claim Analysis}
@@ -161,13 +162,13 @@ We pose three research questions for the first study:
 \item \textbf{semantic similarity of claims}: how the gap relates to the more general notion of 
 textual similarity between claims. 
 \end{enumerate}
-The dataset is adopted from \citet{hasan2014you} which brings three issues. 
+The dataset is adopted from \citet{hasan2014you}, which brings three issues. 
 First, the prominent claim, which has already annotated, need not be
 the correct one. 
 We remedy this by asking our annotators to abstain from adding implicit claim if 
 they believe so, but we rarely expect this to be the case. 
 The second issue is the granularity of prominent claims. 
-As noted in chapter~\ref{chap:argclu}, the level of claim granularity is 
+As noted in Chapter~\ref{chap:argclu}, the level of claim granularity is 
 arbitrary to a certain extent. 
 We speculate that the smaller the predefined set of prominent claims the 
 bigger will the average gap between user claims and prominent claims be. 
@@ -223,8 +224,8 @@ The annotators A1 and A2 have a higher word overlap and use more words to fill t
 Also, A1 and A2 managed to fill the gap for more cases than A3 who 
 often desisted from filling the gap. 
 An example where A1 used considerably more implicit claims than A3 is shown in 
-table~\ref{tab:extreme_premisenumber}. 
-In table~\ref{tab:var-topics} gap-filling metrics are shown across topics. 
+Table~\ref{tab:extreme_premisenumber}. 
+In Table~\ref{tab:var-topics} gap-filling metrics are shown across topics. 
 Here the picture is more balanced. 
 The least number of implicit claims and least number of words are used for the
 ``Abortion'' topic. The ``Gay Rights'' topic contains the most (about 7\%)
@@ -302,7 +303,7 @@ The task was formulated as a question ``\emph{Are two claims
 talking about the same thing?}'', and judgements were made on a scale
 from 1 (``not similar'') to 6 (``very similar''). 
 Annotation guidelines are detailed in the appendix
-section~\ref{sec:argpremises_annotation}. 
+Section~\ref{app:sec:argpremises_annotation}. 
 Each pair of claims received five judgements, which we averaged to obtain the
 gold-similarity score. 
 The average standard deviation is 1.2, indicating good agreement. 
@@ -311,10 +312,10 @@ The Paerson correlation coefficient  between the similarity score and the
 number of implicit claims filling the gap for annotators A1, A2, and A3 is
 $-0.30$, $-0.30$, and $-0.14$, respectively.  The correlation coefficient between the
 similarity score and the number of implicit claims averaged across all annotators is
-$-0.22$ ($p < 0.0001$).  We conclude there is a statistically significant,
+$-0.22$ (with $p < 0.0001$ for each annotator).  We conclude there is a statistically significant,
 albeit weak, negative relationship between semantic similarity and gap size. 
 
-Thus far, we've demonstrated the degree of similarity between implicit 
+Thus far, we have demonstrated the degree of similarity between implicit 
 claims and how it is negatively correlated with the gap size. 
 This suggests that the similarity scores could be increased by reducing the size 
 of the gap.
@@ -324,7 +325,7 @@ We make a preliminary study on the use of implicit claims in prominent claim
 identification.
 This study is motivated to identify prominent claims in internet discussions in
 general.
-Given the users claim , the task is to find the prominent claim from a set of 
+Given the users claim, the task is to find the prominent claim from a set of 
 prominent claims which matches the user's claim the best. 
 We pose \emph{three research questions}: 
 \begin{enumerate*}[label=(\arabic*)]
@@ -338,7 +339,7 @@ We pose \emph{three research questions}:
 
 The prominent claim identification task can be approached in a supervised or
 unsupervised manner (supervised and unsupervised approaches are described in 
-sections and~\ref{sec:unstruc_machine_learning} and
+Sections~\ref{sec:unstruc_machine_learning} and
 \ref{sec:unsupervised_machine_learning} respectively)
 We focus on the unsupervised approach. 
 We use the semantic similarity between claims and implicit claims, as
@@ -349,7 +350,7 @@ argumentation,
 where claims and implicit claims are compared to each other and combined to 
 derive additional claims. 
 
-We use the dataset described in section~\ref{sec:argpremise_dataset} 
+We use the dataset described in Section~\ref{sec:argpremise_dataset} 
 consisting of 125 claim pairs for four topics. 
 We use gap filling implicit claims from annotator A1, who, on average, has the
 highest number of implicit claims. 
@@ -372,12 +373,12 @@ computes the similarity between the users claim and the prominent claim vectors
 without using implicit claims. 
 Each user claim is matched against the most similar prominent claim. 
 The other is a supervised baseline which uses support vector machine (SVM)
-(described in section~\ref{sec:svm}) with an RBF kernel, trained 
+(described in Section~\ref{sec:svm}) with an RBF kernel, trained 
 on user comments to predict the label corresponding to the 
 prominent claim. 
 We train and evaluate using a $5 \times 3$ nested cross validation , separately for each topic. 
 The hyperparameters $C$ and $\gamma$ are optimized using grid-search
-(model selection is described in section~\ref{sec:selection}). 
+(model selection is described in Section~\ref{sec:selection}). 
 We use the LibSVM implementation \citep{chang2011libsvm}. 
 
 \begin{table}
@@ -408,7 +409,7 @@ To obtain a single combined representation of a implicit claim set, we simply
 concatenate the implicit claims together before computing the distributional vector
 representation. 
 We do the same when combining the implicit claims with either of the (prominent or user) claim.
-This is exemplified by table~\ref{tab:argpremise_concatenation}. 
+This is exemplified by Table~\ref{tab:argpremise_concatenation}. 
 We denote the user claim, prominent claim and gap filling implicit claim set between 
 user claim and prominent claim as
 $U_i$, $M_j$, and $P_{ij}$ respectively. 
@@ -466,7 +467,7 @@ to the given prominent claim.
 In this oracle setup, we always use gold-annotated implicit claim set for the
 prominent claim. 
 
-In table~\ref{tab:argpremise_matching} we show claim matching results in terms of
+In Table~\ref{tab:argpremise_matching} we show claim matching results in terms of
 macro-averaged F1-score on the development set. 
 Results suggest that using implicit premises helps in selecting the most similar prominent claim 
 as the models with added implicit claims outperform the unsupervised baseline by
@@ -475,16 +476,16 @@ Furthermore, the model that combines implicit claims with the prominent claim co
 outperforms both baselines and the model that combines implicit claims with the user claim. 
 An exception is the ``\emph{Gay Rights}'' topic, on which the latter model works better. 
 Our analysis revealed this to be due to the presence of very general 
-(i.e. lexically non-discriminative) implicit claims in some implicit claim sets 
-(e.g. ``\emph{Straight people
-have the right to marry}'') which makes corresponding prominent claims more similar to
+(i.e., lexically non-discriminative) implicit claims in some implicit claim sets 
+(e.g., ``\emph{Straight people
+have the right to marry}''), which makes corresponding prominent claims more similar to
 user claims. 
 Another interesting observation is very good performance on the ``\emph{Obama}'' topic. 
 This is likely because only one of 16 prominent claims contains the word ``Obama''
 making it more similar to user claims. 
 However, after implicit claim sets get combined with all prominent claims this
 difference diminishes and prominent claim identification performance improves. 
-We obtained results from table~\ref{tab:argpremise_matching} using implicit claims compiled by
+We obtained results from Table~\ref{tab:argpremise_matching} using implicit claims compiled by
 annotator A1. 
 To see how model performance is affected by using different implicit claim
 sets, we re-run the same experiment with best-performing $U_i \leftrightarrow
@@ -508,7 +509,7 @@ $U_i \leftrightarrow M_j + P_{ij}$, but instead of implicit claim sets, use
 \begin{enumerate*}[label=(\arabic*)]
 \item WordNet \citep{miller1995wordnet} synsets and
 \item top $k$ distributionally most similar words (using distributed
-word representations described in section~\ref{sec:embedding} for $k=\{1, 3, 5, 7, 9\}$) to
+word representations described in Section~\ref{sec:embedding} for $k=\{1, 3, 5, 7, 9\}$) to
 expand the user or prominent claim.
 \end{enumerate*}
 We obtained no improvement over baselines suggesting that lexical information 
@@ -541,13 +542,13 @@ implicit claims on the test set (macro-averaged F1-score).}
 From a practical perspective, we are interested to what extent the implicit claims
 generalize, whether it is possible to reuse the premises compiled for the
 prominent claims, but different user claims. 
-We choose the best performing model from the previous section ($U_i
+We choose the best performing model from the previous Section ($U_i
 \leftrightarrow M_j + P_{ij}$)
 and apply this model and the baseline models on the \emph{test set}. 
 This means that the model uses implicit claim sets $P_{ij}$ for pairs of claims
 $U_i$ and $M_j$ from the training set, and hope is that the same implicit claim
 sets will be useful for unseen user claims $U_k$. 
-Results are shown in table~\ref{tab:argpremise_generalization}. 
+Results are shown in Table~\ref{tab:argpremise_generalization}. 
 Model again outperforms the baselines, except on the ``\emph{Gay rights}'' topic. 
 The performance varies across topics: the average improvement over unsupervised
 and supervised baselines is 10.2 and 3.12 points of F1-score, respectively. 
@@ -584,7 +585,7 @@ extent and thus can be reused for unseen user claims.
 \label{alg:premise_retrieval}
 \end{algorithm}
 
-In a realistic setting, we don't have access to implicit premises 
+In a realistic setting, we do not have access to implicit premises 
 for each prominent claim, but we try to fetch or generate them automatically. 
 This is a preliminary study where we investigate the feasibility of fetching 
 premises automatically. 
@@ -599,14 +600,14 @@ While the user claim is increasingly similar to the prominent claims (which
 means it should be easier to match), we retrieve additional similar claims. 
 Once the similarity to prominent claims stops increasing, we stop
 adding fetched implicit claims to the implicit claim set. The procedure 
-is outlined by algorithm~\ref{alg:premise_retrieval}.
+is outlined by Algorithm~\ref{alg:premise_retrieval}.
 We consider two setups: 
 \begin{enumerate*}[label=(\arabic*)]
 \item one in which the pool of implicit claims to retrieve
 from comes from the topic in question (within-topic) and 
 \item other in which implicit claims from all four topics are considered (cross-topic). 
 \end{enumerate*}
-Results are shown in table~\ref{tab:argpremise_retrieval}. 
+Results are shown in Table~\ref{tab:argpremise_retrieval}. 
 We evaluate on both the development and test set, as well as within topic (WT)
 and cross-topic (XT). 
 Results show that our simple method for within-topic premise retrieval improves
@@ -665,7 +666,7 @@ dev.~set (upper part) and test set (lower part); macro-avg.~F1-score.}
 There is a great deal of usefulness in implicit claims, helping prominent claim
 identification is just one small aspect of it. But, as we have shown in this chapter,
 retrieving implicit claims is difficult using simplistic approaches presented
-so far. We feel comparing claims with some semantic similarity measure is not 
+so far. It has been shown that comparing claims with some semantic similarity measure is not 
 nearly enough to capture the nuances of the different relationships two claims can have.
 Prominent claim identification, claim clustering and deriving implicit
 claims have all thus far been employed at a claim level. To be able to 
@@ -675,4 +676,4 @@ In the next part, we will deal with similar problems, such as deriving
 implicit claims, but we will go with a fundamentally different, and to the best
 of our knowledge, novel approach in argumentation mining. Automatically retrieving 
 implicit claims will then be again revisited in 
-chapter~\ref{chap:analysis}, but using a structured approach.
+Chapter~\ref{chap:analysis}, but using a structured approach.

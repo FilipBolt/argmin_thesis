@@ -3,22 +3,101 @@
 \subsection*{Računalni postupci dubinske argumentativne analize tvrdnji u internetskim raspravama}
 
 Rad se bavi nizom zadataka iz područja dubinske analize argumentacije. 
-Dubinska analiza argumentacija odnosi se na računalnu ekstrakciju argumentacije
-iz teksta. S porastom uporabe interneta sve se više argumentacije nalazi na
-internetskim raspravama. Osnovni gradivni elementi argumentacije jesu tvrdnje.
-Predmet istraživanja jesu računalne metode za dubinsku analizu argumentativnih
-tvrdnji u okviru tematski specifičnih internetskih rasprava. Postupak je
-zasnovan na modeliranju i strukturiranju tvrdnji pomoću računalnih ontologija,
-kojima se opisuju tematski specifični koncepti te generički obrasci
-tvrdnji. Strukturiranje tvrdnji pomoću ontologija umanjuje problem
-jezične varijabilnosti i implicitnosti tvrdnji, čime se omogućava
-učinkovitija računalna analiza argumentacije. Predlažu se metode
-nadziranog strojnog učenja za prepoznavanje i strukturiranje tvrdnji
-iz tekstova internetskih rasprava te model za analizu argumentacije i
-implicitnih tvrdnji svih sudionika rasprave.
+Strukturiranje argumentativnog teksta 
+preduvjet je za kvalitetnu analizu argumentacije. 
+Potreba za analizom argumentativnog teksta prisutna je u raznim djelatnostima, 
+kao što su sažimanje stajališta znanstvenih radova, 
+donošenje političkih odluka temeljem javnog mišljenja, 
+podučavanje stranog jezika kroz razvoj kritičkog razmišljanja 
+i sl. S porastom uporabe interneta sve se više argumentacije nalazi u
+internetskim raspravama. Argumentacijom se obrazlaže mišljenje naspram
+određene teme. Gradivni elementi argumentacije su argumenti, koji se pak sastoje
+od međusobno povezanih tvrdnji. 
+
+Cilj istraživanja bio je razvoj rješenja niza zadataka koji su ključni za 
+dubinsku argumentativnu analizu tvrdnji u internetskim raspravama. 
+Zadatci uključuju ekstrakciju i strukturiranje tvrdnji tvrdnji. Rješavanje
+ovih zadataka vrlo je složeno zbog višeznačnosti jezika i implicitnog 
+znanja ovisnog o kontekstu. Pri istraživanju poseban je naglasak bio na izradi
+radnog okvira za tematski specifičnu dubinsku argumentativnu rasprave. 
+Prvo su provedena tri predistraživanja zasnovana na nestrukturiranim 
+metodama dubinske argumentativne analize. Iz predistraživanja detektirani su 
+nedostaci nestrukturiranih metoda, stoga je predložen pristup strukturiranja tvrdnji
+iskazanih u tekstu, 
+koji se smatra najvažnijim doprinosom rada. 
+
+Prvi istražen zadatak u sklopu predistraživanja jest pronalazak istaknutih tvrdnji. 
+Potrebno je, uz skup komentara s internetske rasprave, 
+pronaći istaknute tvrdnje kojima se sudionici rasprave najčešće služe.  
+Prvo se komentari s internetskih rasprava grupiraju u grupe
+koje sadrže istovjetne tvrdnje, a centroid grupa pretpostavljen je za 
+istaknutu tvrdnju. Komentari se hijarhijski grupiraju koristeći 
+njihove distributirane semantičke reprezentacije. 
+Rješavanje ovog zadatka olakšava sažimanje rasprave.
+
+Drugi zadatak jest postupak prepoznavanja istaknutih tvrdnji u 
+komentarima internetskih rasprava. 
+Komentari mogu biti u podupirati ili pobijati istaknute tvrdnje. Prepoznavanje
+istaknute tvrdnje svodi se na detekciju odnosa između komentara i tvrdnje. 
+Predložen je postupak za prepoznavanje istaknutih tvrdnji 
+temeljen na nadziranom strojnom učenju. 
+
+Naposljetku, treći zadatak u sklopu predistraživanja jest 
+pronalazak implicitnih informacija u komentarima internetskih rasprava. 
+Implicitne informacije između istaknute tvrdnje i komentara koji podupire 
+tu istaknutu tvrdnju definirane su putem niza tvrdnji koje upotpunjavaju 
+lanac logičkog zaključivanja. Predložene su metode za prepoznavanje istaknutih 
+tvrdnji u komentarima uz korištenje implicitnih tvrdnji. 
+Pokazano je kako korištenje implicitnih tvrdnji nedvojbeno pospješuje 
+rješavanje zadatka prepoznavnaja istaknutih tvrdnji. 
+Iz predistraživanja zaključeno je kako je pronalazak implicitnih informacija
+bitan za kvalitetnu dubinsku analizu analizu argumentacije. 
+
+Temeljem zaključaka iz predistraživanja, predložen je 
+strukturirani pristup pronalaska istaknutih tvrdnji kroz 
+radni okvir za strukturiranje tvrdnji. 
+U takvome se pristupu definira formalna struktura tvrdnji kako bi se
+umanjio problem različitih lingvističkih realizacija u tekstu i omogućilo
+izvođenje implicitih tvrdnje logičkim zaključivanjem. 
+Strukturirani pristup konceptualno je proveden u tri dijela. 
+Prvo je predložena metoda za predviđanje tvrdnji iz komentara, 
+zatim su tvrdnje modelirane i strukturirane pomoću računalnih ontologija,
+te je, u konačnici, predložen niz metoda zasnovan na strukturiranom 
+predviđanju za strukturiranje tvrdnji iz teksta. 
+
+Problem previđanja tvrdnji iz komentara definiran je sukladno srodnim
+problemima označavanja sekvenci, kao što je problem ekstrakcije imenovanih
+entiteta.  Matematički je definiran problem predviđanja tvrdnji na dva načina.  Za oba načina
+predloženo je više modela, među njima i model zasnovan na kombinaciji dubokog
+učenja i strukturiranog previđanja. Predloženi modeli eksperimentano su vrednovani 
+te je zaključeno kako metode strukturiranog previđanja pomažu
+prilikom previđanja tvrdnji. 
+
+S ciljem ublažavanja problema različitih lingvističkih realizacija 
+i implicitnosti teksta, 
+izdvojene tvrdnje strukturirane su pomoću računalnih ontologija. 
+Kroz dvije razine računalnim ontologijama opisuju se tematski specifični koncepti te 
+generički obrasci tvrdnji. Kako bi se strukturirale tvrdnje, prvo je 
+potrebno definirati tematski specifične koncepte 
+za svaku pojedinu temu rasprave, zatim je moguće kombinirati 
+definirane koncepte s obrascima kako bi se tvrdnje strukturirale. 
+
+Kako bi se dovršio zadnji korak strukturiranog radnog okvira za dubinsku
+argumentativnu analizu predložene su metode za strukturiranje tvrdnji,
+zasnovane na nadziranom strojnom učenju. Problem strukturiranja
+tvrdnji pokazao se kao vrlo težak problem, uglavnom zbog velikog
+broja mogućih rješenja. Eksperimentalnim vrednovanjem najboljim
+metodama pokazala se metoda ulančanih klasifikatora,
+zasnovanih na strukturiranom previđanju. 
+
+Prednost strukturiranih tvrdnji za dubinsku analizu argumentacije 
+demonstrirana je u vidu dohvaćanja implicitnih tvrdnji logičkim
+zaključivanjem i grupiranjem sudionika temeljem zajedničkih
+tvrdnji u raspravi. Time je pokazan objašnjiv i strukturiran
+način pronalaska implicitnih tvrdnji.  
 
 \vspace{1cm}
 \textbf{Ključne riječi}:  
 dubinska analiza argumentacije, obrada prirodnog jezika,
-formalno predstavljanje znanje, 
-strukturirano predviđanje
+formalno predstavljanje znanja, 
+strojno učenje, strukturirano predviđanje

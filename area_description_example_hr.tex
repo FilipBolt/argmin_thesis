@@ -54,29 +54,29 @@ a result here is a lot of idiots because of constant using.
 };
 }
 	\scriptsize{
-	\node (conclusion1) [above right=0.1cm and 0.5cm of text1.north west] {CONCLUSION 1};
-	\node (premise1) [above left=0.1cm and 0.1cm of text1.north east] {PREMISE 1};
-	\node (conclusion2) [above right=0.1cm and 0.3cm of text2.north west] {PREMISE 2};
-	\node (premise2) [above right=0.1cm and 0.5cm of text2.north] {CONCLUSION 2};
+	\node (conclusion1) [above right=0.1cm and 0.5cm of text1.north west] {ZAKLJU\v{C}AK 1};
+	\node (premise1) [above left=0.1cm and 0.1cm of text1.north east] {PREMISA 1};
+	\node (conclusion2) [above right=0.1cm and 0.3cm of text2.north west] {PREMISA 2};
+	\node (premise2) [above right=0.1cm and 0.5cm of text2.north] {ZAKLJU\v{C}AK 2};
 	}
 
 	\node (invisible) [below=2cm of text2.south] {};
 	\node (support1) [arg, left=1.5cm of invisible] {};
-	\node (claim2) [arg, right=1.5cm of invisible] {};
-	\node (claim1) [arg, left=1.5cm of support1] {};
+	\node (claim2) [arg, right=1.5cm of invisible] {\textcolor{darkgreen}{za}};
+	\node (claim1) [arg, left=1.5cm of support1] {\textcolor{red}{protiv}};
 	\node (support2) [arg, right=1.5cm of claim2] {};
 
 	\scriptsize{
-	\node (conclusion1) [above=0.1cm of claim1] {CONCLUSION 1};
-	\node (premise1) [above=0.1cm of support1] {PREMISE 1};
-	\node (conclusion2) [above=0.1cm of claim2] {CONCLUSION 2};
-	\node (premise2) [above=0.1cm of support2] {PREMISE 2};
+	\node (conclusion1) [above=0.1cm of claim1] {ZAKLJU\v{C}AK 1};
+	\node (premise1) [above=0.1cm of support1] {PREMISA 1};
+	\node (conclusion2) [above=0.1cm of claim2] {ZAKLJU\v{C}AK 2};
+	\node (premise2) [above=0.1cm of support2] {PREMISA 2};
 
 	\draw[-latex]  (support1) -- (claim1) 
-	node [above, midway] {\textcolor{darkgreen}{supports}} node [below, midway] {score $0.7$} ; 
+	node [above, midway] {\textcolor{darkgreen}{podupire}} node [below, midway] {score $0.7$}; 
 
 	\draw[-latex]  (support2) -- (claim2) 
-	node [above, midway] {\textcolor{darkgreen}{supports}} node [below, midway] {score $0.9$} ; 
+	node [above, midway] {\textcolor{darkgreen}{podupire}} node [below, midway] {score $0.9$}; 
 
 	\draw ($(claim1) + (1cm, 0.2cm)$ ) ellipse (3 cm and 1.5cm);
 	\draw ($(claim2) + (1cm, 0.2cm)$ ) ellipse (3 cm and 1.5cm);
@@ -86,9 +86,10 @@ a result here is a lot of idiots because of constant using.
 
 	\draw[-latex, dashed] (claim1.south) .. 
 	controls ($(invisible) + (-1.5cm, -1.5cm)$ ) and ($(invisible) + (1cm, -1.5cm)$ )
-	.. node[above, sloped] {\textcolor{red}{attacks}} (claim2.south);
+	.. node[above, sloped] {\textcolor{red}{napada}} (claim2.south);
 	}
 	% connect them
 
 \end{tikzpicture}
 \end{document}
+

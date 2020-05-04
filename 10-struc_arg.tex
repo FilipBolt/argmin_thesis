@@ -5,7 +5,7 @@
 Throughout the thesis, we advocate for formalized over unstructured claims,
 since a subsequent argumentation analysis different kind of information.  In a
 formalized setup, we may derive implicit claims with exact inference, compared
-to the unstructured setup (as laid out in chapter~\ref{chap:deriving_implicit})
+to the unstructured setup (as laid out in Chapter~\ref{chap:deriving_implicit})
 where information retrieval proves to be much less informative.  Formalized
 claims can be easily queried and are not ambiguous as unstructured claims might
 be. 
@@ -24,9 +24,9 @@ demonstrating the applications of formalized claims.  More specifically, we
 demostrate the benefits of formalized claims by analyzing the ``\emph{Gay
 Rights}'' and the ``\emph{Marijuana}'' topics. 
 We use microstructures to do stance classification in
-section~\ref{sec:stance_micro}, analyze most frequently used
+Section~\ref{sec:stance_micro}, analyze most frequently used
 claims, and provide guidelines for other types
-of analysis in section~\ref{sec:implicit_formalization}. 
+of analysis in Section~\ref{sec:implicit_formalization}. 
 
 % Finally, we provide 
 % conclusions and guidelines for other types of analysis that could be 
@@ -59,11 +59,12 @@ of analysis in section~\ref{sec:implicit_formalization}.
 \end{center}
 \end{table}
 
-We show how microstructures (defined in section~\ref{sec:for_microstructures})
-can be used for stance classification. 
+To demonstrate how microstructured claims can help to solve downstream tasks,
+we use microstructures (defined in Section~\ref{sec:for_microstructures})
+to solve stance classification. 
 
 \paragraph{Data.} We use a subset  of the ``\emph{Gay Rights}'' dataset defined in
-section~\ref{sec:claim_seg_data} for which annotators could produce 
+Section~\ref{sec:claim_seg_data} for which annotators could produce 
 a microstructure (819 out of 920 claims). We then ask two annotators to label
 stance for each of the 819 claim paraphrases on a five-point scale:
 \emph{strong favor} (\textbf{F}), \emph{likely favor}(\textbf{f}), \emph{neither} (\textbf{N}),
@@ -82,7 +83,7 @@ associated claim paraphrase, microstructure, and stance.
 
 \paragraph{Baselines.} 
 We compare against two baselines, which, to the best of our knowledge, are
-considered state of the art methods for stance classification
+considered state-of-the-art methods for stance classification
 \citep{sobhani2016detecting}: 
 \begin{enumerate*}[label=(\arabic*)]
 \item a sum of skip-gram vectors \citep{mikolov2013distributed} for each word
@@ -97,7 +98,7 @@ that is more difficult than obtaining microstructures.
 
 \paragraph{Microstructures.}
 To represent the claim microstructures (\emph{ms}), we adopt a simple 
-one-hot vector for each microstructure component: modality, relations, 
+one-hot vector for each microstructure component: type, relations, 
 relation negations, concepts, and opinion holders.
 Then we concatenate the vectors into a single feature vector (\emph{onehot}). 
 In addition, to leverage the taxnomical relations between concepts, 
@@ -111,7 +112,7 @@ We trained and evaluated the models on 803 claim instances
 (either original segments, paraphrases, or microstructures) using
 $5 \times 3$ nested cross validation, using grid-search to 
 optimize hyperparameters $C$ and $\gamma$
-(model selection explained in section~\ref{sec:selection}).
+(model selection explained in Section~\ref{sec:selection}).
 
 \paragraph{Tasks.}
 We considered four tasks:
@@ -123,7 +124,7 @@ numeric stance score, but afterwards predictions are rounded and mapped to label
 mapped to neutral (3-way-N), and
 \item a 3-way classification task, in which the implicit labels are mapped to
 explicit \pro{for} and \con{against} labels (3-way-E)
-\end{enumerate*}
+\end{enumerate*}.
 Since the solution space is more narrow for the last two tasks, 
 we expect models to perform these tasks better. 
 
@@ -186,10 +187,10 @@ for a 3-way classification setup.
 
 We wish to explore discovering implicit claims in a structured manner. 
 An unstructured approach to discovering implicit claims 
-was presented in chapter~\ref{chap:deriving_implicit}. There it was clearly
+was presented in Chapter~\ref{chap:deriving_implicit}. There it was clearly
 shown how using implicit claims improves the task of prominent 
 claim identification, but it proved extremely difficult to automatically retrieve 
-implicit claims (shown in section~\ref{sec:argpremise_retrieval}). 
+implicit claims (shown in Section~\ref{sec:argpremise_retrieval}). 
 Now, we show an analysis of formalized claims which uses inference to uncover
 implicit claims to demonstrate one of the advantages of structured
 argumentation mining. 
@@ -206,9 +207,9 @@ doing another frequency count. In the fourth task, we analyze claims
 across different speakers and propose \emph{crowd-based} inference.
 
 We use the \emph{ClaimOntology} and the \emph{marijuana legalization} domain
-presented in chapter~\ref{chap:formalization}. Most frequent queries 
+presented in Chapter~\ref{chap:formalization}. Most frequent queries 
 are made using Java libraries OntoAPI \citep{bellatreche2007ontoapi} and 
-the JFact reasoner\footnote{\url{http://jfact.sourceforge.net/}}.
+the JFact reasoner.\footnote{\url{http://jfact.sourceforge.net/}}
 Queries to filter claims are made using the SPARQL query language
 \citep{perez2006semantics}.
 
@@ -235,7 +236,7 @@ Queries to filter claims are made using the SPARQL query language
 We wish to explore most frequently used claims in two ways.
 First, we determine the most frequent claims across the entire dataset
 (\emph{domain independent}).
-Second, most frequently used claims across a specific 
+Second, we determine the most frequently used claims across a specific 
 (``\emph{marijuana legalization}'') domain filter query
 (\emph{domain dependent}). 
 Two claims individuals are equivalent if they both contain the same
@@ -330,7 +331,7 @@ indepedent, such as the transitivity of the \texttt{causes} object property.
 Other axioms may be domain dependent like stating
 that a positive value statement about the \texttt{marijuana} domain 
 individual inferrs an implicit claim individual that contains
- a \texttt{policy} modality and \texttt{has\_declaration} 
+ a \texttt{policy} type and \texttt{has\_declaration} 
  object property with \texttt{marijuana legalization} domain individual.
 
 Transitivity is defined as $\forall a, b, c \in X : (a R b \vee b R c)
@@ -350,7 +351,7 @@ stating
 \emph{marijuana taxation causes economy profit}, the derived transitive
 implicit claim amounts to \emph{marijuana legalization causes economy profit}.
 We apply this rule for \texttt{causes}, \texttt{promotes}, and \texttt{implies}
-object properties which yields 26 inferred claims. 
+object properties, which yields 26 inferred claims. 
 
 As for domain dependent axioms, an expert may want to encode that 
 speakers who express positive value judgements about 
@@ -360,18 +361,18 @@ Now, we define a policy implicit claim with properties (2)  if there
 exists a claim with properties (1):
 \begin{align*}
 	(1) & \hspace{0.1cm} \mathit{has\_declaration} (\mathit{marijuana}) 
-	\wedge \mathit{has\_modality} (\mathit{good\_value})\\
+	\wedge \mathit{has\_type} (\mathit{good\_value})\\
 	\cline{1-3}
 	(2) & \hspace{0.1cm} \mathit{has\_declaration} (\mathit{marijuana}) 
-	 \wedge \mathit{has\_modality} (\mathit{policy})
+	 \wedge \mathit{has\_type} (\mathit{policy})
 \end{align*}
 We apply this rule using the \texttt{marijuana}, \texttt{marijuana
 legalization}, and \texttt{marijuana consumption} domain individuals.
 Additionally, we apply the equivalent rule, with the difference of requiring
-the \texttt{bad\_value} modality, to derive claims which are \con{against}
+the \texttt{bad\_value} type, to derive claims which are \con{against}
 \texttt{marijuana legalization}. Applying these rules to the dataset increases
 the frequencies of claims \emph{marijuana should be legalized} and {marijuana
-shouldn't be legalized} from 35 to 39 and 22 to 37 respectively.  This
+should not be legalized} from 35 to 39 and 22 to 37, respectively.  This
 indicates that negative stance is implicit much more often than positive
 stance. 
 
@@ -453,7 +454,7 @@ As the second and third claim are uncovered the stance shifts towards neutral an
 \end{figure}
 
 
-An example of concomitant claims is shown in table~\ref{tab:struc_group}. 
+An example of concomitant claims is shown in Table~\ref{tab:struc_group}. 
 Two groups (one \pro{pro} and one \con{against} marijuana legalization)
 of four speakers share exactly two claims. Looking at the \con{con} side, we
 can infer that speaker $K200$ is also likely to claim that \emph{marijuana is a drug}, because
@@ -463,7 +464,7 @@ In the \pro{pro} group only speaker $K75$ makes a claim
 common sense reasoning and domain knowlege suggest that other speakers in the group
 are likely to agree with that statement. Speaker $E12$ states 
 that \emph{money is wasted on monitoring} and $K1$ states that \emph{
-marijuana would be cheaper if legalized} which in real life situations 
+marijuana would be cheaper if legalized}, which in real life situations 
 would usually be associated with supporting the fact that it would
 \emph{help the government earn more money}, but there is no direct line of inference.
 The absence of such a claim suggests that more common-sense axioms could be
@@ -475,7 +476,7 @@ claims made by a speaker in Fig.~\ref{fig:pro_con_shift}.  The speaker first
 makes the claim \emph{there are side effects to smoking marijuana}, which is a
 claim that is often associated with the \con{con} stance, leading us to believe
 the speaker is also \con{against} marijuana legalization.  However, after
-making the claim \emph{marijuana is not a drug} the speaker is closer to the
+making the claim \emph{marijuana is not a drug}, the speaker is closer to the
 claims more often expressed by supporters of marijuana legalization.  Finally,
 the speaker expresses their \pro{pro} stance with the claim \emph{marijuana
 should be legalized} removing any doubt. Having more claims usually leads to

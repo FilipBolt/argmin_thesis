@@ -22,13 +22,13 @@ mining pipeline. The argumentation mining pipeline starts with text and
 produces an argumentative structure. 
 We worked on claim extraction, claim
 structuring, and deriving implicit claims as part of our implementation of the
-argumentation mining pipeline. To solve those problems, we make a distinction
+argumentation mining pipeline. To solve those problems, we made a distinction
 between two approaches: an unstructured and a structured approach. In the
-unstructured approach (part~\ref{part:unstruc}), we employ commonly-used machine
+unstructured approach (Part~\ref{part:unstruc}), we employed commonly-used machine
 learning algorithms to extract natural language claims. On the other hand, in
-the structured approach (part~\ref{part:struc}), we used structured prediction
+the structured approach (Part~\ref{part:struc}), we used structured prediction
 machine learning to obtain logical claim representations. 
-We opt for structured argumentation mining based on three pre-research studies
+We opted for structured argumentation mining based on three pre-research studies
 (described in chapters~\ref{chap:argclu}, \ref{chap:argrec}, and
 \ref{chap:deriving_implicit}) which showed the limits of computational
 representations of unstructured text.  
@@ -36,7 +36,7 @@ The original research contribution of this thesis, based on
 structured argumentation mining, can be divided into three parts. 
 
 The first part of the research contribution, described in
-chapter~\ref{chap:formalization}, involves modeling an internet discussion using an
+Chapter~\ref{chap:formalization}, involved modeling an internet discussion using an
 argument framework to formalize claims.  
 Formalized claims (in comparison to natural language claims) contain a crisp
 logical representation of claims and allow us to infer additional knowledge. 
@@ -47,38 +47,38 @@ ontology models general argumentative claim patterns, whereas the domain
 ontology contains domain knowledge. To verify and validate the ontology
 second-order description logic and textual entailment are used, respectively. 
 
-The second part of the research contribution involves automatically building
+The second part of the research contribution involved automatically building
 formalized claims from text -- implementing the argumentation mining pipeline. 
-We approach this problem in two steps.  In the first step, we build supervised
+We approached this problem in two steps.  In the first step, we built supervised
 machine learning models to solve the claim segmentation problem in
-chapter~\ref{chap:claim_segmentation}.  For the dataset, we expand the existing
+Chapter~\ref{chap:claim_segmentation}.  For the dataset, we expanded on the existing
 dataset of internet discussion comments \citep{hasan2014you} to involve claims
-and claim formalizations.  In the second step, we take extracted claims from
+and claim formalizations.  In the second step, we took extracted claims from
 claim segmentation and use supervised machine learning models to build claim
-formalizations (described in chapter~\ref{chap:claim_structuring}). To
-structure claims, we explore structured prediction approaches to take advantage
+formalizations (described in Chapter~\ref{chap:claim_structuring}). To
+structure claims, we explored structured prediction approaches to take advantage
 of the dependencies of claim formalization components.  To build formalized
-claims directly from text, we also propose a supervised joint model which is
+claims directly from text, we also proposed a supervised joint model which is
 trained to do claim segmentation and claim structuring in one step. 
 
-For the third, and final, part of the research contribution we build a framework
-and support for internet discussion analysis involving claim detection,
+For the third, and final, part of the research contribution we built a framework
+for internet discussion analysis involving claim detection,
 structuring, and analysis based on a comparison of claims from all discussion
-participants. In chapter~\ref{chap:analysis} we build a domain ontology based
-on the ``\emph{Marijuana}'' topic, integrate it with the upper ontology,
-annotate claim individuals, and validate the end result. We train and
-evaluate claim structuring and claim segmentation models (in
-chapters~\ref{chap:claim_segmentation} and~\ref{chap:claim_structuring}) which
-produce formalized claims. Finally, we showcase the advantages of having claims
+participants. In Chapter~\ref{chap:analysis} a domain ontology based 
+on the ``\emph{Marijuana}'' topic is proposed, integrated with the upper ontology,
+claim individuals are annotated, after which end result is validated. 
+Claim segmentation and claim structuring models are constructured and evaluated (in
+Chapters~\ref{chap:claim_segmentation} and~\ref{chap:claim_structuring}). 
+Finally, we showcased the advantages of having claims
 formalized by deriving implicit claims across multiple setups. 
-Finally, we show how we can derive additional implicit claims by comparing
+Finally, we showed how we can derive additional implicit claims by comparing
 claims across groups of speakers. 
 
 Overall, we propose three main future work directions.  First, as both
 microstructure and ontology-based claim formalizations have proved useful in stance
 classification and most frequent claims identification, respectively, we wish to
 apply these formalizations to either study different topics or expand the existing
-``\emph{Marijuana}'' and ``\emph{Gay Rights}'' topics.  Even though
+``\emph{Marijuana}'' and ``\emph{Gay Rights}'' topics. Even though
 microstructure formalization proved useful in determining stance, we wish to focus
 on ontology-based formalizations, simply because they allow for a broader set
 of applications. Annotating new topics using the ontology-based formalization
@@ -93,13 +93,13 @@ new claims and concepts.
 Second, we wish to improve how formalized claims can be attained automatically.
 Formalizing claims from comments is done by claim segmentation followed by
 claim structuring.  Claim segmentation models have shown decent enough
-performance to be used in practice. To improve them, we wish to start by
+performance to be used in practice. To improve them, we would like to start by
 exploring a more advanced, syntax-based heuristic, given the promising results
 of the na\"ive heuristic baseline.  However, determining overlapping and
 discontinuous claims still posses a challenging problem in claim segmentation.
-To tackle it, we propose trying different structured prediction approaches, such as
+To tackle it, we wish to experiment with different structured prediction approaches, such as
 the structured SVM \citep{mcdonald2005flexible}. Claim structuring has shown
-that recognizing \emph{modality} and \emph{count} components is feasible,
+that recognizing \emph{type} and \emph{arity} components is feasible,
 whereas determining \emph{domain individuals} and \emph{properties}
 performs extremely poorly, hence claim structuring rarely produces correct formalizations.
 Using structured prediction approaches has shown superior performance 
@@ -108,7 +108,7 @@ As a first step towards improving claim structuring,
 we want to take advantage of the formalization rules to severely
 restrict the solution search space. The search space restriction can be done by
 adding constraints to the search domain. One way to do so is via Lagrange
-multipliers \citep{bellman1956dynamic}.  Additionally, we want to explore
+multipliers \citep{bellman1956dynamic}. Additionally, we want to explore
 how to model having multiple valid formalizations for the same claim, since this would
 allow to use different annotations simultaneously. 
 
@@ -118,9 +118,9 @@ identification and claim structuring. Therefore, we wish to explore methods of
 denoising vague, informal, albeit argumentative claims.
 Working with noisy text is a common theme in natural language processing 
 (see \citep{subramaniam2009survey} for a review on dealing with noisy text),
-but we would like to focus on argumentative texts and study natural language
-generation methods specifically when trying to generate a succinct, more formal 
-paraphrased claim.  
+but we would like to focus on argumentative texts. To that end, it might be worth
+considering studying natural language generation methods when trying to
+generate a succinct, more formal paraphrased claim.  
 
 % future work, what more can be done in this area
 
@@ -142,8 +142,10 @@ BERT model has to select the appropriate implicit claim that would make the
 inference between the given premise and conclusion logical. This work
 is closely related to our work on deriving implicit claims, since we also strive to 
 build models that try to attain implicit, real-world knowledge. 
-We hope our research will inspire further research in argumentation
-mining, in particular through exploring implicit claims and implicit knowledge. 
+We hope this thesis will spark further research in exploring
+attaining implicit opinions and knowledge, as we strongly believe it 
+is one key factors in achieving natural language understanding. 
+
 
 % what methods need improvement
 % \todo{break down into sentences}

@@ -38,11 +38,13 @@ The user comment may be a single prominent claim (and it often is), but it
 is referred to as a \textit{comment} to emphasize the fact that in general 
 it may contain several claims, as well as non-argumentative text. 
 
-In this chapter, we first introduce the \ComArg corpus in section~\ref{sec:comarg}
+In this chapter, we first introduce the \ComArg corpus in Section~\ref{sec:comarg},
 which contains labelled pairs of comments with prominent claims. Next, 
-we build a model for prominent claim identification as described in 
-section~\ref{sec:argrec_model}. Finally, the model is evaluated in 
-section~\ref{sec:argrec_experiments}. 
+a model for prominent claim identification is proposed in 
+Section~\ref{sec:argrec_model}. Finally, the model is evaluated in 
+Section~\ref{sec:argrec_experiments}. 
+This work is also described in \citep{boltuzic2014back}.
+
 \begin{table}
 \centering
 {\small
@@ -68,13 +70,13 @@ Label & Description: Comment\dots \\
 For training and evaluating prominent claim identification models, 
 we have compiled a corpus of user comments, manually annotated
 with prominent claims which we refer to as \ComArg. \ComArg is
-freely available\footnote{Freely available under the CC BY-SA-NC license from
-\url{http://takelab.fer.hr/data/comarg}}. 
+freely available. \footnote{Freely available under the CC BY-SA-NC license from
+\url{http://takelab.fer.hr/data/comarg}}
 As a source of data we use two websites:
 \emph{procon.org}\footnote{\url{http://www.procon.org}} and 
-\textit{idebate.org}.\footnote{\url{http://idebate.org}}. 
+\textit{idebate.org}\footnote{\url{http://idebate.org}}. 
 The former is a discussion site covering ideological, social, political, and
-other topics where users express their personal opinions on a selected topic,
+other topics, where users express their personal opinions on a selected topic,
 taking either the \pro{pro} or \con{con} side.  The latter,
 \textit{idebate.org} is a debating website containing online debates and an
 archive of past debates.  Each archived topic contains a set of prominent
@@ -90,7 +92,7 @@ We choose two topics: ``\textit{Under God in Pledge}'' (UGIP) and
 they have a larger-than-average number of comments (above 300) and are 
 well-balanced between \pro{pro} and \con{con} stances. 
 For these two topics, we then took the corresponding comments and prominent claims
-from \textit{procon.org} and \textit{idebate.org} respectively. 
+from \textit{procon.org} and \textit{idebate.org}, respectively. 
 As the users can produce comments not relevant to the topic, we skim-read 
 the comments and omit non-argumentative comments.  We end up with a set of 175
 comments and 6 arguments for UGIP, and 198 comments and 7 arguments for the GM
@@ -156,14 +158,14 @@ We paired all comments with all possible prominent claims for the topic, resulti
 1,050 and 1,386 comment-prominent claim pairs for the ``\emph{Under God
 in pledge}'' and ``\emph{Gay marriage}'' topics, respectively. 
 We then ask annotators to annotate each prominent claim--comment 
-pair\footnote{
+pair. \footnote{
 We 
 initially attempted to crowdsource the annotation with guidelines listed in 
-appendix~\ref{sec:argrec_annotation}, but working with expert annotators 
-proved much more successful. }.
-Since user-provided claims (in comments) are often vague or implicit, we therefore decided to
-annotate each comment-prominent claim pair using a five point scale shown in 
-table~\ref{tab:comarg-labels}. Labels encode the presence (\textbf{A, a, s, S})
+Appendix~\ref{sec:argrec_annotation}, but working with expert annotators 
+proved much more successful. }
+Since user-provided claims (in comments) are often vague or implicit, 
+each comment-prominent claim pair was annotated using a five point scale shown in 
+Table~\ref{tab:comarg-labels}. Labels encode the presence (\textbf{A, a, s, S})
 or absence (\textbf{N}) of a prominent claim in a comment, its polarity
 (comment labelled \textbf{S} and \textbf{s} supports the prominent claim; comment labelled
 \textbf{A} and \textbf{a} attacks the prominent claim),
@@ -246,7 +248,7 @@ Most problematic prominent claims are \textit{A1.3} and \textit{A1.5} for the
 ``\emph{Under God in pledge}'' topic
 and prominent claims \textit{A2.1} and \textit{A2.7} for the ``\emph{Gay marriage}''
 topic (references
-in table~\ref{tab:comarg-claims}). 
+in Table~\ref{tab:comarg-claims}). 
 In the second step, we asked annotators to independently revise 
 their decisions for the problematic comment-prominent claim pairs. 
 Each re-annotated 515 pairs of which 86 were revised. 
@@ -286,10 +288,10 @@ Pearson's $r$    & 0.68 & 0.74 &  0.71 \\
 
 % \subsubsection{Annotation analysis}
 
-Table~\ref{tab:labels} shows distribution of labels across pairs. 
+Table~\ref{tab:labels} shows the distribution of labels across pairs. 
 Majority (67.0~\%) of pairs are the cases in which the argument is not used
 (label \textbf{N}).
-Attacked arguments (labels \textbf{A} or \textbf{a}) make up 12.9\% while supported
+Attacked arguments (labels \textbf{A} or \textbf{a}) make up 12.9\%, while supported
 arguments (labels \textbf{S} or \textbf{s}) make up 20.1\%.
 Among the cases not labelled as \textbf{N}, prominent claims are used explicitly 
 in 58.4\% (labels \textbf{A} and \textbf{S}) and vague/implicit (labels \textbf{a} and \textbf{s})
@@ -442,10 +444,10 @@ of marriage.
 \label{sec:argrec_model}
 
 We cast the prominent claim identification problem as a multiclass problem
-(multiclass problems described in section~\ref{sec:unstruc_machine_learning}). 
+(multiclass problems described in Section~\ref{sec:unstruc_machine_learning}). 
 Given a comment-prominent claim pair as input, the classifier should
 predict the correct label from the set of five possible labels (labels
-listed in table~\ref{tab:labels}). 
+listed in Table~\ref{tab:labels}). 
 The classifier should rely on the features derived from the comparison
 of the comment and prominent claim. 
 This approach, ideally, should be less domain-dependent than using features
@@ -456,8 +458,8 @@ Three kinds of features are used:
 \item semantic text similarity (STS) features, and
 \item ``stance alignment'' (SA) features. 
 \end{enumerate*}
-Textual entailment is described in section~\ref{sec:textual_entailment}, whereas
-semantic textual similarity is described in section~\ref{sec:sts}. 
+Textual entailment is described in Section~\ref{sec:textual_entailment}, whereas
+semantic textual similarity is described in Section~\ref{sec:sts}. 
 ``Stance alignment'' is a binary feature whose value is set to one if a
 \pro{pro} comment is paired with a \pro{pro} prominent claim or if a
 \con{con} comment is paired with a \con{con} prominent claim. This SA
@@ -473,7 +475,7 @@ feature presupposes that comment stance is known a priori.
 Following the work of \citet{cabrio2012combining}, we use textual 
 entailment to determine whether the comment (text) entails the prominent
 claim (hypothesis) (textual entailment in general is described in 
-section~\ref{sec:textual_entailment}).
+Section~\ref{sec:textual_entailment}).
 To this end, we use the Excitement Open Platform (EOP) \citep{pado2015design}. 
 From EOP, we used seven pre-trained \textit{entailment decision algorithms}
 (EDAs). 
@@ -509,8 +511,8 @@ The former case also includes a paraphrase.
 In the latter case, there might be a contradiction or it may be \textit{non sequitur}. 
 These relations can be hard to detect, especially from vaguely stated comments. 
 To account for this, we use a feature based on semantic textual similarity (STS). 
-We use TakeLab's STS \citep{vsaric2012takelab} which works as described in
-section~\ref{sec:sts} to get a similarity score between 
+We use TakeLab's STS \citep{vsaric2012takelab}, which works as described in
+Section~\ref{sec:sts} to get a similarity score between 
 a comment and a prominent claim, as well as the similarity score between 
 each sentence of the comment and the prominent claim. 
 Thus we have a vector of similarities (one global, one for each sentence) of size
@@ -575,13 +577,13 @@ We use two baselines as a reference of performance:
 \item bag-of-words overlap classifier (BoWO), which uses word overlap between
 	the comment and prominent claim as the only feature.
 \end{enumerate*}
-For classification, we use the SVM algorithm (described in section~\ref{sec:svm}) with a 
+For classification, we use the SVM algorithm (described in Section~\ref{sec:svm}) with a 
 Radial Basis Function Kernel. 
 We train and evaluate the SVM model using nested $5 \times 3$ cross-validation
  optimizing hyperparameters $C$ and $\gamma$ using
-grid-search (model selection described in section~\ref{sec:selection}).
+grid-search (model selection described in Section~\ref{sec:selection}).
 We use the LibSVM implementation \citep{chang2011libsvm}. 
-Micro-averaged results are shown in table~\ref{tab:claim_identification_results}
+Micro-averaged results are shown in Table~\ref{tab:claim_identification_results}
 for the three problem formulations. 
 Models are trained separately on ``\emph{Under God in Pledge}'' on ``\emph{Gay
 Marriage}'' topics. 
@@ -590,7 +592,7 @@ The TE model outperforms baselines in all but one setting on both topics:
 the difference ranges from 0.6 to 11.7 percentage points. 
 The STS model does benefit from SA, while the TE does in some setups 
 (\textbf{Aa-N-sS} and \textbf{A-N-S}) in which the average scores increases 3 percentage points. 
-This might be explained by Fig.~\ref{fig:entailment_ratio} which shows that 
+This might be explained by Fig.~\ref{fig:entailment_ratio}, which shows that 
 entailment decisions in attacks (\textbf{A} and \textbf{a}) are sometimes positive. 
 In such cases the SA feature helps distinguish between entailment (supported prominent claim) 
 and contradiction (attacked prominent claim). 
@@ -621,10 +623,11 @@ setting)}
 
 We also wish to test how well we can train models to perform cross-topic. 
 Therefore, we trained each model on one topic and evaluated on the other. 
-Results are shown in table~\ref{tab:claim_identification_crosstopic}. 
+Results are shown in Table~\ref{tab:claim_identification_crosstopic}. 
 The difference in performance is small (0.7 on average). 
 The best performing model (TE + SA) does not suffer a performance decrease. 
-This suggests the models are domain independent, but a more detailed study is needed. 
+This suggests the models are domain independent, but a more detailed study would be
+needed to confirm this.
 
 \begin{table*}
 \setlength{\tabcolsep}{5pt}
@@ -653,9 +656,9 @@ STS+TE+SA & 46.3 & \textbf{27.2} & \textbf{28.6} & \textbf{71.6} & 61.6 & 43.5 &
 
 Finally, we trained and tested the TE+SA and STS+TE+SA models on the complete 
 \ComArg dataset. 
-The results are shown in table~\ref{tab:claim_identification_best}. 
+The results are shown in Table~\ref{tab:claim_identification_best}. 
 We report macro-averaged precision, recall, F1-score, and 
-micro-averaged F1-score (metrics described in section~\ref{sec:metrics}). 
+micro-averaged F1-score (metrics described in Section~\ref{sec:metrics}). 
 Generally, models perform less well on smaller classes (\textbf{A},
 \textbf{a}, \textbf{s}, and \textbf{S}) hence macro-averaged scores are much lower than
 micro-averaged ones. 
@@ -666,7 +669,7 @@ while on the other problems TE+SA performs best.
 
 % error analysis
 The vague/implicit prominent claims posed the greatest challenge for the models. 
-Case in point is the comment-prominent claim pair 2.23.4 from table~\ref{tab:comarg}  stating 
+Case in point is the comment-prominent claim pair 2.23.4 from Table~\ref{tab:comarg}  stating 
 ``\textit{All these arguments on my left are and have always been FALSE. Marriage is
 between a MAN and a WOMAN by divine definition. Sorry but, end of story.}''.
 Solely from the comment text it is unclear what the user actually meant. 
@@ -676,14 +679,14 @@ but there are certain additional assumptions that need to be met for the promine
 to be entailed. 
 The second major problem is distinguishing between prominent claims that are mentioned 
 and those that are not. 
-Consider the comment-prominent claim pairs 2.111.4 and 2.114.2 from table~\ref{tab:comarg}. 
+Consider the comment-prominent claim pairs 2.111.4 and 2.114.2 from Table~\ref{tab:comarg}. 
 In the former case, classifier predicts \textbf{S} instead of \textbf{s}. 
 This is likely due to the low difference in the comment-prominent claim similarities for these
 two classes. 
 In the latter example, classifier predicts that the prominent claim is used in the comment, but
 it is not. 
 The TE model in the majority of cases outperforms the STS model. 
-In the case of the comment-prominent claim pair 2.157.2 from table~\ref{tab:comarg}, the STS-based
+In the case of the comment-prominent claim pair 2.157.2 from Table~\ref{tab:comarg}, the STS-based
 model outperforms the TE model. 
 In this case word overlap is quite high, although they are semantically different. 
 Conversely, comment-prominent claim pair 2.101.2 is a good example when
