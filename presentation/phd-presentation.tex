@@ -3,12 +3,16 @@
 \usepackage[T1]{fontenc}
 \usepackage{courier}
 \usepackage{etoolbox}
+\usepackage{animate}
 
 \usepackage{tabularx} % package that allows dynamical changing table cell width
 \usepackage{multirow}  % package that enables multiple rows in a table
 
 \usepackage{amsfonts}
 \usepackage{booktabs}
+\usepackage{beamerthemesplit} 
+
+
 \usetheme{Rochester}
 
 \definecolor{chameleongreen1}{RGB}{98,189,25}
@@ -61,8 +65,26 @@
   \end{frame}
 }
 
-\setbeamerfont{page number in head/foot}{size=\large}
-\setbeamertemplate{footline}[frame number]
+% \setbeamerfont{page number in head/foot}{size=\large}
+% \setbeamertemplate{footline}[frame number]
+% \setbeamertemplate{footline}[framenumber]
+% \setbeamertemplate{footline}{\hfill \insertframenumber ~/ \inserttotalframenumber}
+
+% \addtobeamertemplate{navigation symbols}{}{%
+%     \usebeamerfont{footline}%
+%     \usebeamercolor[fg]{footline}%
+%    
+%     \insertframenumber/\inserttotalframenumber
+% }
+
+\beamertemplatenavigationsymbolsempty
+
+\setbeamertemplate{footline}{%
+\usebeamerfont{footline}
+\usebeamercolor[fg]{footline}
+\hfill
+\insertframenumber{}/\inserttotalframenumber
+}
 
 \scriptsize{ \bibliographystyle{apalike}}
 
@@ -71,9 +93,13 @@
 	Argumentation Mining of Claims \\
 	in Internet Discussions
 }
+
+{
 \author{student: mag.~ing.~comp.~Filip Boltužić 
 \\ mentor: izv.~prof.~dr.~sc.~Jan Šnajder
 }
+}
+
 \institute{
 Faculty of Electrical Engineering and Computing \\
 University of Zagreb
@@ -97,12 +123,14 @@ University of Zagreb
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+{
 \begin{frame}
 \frametitle{Should masks be worn to prevent virus spreading?}
 \includegraphics[scale=0.3]{MaskProCon.png}
 \footnote{
 \tiny{Source: \url{https://www.medwiser.org/pros-cons-of-public-recommendations-for-surgical-cloth-diy-masks-to-prevent-coronavirus/}}}
 \end{frame}
+}
 
 \begin{frame}
 \frametitle{Should masks be worn to prevent virus spreading?}
@@ -113,14 +141,14 @@ University of Zagreb
 
 \begin{frame}
 \frametitle{Should masks be worn to prevent virus spreading?}
-\begin{block}{Pro Claims}
+\begin{block}{\pro{Pro} Claims}
 \begin{itemize}
 	\item Wearing a Breathe Healthy Mask can help reduce the amount of particles you breathe.
 	\item Wearing a facemask properly offers satisfactory protection against respiratory tract infections.
 \end{itemize}
 \end{block}
 
-\begin{block}{Con Claims}
+\begin{block}{\con{Con} Claims}
 \begin{itemize}
 	\item Also, cold and flu germs can enter the body by contaminated hands touching the corners of your eyes, your lips and your inner nose.
 	\item During the allergy season, wearing a Breathe Healthy Mask can help reduce exposure during the peak times for allergens
@@ -138,6 +166,76 @@ University of Zagreb
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{frame}
+	\frametitle{Research objective}
+	\begin{block}{Research objective}
+		
+The research objective is the development and evaluation of a machine learning
+based system for in-depth argument analysis of a single targeted domain of
+internet discussions. Examples of possible argument analyses are: prominent
+claim analysis, implicit claim detection, and author profiling based on common claims. 
+\end{block}
+
+\begin{block}{Approach}
+The suggested approach of single domain in-depth analysis is in contrast
+with most existing shallow cross domain approaches. 
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+
+	\frametitle{Research outcome}
+
+\begin{block}{Outcome}
+A successful outcome of this research will produce an end-to-end claim analysis
+system. The research defines three problems: 
+\begin{enumerate}
+	\item claim detection from online discussions, 
+	\item claim structuring using ontologies, 
+	\item structured claim analysis.  
+\end{enumerate}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Research hypothesis}
+\begin{block}{Hypothesis}
+	\begin{enumerate}
+	\item Machine learning can achieve sufficiently high accuracy in detecting claims from text;
+	\item Structuring claims from online discussions is possible such that structured claims retain relevant aspects of original claims to
+	conduct claim analysis;
+	\item A manually built domain-specific ontology of online discussions can be abstract enough to reduce the problem of language
+	variance, yet complex enough to provide a sound basis for in-depth claim analysis;
+	\item Logical reasoning is possible with structured claims;
+	\item Automatic detection, structuring, and analysis of claims is far less time-consuming than its manual counterpart, all while achieving
+	competitive accuracy.
+	\end{enumerate}
+\end{block}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{frame}
+% 	\frametitle{Expected scientific contribution of proposed research}
+% This research proposes claim detection, structuring and analysis from online discussions based on machine learning, natural
+% language processing and ontological modelling. Expected research contributions are:
+% \begin{enumerate}
+% 	\item  Modeling an online discussion using an two-level ontology, where
+% 		the first level contains domain knowledge and the second models
+% 		claim patterns, aiming to fully structure online discussions;
+% 	\item  Supervised machine learning method for claim detection and claim
+% 		structuring;
+% 	\item Framework and support for online discussion analysis involving
+% 		claim detection, structuring, and analysis based on a
+% 		comparison of claims from all discussion participants
+% \end{enumerate}
+% \end{frame}
+
 \section{Introduction}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,17 +243,23 @@ University of Zagreb
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-	\frametitle{Argumentation}
+	\frametitle{Argumentation -- bottom up}
 
-\begin{block}{Argumentation}
-Argumentation is the process of putting forth arguments to determine  the
-acceptability of claims \cite{walton1989informal}.
+\begin{block}{Claim}
+Claim is a statement you want others to accept and act upon.
+\cite{rieke1997argumentation}. 
 \end{block}
 
 \begin{block}{Argument}
 An argument links a set of claims, the premises, to another claim, the conclusion
 \cite{walton1989informal}.
 \end{block}
+
+\begin{block}{Argumentation}
+Argumentation is the process of putting forth arguments to determine  the
+acceptability of claims \cite{walton1989informal}.
+\end{block}
+
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,6 +279,11 @@ of the structure of inference and reasoning expressed as arguments presented in 
 \includegraphics[scale=0.7]{../area_description_pipeline-figure0.pdf}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Argument Mining -- Example}
+	\includegraphics[scale=0.3]{argstruc.png}
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %=================================================%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -192,25 +301,35 @@ of the structure of inference and reasoning expressed as arguments presented in 
 \frametitle{Argumentation Mining Related Areas}
 
 \begin{itemize}
-\item Stance Classification
+	\item Stance Classification \cite{anand2011cats, mohammad2016semeval}
 	\begin{itemize}
 		\item Determines \textcolor{green}{Pro} or \textcolor{red}{Con} stance of claim towards a topic
 	\end{itemize}
-\item Fact Checking
+\item Fact Checking \cite{vlachos2014fact, ciampaglia2015computational}
 	\begin{itemize}
 		\item Checks factual assertions in non-fictional text to determine the
 			veracity and correctness of the factual statements
 	\end{itemize}
-\item Sentiment Classification
+\item Sentiment Classification \cite{bakshi2016opinion, sobhani2016detecting}
 	\begin{itemize}
 		\item Determines subjective information and affective states in text
 	\end{itemize}
-\item Rumour Tracking
+\item Rumour Tracking \cite{gorrell2019semeval}
 	\begin{itemize}
 		\item Objective is to find the source of rumourous claims
 	\end{itemize}
 \end{itemize}
 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Argumentation Mining -- Related Work}
+	\begin{itemize}
+		\item classifying arguments and argument schemes \cite{palau2009argumentation}
+		\item argument extraction \cite{hasan2014you}
+		\item argument boundary detection \cite{lippi2015context}
+		\item claim extraction \cite{levy2014context}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -669,7 +788,7 @@ TE+STS+SA   & \textbf{70.5} & 72.5 & 68.9 & 73.4 & 81.4 & 79.7        \\
 
 	\begin{itemize}
 		\item Gap between claims can be vary
-		\item Idea: Quantify the gap by adding implicit claims between two claims
+		\item Idea: Quantify the semantic gap by adding implicit claims between two claims
 	\end{itemize}
 
 \begin{table}
@@ -688,7 +807,7 @@ TE+STS+SA   & \textbf{70.5} & 72.5 & 68.9 & 73.4 & 81.4 & 79.7        \\
 	regulated by the government.}\\
 \hline
 \end{tabular}}
-\caption{User claim, the matching prominent claim, and the implicit claims filling the gap.}
+\caption{User claim, the matching prominent claim, and the implicit claims filling the semantic gap.}
 \label{tab:premise_example}
 \end{table}
 \end{frame}
@@ -824,32 +943,604 @@ dev.~set (upper part) and test set (lower part); macro-avg.~F1-score. WT -- with
 \begin{frame}
 	\frametitle{Structured Argumentation Mining of Claims}
 
-	\begin{itemize}
-		\item Extract claims 
-		\item Structure claims into formal representations
+	\begin{enumerate}
+		\item Extract claims -- \textbf{Claim Segmentation}
+			\vspace{1cm}
+		\item Structure claims into formal representations -- \textbf{Claim Structuring}
+			\vspace{1cm}
 		\item Use formal representations and logic rules to obtain inferred claims
-	\end{itemize}
+	\end{enumerate}
 
 \end{frame}
 
 \subsection{Claim Segmentation}
 \begin{frame}
-	\frametitle{Claim Segmentation}
-
-	\begin{block}{Claim Segmentation definition}
+\frametitle{Claim Segmentation}
+\begin{block}{Claim Segmentation definition}
 We wish to split the user discussion comments into \emph{atomic units
 that convey a single thought} -- \textbf{claims}.
-	\end{block}
+
+\end{block}
+
+\vspace{0.5cm}
+The term claim is used to refer to an elementary \emph{argument component}, 
+which are a generalization of elementary discourse units
+\cite{winter1982towards, givon1983topic, polanyi1996linguistic}
 	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Claim Segmentation -- Dataset}
+
+	\begin{itemize}
+		\item dataset from \cite{hasan2014you}
+		\item two topics: ``Gay Rights'' and ``Marijuana'' (100 comments from each)
+		\item annotators segment out claims and user comments
+		\item annotators provide a paraphrased version of the claim
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Claim Segmentation -- Problem Definition}
+
+\begin{table}[t]
+\begin{center}
+{\footnotesize
+	\begin{tabular}{@{}p{0.3\linewidth} p{0.30\linewidth} p{0.30\linewidth} }
+\toprule
+\textbf{User comment} & \textbf{Claim segment} & \textbf{Claim paraphrase}   \\
+\midrule
+\multirow{3}{*}{\parbox{3cm}{
+		\emph{Men should fall in love with women that's why they where
+		created and women should get married to men because it makes
+		everything easier. }
+}}
+&  
+\emph{Men should fall in love with women.}
+& \emph{People of opposite sex should fall in love.}
+\\
+\cmidrule{2-3}
+& \emph{that's why they where created} & \emph{Men and women are created to pair.}
+ \\
+\cmidrule{2-3}
+& \emph{women should get married to men because it makes everything easier.} & 
+ \emph{Heterosexual marriages make everything easier.}
+ \\
+ \bottomrule
+\end{tabular}}
+\end{center}
+\caption{An example of a user comment segmented into three claim segments with
+	their corresponding paraphrase.}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Claim Segmentation -- Model}
+
+\begin{table}
+\scriptsize
+\begin{tabular}{l | ccccccc cccccccc ccc ccccc}
+
+	& Nothing& can& bring& peace& to& this& world 
+&Its& a& great& idea 
+
+% & to& try 
+% & and& push& 
+% for& world& peace 
+% 	& but & it & will & never & happen 
+\\
+	\midrule
+	\texttt{BIO} & \texttt{B} & \texttt{I} & \texttt{I} &
+	\texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} & \texttt{B}&
+	\texttt{I} & \texttt{I} & \texttt{I} 
+%  		   & \texttt{I} & \texttt{I} &
+%  	\texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} &
+%  	\texttt{B} & \texttt{I} & \texttt{I} & \texttt{I} & \texttt{I} \\
+	\\
+	\midrule
+	\multirow{3}{*}{BR} & 1 & 1 & 1 & 1 & 1 & 1 & 1 
+	& 0& 0 & 0 & 0 
+	% & 0 & 0 & 0 & 0 & 0 
+	% & 0 & 0 & 0 & 0 & 0 \\
+	\\
+
+	& 0 & 0 & 0 & 0 & 0 & 0 & 0 
+	& 1& 1 & 1 & 1 
+
+	% & 1 & 1 & 1 & 1 & 1 
+	% & 0 & 0 & 0 & 0 & 0 \\
+	\\
+
+	% & 0 & 0 & 0 & 0 & 0 & 0 & 0 
+	% & 0& 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 
+	% & 1 & 1 & 1 & 1 & 1 \\
+\end{tabular}
+	\caption{Binary relevance Multi-label (BR) and \texttt{BIO} labelling
+	of comment with three segments: 
+	``\textit{Nothing can bring peace to this world}'', 
+	``\textit{Its a great idea to try and push for world peace}'', and
+	``\textit{but it will never happen}''. 
+}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Claim Segmentation -- Model}
+
+	\begin{itemize}
+		\item Na\"ive heuristic
+		\begin{itemize}
+			\item claim corresponds to sentence
+		\end{itemize}
+		\item SVM
+		\begin{itemize}
+			\item standard machine learning approach
+			\item distributed word representations as features
+			\item context of up to 5 surrounding words provided 
+			\item weighted SVM
+		\end{itemize}
+		\item BiLSTM -- CRF
+		\begin{itemize}
+			\item sequence classification and structured prediction combined
+			\item distributed word representations as features
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+
+\frametitle{Claim Segmentation -- Results}
+
+\begin{table}
+\setlength{\tabcolsep}{6pt} % Default value: 6pt
+\renewcommand{\arraystretch}{1.2} % Default value: 1
+	\begin{tabular}{l c  c c c c c c}
+\toprule
+		Tagset & Model & P & R & F1 & lP & lR & lF1 \\
+      \midrule
+		& Heuristic    & \textbf{0.41} & 0.23 & 0.29 & 0.89 & 0.49 & 0.63 \\
+		\cline{2-8}
+		\multirow{2}{*}{\texttt{BR} } & SVM & 0.03 & 0.01 & 0.02 & 0.09 & 0.01 & 0.02 \\
+		                     & BiLSTM-CRF & 0.12 & 0.01 & 0.02 & 0.32 & 0.04 & 0.06 \\
+		\cline{2-8}
+		\multirow{2}{*}{\texttt{BIO}} & SVM & 0.35 & 0.14 & 0.20 & 0.88 & 0.35 & 0.50 \\
+				     & BiLSTM-CRF & 
+				     \textbf{0.41} & 
+				     \textbf{0.27}  & \textbf{0.32} & \textbf{0.92} & \textbf{0.61} & \textbf{0.74} \\
+      \bottomrule
+	\end{tabular}
+	\caption{Claim segmentation standard and lenient (set offset to two) precision, recall, 
+	and F1 score in the \texttt{BR} and \texttt{BIO} setups. }
+\end{table}
 \end{frame}
 
 \subsection{Formalizing Claims}
 
+\begin{frame}
+	\frametitle{Formalizing Claims}
+
+	\begin{block}{Goal}
+	Derive a argumentation-relevant logical representation of a claim from text. 
+	\end{block}
+	\vspace{0.3cm}
+
+	\begin{itemize}
+		\item related to semantic parsing (shallow and deep)
+		\begin{itemize}
+			\item \textbf{shallow} -- attempts to identify entities in a text and assign roles to identified entities \cite{pradhan2004shallow} 
+			\item \textbf{deep} -- producing precise meaning representations with complex (compositional) expressions \cite{pasupat2015compositional} 
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formalizing Claims -- ClaimOntology}
+	\begin{block}{ClaimOntology}
+	Formalization framework which defines how to bootstrap a claim formalization
+	from scratch.
+	\end{block}
+
+	\begin{itemize}
+		\item two-level ontology
+		\item \textbf{upper} -- formalizes abstract patterns in argumentative claims as object
+properties
+		\item \textbf{domain} -- conceptualizes a specific discussion domain
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formalizing Claims -- Upper Ontology}
+
+\begin{figure}
+	\centering
+	\footnotesize
+	\includegraphics[scale=0.8]{../formalizations_main_classes-figure0.pdf}
+\caption{Main classes and properties of ClaimOntology. Dashed lines indicate
+	semantic properties, full lines structural properties. 
+	indicate. Arrow orientation indicates the
+	triplet ordering. }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formalizing Claims -- Domain Ontology}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.8]{../formalizations_marijuana_main_classes-figure0.pdf}
+\caption{Marijuana legalization domain ontology top-level classes}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formalizing Claims -- Domain Ontology}
+
+\begin{figure}
+	\includegraphics[scale=0.6]{../formalizations_drug_hierarchy-figure0.pdf}
+\caption{Marijuana legalization domain ontology drug individuals. 
+	Classes/entities and orange and individuals are blue. }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Formalizing Claims -- Example}
+
+	\begin{block}{Claim\_1}
+\textit{Smoking pot has more severe effects on your mind than drinking.} 
+\end{block}
+
+Formalized ontology properties
+\begin{align*}
+	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{comparison\_greater}, \hspace{0.1cm}
+	\mathit{alcohol} > \\
+	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{comparison\_less}, \hspace{0.1cm}
+	\mathit{marijuana} >  \\
+	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{comparison\_property}, \hspace{0.1cm}
+	\mathit{mind\_influental} >  \\
+	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{has\_type}, \hspace{0.1cm}
+	\mathit{fact} > 
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\frametitle{Formalizing Claims -- Examples}
+
+\begin{table}[t]
+
+\renewcommand{\arraystretch}{1.5} % Default value: 1
+	\scriptsize
+	\begin{tabular}{p{3cm}|p{3.5cm}|p{3.5cm}}
+	\toprule
+Original & Paraphrased & Formalized \\
+\midrule
+Pot hurts you & Marijuana is bad for your health & Marijuana consumption has negative health effects \\
+
+Cannabis has been proven to have health benefits . & 
+Marijuana has been proven to have health benefits. & 
+marijuana suppresses negative health effect \\
+
+YOU WILL DIE IF YOU USE THIS TO OFTEN &                                                                     
+Using marijuana too often causes death. &                                                                                                                                                     
+marijuana consumer promotes death \\                                                         
+\bottomrule
+\end{tabular}
+\caption{Annotation examples. Original represents the unedited speakers' claim.
+	Paraphrased represents the from canonical claim made by the annotators.
+	Formalized is the text version  of the formalized claim (obtained by
+	applying a formalization-to-claim algorithm )
+	}
+\end{table}
+
+\end{frame}
+
 \subsection{Claim Structuring}
+
+\begin{frame}
+\frametitle{Claim Structuring -- Definition}
+
+\begin{block}{Claim Structuring}
+Automatically acquiring formalized claims from raw text claims
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Claim Structuring -- Dataset}
+
+	\begin{itemize}
+		\item ontology formalizations from the ``Marijuana'' dataset (920 claims)
+		\item three annotators: formalized 864, 867, and 860 claims
+		\item we work with annotations from a single annotator (864)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Claim Structuring -- Problem Formulation}
+
+	\begin{enumerate}
+		\item \texttt{BR} -- binary relevance
+		\item \texttt{LR} -- label powerset
+	\end{enumerate}
+
+	\texttt{BR} approach
+\begin{itemize}
+	% TODO add mathematical notation from ontology section
+	\item \emph{type} ($\mathit{TYP} \in \{\mathit{fact},
+		\mathit{good\_value}, \mathit{bad\_value}, \mathit{policy}\}$), 
+	\item \emph{arity} ($\mathit{ARI} \in \{\mathit{unary},
+		\mathit{binary},  \mathit{ternary}\}$),
+	\item \emph{properties} ($\mathit{PR} \in \{\mathit{has\_antecedent},
+		\mathit{has\_declaration}, \mathit{implies}, \dots\}$), and
+	\item \emph{domain individuals} ($\mathit{DI} \in \{\mathit{marijuana},
+		\mathit{legalized\_marijuana}, \mathit{mafia\_bankrupt},
+		\dots\}$).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Claim Structuring -- Models}
+	\begin{enumerate}
+
+		\item Random (RAND)
+			\begin{itemize}
+				\item baseline
+				\item randomly select component
+			\end{itemize}
+		\item Independent classifiers (IND)
+			\begin{itemize}
+				\item independent SVMs to pre-
+				\item distributed word representations as features
+				\item both \texttt{BR} and \texttt{LP}
+			\end{itemize}
+		\item Chain classification (CC)
+			\begin{itemize}
+				\item chain of SVM models
+				\item use output of one model as feature for next
+				\item randomized ordering of predictions
+				\item ensembling (ECC)
+				\item \texttt{BR} approach
+			\end{itemize}
+		\item Joint BiLSTM (BiLSTM-J)
+			\begin{itemize}
+				\item end-to-end model
+				\item jointly predicts segmentation and structuring
+				\item two parts: \texttt{BiLSTM-seg} and \texttt{BiLSTM-struc}
+				\item \texttt{BR} and \texttt{LP} setup
+			\end{itemize}
+	\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Claim Structuring -- Models}
+\begin{figure}
+	\includegraphics[scale=0.63]{../joint_tikz-figure0.pdf}
+	\caption{BiLSTM-J model for both claim segmentation and claim 
+	structuring. }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Claim Structuring -- Results}
+
+\begin{table}
+	\centering
+	\scriptsize
+\renewcommand{\arraystretch}{1.5}%
+	\begin{tabular}{p{1.6cm} c c c c  c  c c c  @{\hspace{1.5em}}c@{}  @{\hspace{1em}}c@{}  }
+	\toprule
+		\multirow{2}{*}{Model / Setup}
+		& \multicolumn{2}{c}{\texttt{TYP}} 
+		& \multicolumn{2}{c}{\texttt{ARI}} 
+		& \multicolumn{2}{c}{\texttt{PR}}
+		& \multicolumn{2}{c}{\texttt{DI}} 
+		& \multicolumn{2}{c}{\texttt{CL}}
+		\\
+
+		& OR  & PA  & OR  & PA  & OR  & PA & OR  & PA &  OR & PA \\
+		\midrule
+
+		RAND & \multicolumn{2}{c}{0.25} & \multicolumn{2}{c}{0.32} & \multicolumn{2}{c}{0.10} & \multicolumn{2}{c}{0.04} & \multicolumn{2}{c}{0.00} \\
+		IND & \textbf{0.84} & 0.90 & \textbf{0.79} & \textbf{0.87} & 0.11 & 0.24 & \textbf{0.05} & 0.13 & 0.00 & 0.00  \\		
+		CC & \textbf{0.84} & \textbf{0.91} & \textbf{0.79} & \textbf{0.87} & 0.14 & 0.39 & 0.03 & 0.05 & 0.02 & 0.03 \\
+		ECC & 0.80 & 0.88 & 0.77 & \textbf{0.87} & \textbf{0.15} & \textbf{0.41} & 0.04 & \textbf{0.06} & \textbf{0.03} & \textbf{0.04} \\
+		BiLSTM-J & 0.52 & -- &  0.33 & -- & 0.11 & -- &  0.00 & -- & 0.00 & -- \\
+
+		\bottomrule
+	\end{tabular}
+	\caption{
+		\scriptsize{
+	Macro-averaged F1-score comparison between 
+	the independent SVM (IND), randomized classifier (RAND), chain classification (CC), 
+	ensemble chain classification (ECC), and joint model (BiLSTM-J)
+	in the task of 
+	claim structuring from both original (OR) and paraphrased text claims (PA)
+	using the \texttt{BR} approach. 
+	Results are compared on individual components
+	across types (TYP), arities (ARI), 
+	properties (PR), and 
+	domain individuals (DI). Finally, predictions are assembled into a 
+	formalized claim and compared against the gold formalized claims (CL).
+	Best results for each setup are boldfaced.
+}
+	}
+	\label{tab:claim_struc_per_component}
+\end{table}
+
+\end{frame}
 
 \subsection{Analysis using Formalized Claims}
 
+\begin{frame}
+	\frametitle{Analysis using Formalized Claims}
+	\begin{enumerate}
+		\item most frequent claim analysis
+			\vspace{1cm}
+		\item concomitant claim analysis
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Analysis using Formalized Claims -- Most Frequent Claims}
+
+	\begin{itemize}
+		\item observe most frequent claims from a discussion
+		\item with/without inferred claims
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Analysis using Formalized Claims -- Most Frequent Claims}
+
+\begin{table}[t]
+\centering
+
+\renewcommand{\arraystretch}{1.5}%
+\scriptsize
+\begin{tabular}{p{4 cm} | cc | cc | cc}
+	\toprule
+	\textbf{Claim} & freq & rank & freq & rank & $\Delta$rank \\
+\midrule
+	\emph{Marijuana should be legal 				}& 35 & 1 & 39 & 1 & 0 \\
+	\emph{Marijuana should be illegal 				}& 22 & 2 & 22 & 3 & -1 \\
+	\emph{Marijuana consumption causes reduced mental capabilities} & 10 & 3 & 18 & 4 & -1 \\
+	\emph{Marijuana promotes mind influental behavior 		}& 10 & 3 & 17 & 5 & -2 \\
+	\emph{Marijuana consumption promotes negative health effects 	}& 10 & 3 & 23 & 2 & +1 \\
+\bottomrule 
+\end{tabular}
+\caption{Claim frequences for the entire ``Marijuana'' topic. Frequency and rank are
+	shown before and after adding inferred claims. }
+\end{table}
+
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Analysis using Formalized Claims -- Concomitant Claims}
+	Groups of speakers that share claims
+	\begin{itemize}
+		\item collaborative filtering approach \cite{he2017neural}
+		\item take asserted and inferred claims
+		\item group claims shared across at least two distinct speakers
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Analysis using Formalized Claims -- Concomitant Claims}
+\begin{table}[t]
+	\scriptsize{
+		\begin{tabular}{p{1cm} | p{1.3cm} p{1.5cm} p{1.5cm} p{1.5cm} |  }
+	\toprule
+			\multirow{2}{*}{\parbox{1cm}{Claims}} &
+
+	\multicolumn{4}{c|}{\pro{Marijuana should be legalized}}
+	% & \multicolumn{4}{c}{\con{Marijuana should not be legalized}} 
+	\\[1ex]
+
+	% & 
+	% \multicolumn{4}{c|}{\pro{Marijuana should be taxed}} 
+	% & \multicolumn{4}{c}{\con{Marijuana has negative effects on the human body}} 
+	\\[2ex]
+
+	% speakers
+	Speaker & 
+	\multicolumn{1}{c}{\small{E12}} &
+	\multicolumn{1}{c}{\small{K1}}  &
+	\multicolumn{1}{c}{\small{K97}} &
+	\multicolumn{1}{c|}{\small{K75}}
+
+	% \multicolumn{1}{c}{\small{B48}} &
+	% \multicolumn{1}{c}{\small{I89}} &
+	% \multicolumn{1}{c}{\small{B58}} &
+	% \multicolumn{1}{c}{\small{K200}} 
+	\\[1ex]
+
+	\hline
+
+	& 
+	Marijuana should be regulated & 
+	Marijuana would be cheaper if legalized & 
+	Alcohol causes more casualties than marijuana & 
+	Marijuana legalizationcould be the answer to the U.S. debt crisis.
+
+	% Marijuana is a drug &
+	% Marijuana is a drug & 
+	% Marijuana abuse kills people & 
+	%Marijuana is a drug 
+	\\
+	\hline
+
+	& 
+	We should stop wasting money on monitoring & 
+	If marijuana was legal, it would not be risky to sell marijuana. &
+	There is nothing wrong with consuming marijuana & 
+	
+
+	% Marijuana makes you hungry & 
+	% Marijuana contains more toxic substances than tobacco &
+	% Marijuana abuse causes mental illness &
+	% Marijuana is terrible 
+	\\
+	\bottomrule
+\end{tabular}
+}
+	\caption{Four \pro{pro} (left)  
+	marijuana legalization speakers share two concomitant claims (up),
+	and make additional unshared claims (down)
+	}
+\end{table}
+
+\end{frame}
+
 \section{Conclusion}
+
+\begin{frame}
+\frametitle{Conclusion}
+	\begin{itemize}
+	\item unstructured and structured argumentation mining approaches explored
+	\item built framework for extract, formalizing, and structuring arguments
+	\item showcased example argumentation analysis on the ``Marijuana'' topic
+	\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+	\frametitle{Expected Scientific Contribution of Proposed Research}
+\begin{enumerate}
+\item Modeling an online discussion using an two-level ontology, where the
+	first level contains domain knowledge and the second models claim
+	patterns, aiming to fully structure online discussions;
+\item Supervised machine learning method for claim detection and claim
+	structuring;
+\item Framework and support for online discussion analysis involving claim
+	detection, structuring, and analysis based on a comparison of claims
+	from all discussion participants
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Future Work}
+	\begin{itemize}
+		\item research area of implicit knowledge
+		\begin{itemize}
+			\item cultural, user, gender biases
+		\end{itemize}
+		\item incorporating implicit knowledge in machine learning models
+		\item combining knowledge-based and statistical models
+	\end{itemize}
+\end{frame}
+
+% \begin{frame}
+% \animategraphics[loop,controls,width=\linewidth]{20}{something-}{0}{90}
+% \Huge{Thank you!}
+% \end{frame}
 
 % \begin{frame}
 % \frametitle{Teorija argumentacije}
@@ -1380,15 +2071,10 @@ that convey a single thought} -- \textbf{claims}.
 % \end{frame}
 % %------------------------------------------------
 % 
-% \begin{frame}
-% 
-% \Huge{Hvala na pozornosti!}
-% 
-% \end{frame}
 
 %------------------------------------------------
 \begin{frame}[allowframebreaks] %allow to expand references to multiple frames (slides)
-\frametitle{Popis citirane literature}
+\frametitle{References}
 \bibliography{phd-presentation} %bibtex file name without .bib extension
 
 \end{frame}
