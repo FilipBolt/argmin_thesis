@@ -4,6 +4,7 @@
 \usepackage{courier}
 \usepackage{etoolbox}
 \usepackage{animate}
+\usepackage{graphicx}
 
 \usepackage{tabularx} % package that allows dynamical changing table cell width
 \usepackage{multirow}  % package that enables multiple rows in a table
@@ -11,7 +12,7 @@
 \usepackage{amsfonts}
 \usepackage{booktabs}
 \usepackage{beamerthemesplit} 
-
+\usepackage{appendixnumberbeamer}
 
 \usetheme{Rochester}
 
@@ -45,6 +46,8 @@
 \setbeamercolor*{linebottom}{parent=palette tertiary}
 \setbeamercolor*{title page header}{parent=palette quaternary}
 
+
+
 \AtBeginSection[]
 {
 \begin{frame}
@@ -70,21 +73,27 @@
 % \setbeamertemplate{footline}[framenumber]
 % \setbeamertemplate{footline}{\hfill \insertframenumber ~/ \inserttotalframenumber}
 
-% \addtobeamertemplate{navigation symbols}{}{%
-%     \usebeamerfont{footline}%
-%     \usebeamercolor[fg]{footline}%
-%    
-%     \insertframenumber/\inserttotalframenumber
+
+% \setbeamertemplate{frametitle}
+% {
+% 	\insertframetitle
+% 	\hfill
+% 	\tiny{\insertframenumber/\inserttotalframenumber}
 % }
 
-\beamertemplatenavigationsymbolsempty
+% DOBAR I RADI
+\pagenumbering{gobble}
 
-\setbeamertemplate{footline}{%
-\usebeamerfont{footline}
-\usebeamercolor[fg]{footline}
-\hfill
-\insertframenumber{}/\inserttotalframenumber
+\addtobeamertemplate{headline}{}{%
+    \usebeamerfont{headline}%
+    \usebeamercolor[fg]{headline}%
+    \hfill
+    \large{\insertframenumber/\inserttotalframenumber}
 }
+
+\setbeamertemplate{footline}{}{}
+
+\beamertemplatenavigationsymbolsempty
 
 \scriptsize{ \bibliographystyle{apalike}}
 
@@ -93,19 +102,17 @@
 	Argumentation Mining of Claims \\
 	in Internet Discussions
 }
-
-{
 \author{student: mag.~ing.~comp.~Filip Boltužić 
 \\ mentor: izv.~prof.~dr.~sc.~Jan Šnajder
 }
-}
+
 
 \institute{
 Faculty of Electrical Engineering and Computing \\
 University of Zagreb
 }
 
-\titlegraphic{\includegraphics[width=0.3\textwidth,height=0.15\textheight]{logoi.jpg}}
+\titlegraphic{\includegraphics[width=0.22\textwidth,height=0.1\textheight]{logoi.jpg}}
 
 \date{September 29th, 2020}
 
@@ -113,11 +120,12 @@ University of Zagreb
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 {
-\setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
 \begin{frame}
 \titlepage
 \end{frame}
 }
+
 
 \setcounter{framenumber}{0}
 
@@ -126,6 +134,7 @@ University of Zagreb
 {
 \begin{frame}
 \frametitle{Should masks be worn to prevent virus spreading?}
+	\centering
 \includegraphics[scale=0.3]{MaskProCon.png}
 \footnote{
 \tiny{Source: \url{https://www.medwiser.org/pros-cons-of-public-recommendations-for-surgical-cloth-diy-masks-to-prevent-coronavirus/}}}
@@ -158,9 +167,21 @@ University of Zagreb
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Applications}
+
+\includegraphics[scale=0.2]{informed_decision.jpeg}
+\footnote{
+\tiny{Source: \url{https://hadit.com/an-insulting-promotion-at-veterans-affairs/}}}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 \frametitle{How to automate argument extraction from text?}
-\includegraphics[scale=0.3]{assembly_line.png}
+\begin{center}
+\includegraphics[scale=0.22]{assembly_line_text.png}
+\end{center}
 \footnote{
 \tiny{Source: \url{https://www.finbridge.de/trends/2019/7/9/how-to-rpa}}}
 \end{frame}
@@ -171,9 +192,9 @@ University of Zagreb
 	\begin{block}{Research objective}
 		
 The research objective is the development and evaluation of a machine learning
-based system for in-depth argument analysis of a single targeted domain of
+based system for \textbf{in-depth argument analysis} of a single targeted domain of
 internet discussions. Examples of possible argument analyses are: prominent
-claim analysis, implicit claim detection, and author profiling based on common claims. 
+claim analysis, \textbf{implicit claim detection}, and author profiling based on common claims. 
 \end{block}
 
 \begin{block}{Approach}
@@ -205,14 +226,19 @@ system. The research defines three problems:
 	\frametitle{Research hypothesis}
 \begin{block}{Hypothesis}
 	\begin{enumerate}
-	\item Machine learning can achieve sufficiently high accuracy in detecting claims from text;
-	\item Structuring claims from online discussions is possible such that structured claims retain relevant aspects of original claims to
-	conduct claim analysis;
-	\item A manually built domain-specific ontology of online discussions can be abstract enough to reduce the problem of language
-	variance, yet complex enough to provide a sound basis for in-depth claim analysis;
+	\item Machine learning can achieve \textbf{sufficiently high accuracy} in
+		detecting claims from text;
+	\item Structuring claims from online discussions is possible such that
+		\textbf{structured claims retain relevant aspects of original claims} to
+		conduct claim analysis;
+	\item A manually built domain-specific ontology of online discussions
+		can be abstract enough to reduce the problem of language
+		variance, yet complex enough to provide a sound basis for
+		in-depth claim analysis;
 	\item Logical reasoning is possible with structured claims;
-	\item Automatic detection, structuring, and analysis of claims is far less time-consuming than its manual counterpart, all while achieving
-	competitive accuracy.
+	\item Automatic detection, structuring, and analysis of claims is far
+		\textbf{less time-consuming} than its manual counterpart, all while
+		achieving competitive accuracy.
 	\end{enumerate}
 \end{block}
 
@@ -245,7 +271,7 @@ system. The research defines three problems:
 \begin{frame}
 	\frametitle{Argumentation -- bottom up}
 
-\begin{block}{Claim}
+\begin{block}{Claim -- Definition}
 Claim is a statement you want others to accept and act upon.
 \cite{rieke1997argumentation}. 
 \end{block}
@@ -270,8 +296,8 @@ acceptability of claims \cite{walton1989informal}.
 
 \frametitle{Argumentation Mining}
 \begin{block}{Argumentation Mining}
-Argumentation mining is a discipline dealing with the automatic identification and extraction
-of the structure of inference and reasoning expressed as arguments presented in natural language
+Argumentation mining is a discipline dealing with the \textbf{automatic identification and extraction}
+of the structure of inference and reasoning expressed as \textbf{arguments} presented in natural language
 \cite{lawrence2019argument}.
 \end{block}
 
@@ -279,9 +305,13 @@ of the structure of inference and reasoning expressed as arguments presented in 
 \includegraphics[scale=0.7]{../area_description_pipeline-figure0.pdf}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================================================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}
 	\frametitle{Argument Mining -- Example}
-	\includegraphics[scale=0.3]{argstruc.png}
+	\centering
+	\includegraphics[scale=0.25]{argstruc.png}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -289,13 +319,14 @@ of the structure of inference and reasoning expressed as arguments presented in 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Argumentation Mining Application}
-
-\includegraphics[scale=0.2]{informed_decision.jpeg}
-\footnote{
-\tiny{Source: \url{https://hadit.com/an-insulting-promotion-at-veterans-affairs/}}}
-
+	\frametitle{Argument Mining -- Example}
+	\centering
+	\includegraphics[scale=0.25]{argstruc_2.png}
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================================================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
 \frametitle{Argumentation Mining Related Areas}
@@ -321,14 +352,17 @@ of the structure of inference and reasoning expressed as arguments presented in 
 \end{itemize}
 
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%=================================================%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
 	\frametitle{Argumentation Mining -- Related Work}
 	\begin{itemize}
-		\item classifying arguments and argument schemes \cite{palau2009argumentation}
-		\item argument extraction \cite{hasan2014you}
-		\item argument boundary detection \cite{lippi2015context}
-		\item claim extraction \cite{levy2014context}
+		\item Classifying arguments and argument schemes \cite{palau2009argumentation}
+		\item Argument extraction \cite{hasan2014you}
+		\item Argument boundary detection \cite{lippi2015context}
+		\item Claim extraction \cite{levy2014context}
 	\end{itemize}
 \end{frame}
 
@@ -338,16 +372,16 @@ of the structure of inference and reasoning expressed as arguments presented in 
 \begin{itemize}
 \item Unstructured Argumentation Mining
 	\begin{itemize}
-		\item Employs methods unaware of argument structure
-		\item Usually attempts to derive arguments directly from text
-		\item Offer little to none interpretability
-		\item Do not require a background knowledge
+		\item employs methods unaware of argument structure
+		\item usually attempts to derive arguments directly from text
+		\item offer little to none interpretability
+		\item do not require a background knowledge
 	\end{itemize}
 \item Structured Argumentation Mining
 	\begin{itemize}
-		\item Involves biased methods on what arguments are and typically consist of
-		\item Produces a formal logical structure of arguments
-		\item Requires background knowledge
+		\item involves biased methods on what arguments are and typically consist of
+		\item produces a formal logical structure of arguments
+		\item requires background knowledge
 	\end{itemize}
 \end{itemize}
 
@@ -400,7 +434,7 @@ by inverse sentence frequency \cite{ramage2009random} and
 \item a distributed representation based on the skip-gram model
 	\cite{mikolov2013distributed}. 
 \end{enumerate}
-\vspace{0.5cm}
+\vfill
 Clustering Algorithm
 \begin{itemize}
 	\item hierarchical agglomerative clustering (HAC) algorithm \cite{szekely2005hierarchical}
@@ -688,13 +722,13 @@ The prominent claims can be \textcolor{red}{attacked},
 \begin{frame}
 \frametitle{Prominent Claim Identification -- Data}
 
-ComArg corpus \footnote{Freely available under the CC BY-SA-NC license from
+ComArg corpus\footnote{Freely available under the CC BY-SA-NC license from
 \url{http://takelab.fer.hr/data/comarg}}
 
 \begin{itemize}
-	\item prominent claims from debate platform \textit{idebate.org}
-	\item comments from \textit{procon.org}
-	\item two topics: ``\textit{Under God in Pledge}'' (UGIP) and 
+	\item Prominent claims from debate platform \textit{idebate.org}
+	\item Comments from \textit{procon.org}
+	\item Two topics: ``\textit{Under God in Pledge}'' (UGIP) and 
 ``\textit{Gay marriage}'' (GM)
 	\item 175
 comments and 6 arguments for UGIP, and 198 comments and 7 arguments for GM
@@ -729,11 +763,11 @@ Label & Description: Comment\dots \\
 	\frametitle{Prominent Claim Identification -- Model}
 
 \begin{itemize}
-	\item prominent claim identification cast as a multiclass problem
+	\item Prominent claim identification cast as a multiclass problem
 	\begin{itemize}
 		\item 5 class labels
 	\end{itemize}
-\item features used
+\item Features used
 	\begin{enumerate}
 	\item textual entailment (TE) features, 
 	\item semantic text similarity (STS) features \cite{vsaric2012takelab}, and
@@ -821,7 +855,7 @@ TE+STS+SA   & \textbf{70.5} & 72.5 & 68.9 & 73.4 & 81.4 & 79.7        \\
 	\end{itemize}
 	Annotate with implicit claims
 	\begin{itemize}
-		\item three annotators
+		\item Three annotators
 		\item 125 claim pairs from each topic
 	\end{itemize}
 
@@ -853,11 +887,12 @@ Non-matching (\%)     & 1.2  & 3.6   & 14.5  &  \phantom{0}6.4 $\pm$ 5.8  \\
 
 	Can implicit claims help with prominent claim identification?
 	\begin{itemize}
-		\item add the implicit claims to the comments to see if they help
+		\item Add the implicit claims to the comments to see if they help
 			with solving the prominent claim identification problem
 
-		\item adding implicit claims: concatenating implicit claims
+		\item Adding implicit claims: concatenating implicit claims
 			together before computing the feature representation
+			(to help overcome a lexical gap)
 	\end{itemize}
 
 \end{frame}
@@ -898,20 +933,19 @@ claim matching models utilizing implicit claims from annotator A1
 	\frametitle{Implicit Claim Retrieval}
 
 	\begin{itemize}
-		\item method to retrieve relevant implicit premise
+		\item Method to \textbf{retrieve relevant implicit premises}
 			from a pre-defined set of implicit claims
 		\begin{itemize}
-			\item greedy heuristic that adds a claim if the similarity towards
+			\item greedy heuristics that adds a claim if the similarity towards
 				a prominent claim increases and decreases towards others
 		\end{itemize}
-	\item use fetched premises and repeat prominent claim identification experiment
+	\item Use fetched premises and repeat \textbf{prominent claim identification} experiment
 	\end{itemize}
 
 \end{frame}
 
 \begin{frame}
-
-	\frametitle{Implicit Claim Retrieval -- Results}
+\frametitle{Implicit Claim Retrieval -- Results}
 
 \begin{table}
 \begin{center}
@@ -973,10 +1007,10 @@ which are a generalization of elementary discourse units
 	\frametitle{Claim Segmentation -- Dataset}
 
 	\begin{itemize}
-		\item dataset from \cite{hasan2014you}
-		\item two topics: ``Gay Rights'' and ``Marijuana'' (100 comments from each)
-		\item annotators segment out claims and user comments
-		\item annotators provide a paraphrased version of the claim
+		\item Dataset from \cite{hasan2014you}
+		\item Two topics: ``Gay Rights'' and ``Marijuana'' (100 comments from each)
+		\item Annotators segment out claims and user comments
+		\item Annotators provide a paraphrased version of the claim
 	\end{itemize}
 
 \end{frame}
@@ -1071,7 +1105,7 @@ which are a generalization of elementary discourse units
 	\frametitle{Claim Segmentation -- Model}
 
 	\begin{itemize}
-		\item Na\"ive heuristic
+		\item Na\"ive heuristics
 		\begin{itemize}
 			\item claim corresponds to sentence
 		\end{itemize}
@@ -1160,7 +1194,7 @@ properties
 	\includegraphics[scale=0.8]{../formalizations_main_classes-figure0.pdf}
 \caption{Main classes and properties of ClaimOntology. Dashed lines indicate
 	semantic properties, full lines structural properties. 
-	indicate. Arrow orientation indicates the
+	Arrow orientation indicates the
 	triplet ordering. }
 \end{figure}
 \end{frame}
@@ -1179,7 +1213,8 @@ properties
 	\frametitle{Formalizing Claims -- Domain Ontology}
 
 \begin{figure}
-	\includegraphics[scale=0.6]{../formalizations_drug_hierarchy-figure0.pdf}
+	\centering
+	\includegraphics[scale=0.5]{../formalizations_drug_hierarchy-figure0.pdf}
 \caption{Marijuana legalization domain ontology drug individuals. 
 	Classes/entities and orange and individuals are blue. }
 \end{figure}
@@ -1188,16 +1223,16 @@ properties
 \begin{frame}
 	\frametitle{Formalizing Claims -- Example}
 
-	\begin{block}{Claim\_1}
-\textit{Smoking pot has more severe effects on your mind than drinking.} 
+	\begin{block}{$\mathit{claim\_1}$}
+Smoking pot has more severe effects on your mind than drinking.
 \end{block}
 
 Formalized ontology properties
 \begin{align*}
 	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{comparison\_greater}, \hspace{0.1cm}
-	\mathit{alcohol} > \\
+	\mathit{marijuana} > \\
 	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{comparison\_less}, \hspace{0.1cm}
-	\mathit{marijuana} >  \\
+	\mathit{alcohol} >  \\
 	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{comparison\_property}, \hspace{0.1cm}
 	\mathit{mind\_influental} >  \\
 	< & \mathit{claim\_1}, \hspace{0.1cm} \mathit{has\_type}, \hspace{0.1cm}
@@ -1251,9 +1286,9 @@ Automatically acquiring formalized claims from raw text claims
 	\frametitle{Claim Structuring -- Dataset}
 
 	\begin{itemize}
-		\item ontology formalizations from the ``Marijuana'' dataset (920 claims)
-		\item three annotators: formalized 864, 867, and 860 claims
-		\item we work with annotations from a single annotator (864)
+		\item Ontology formalizations from the ``Marijuana'' dataset (920 claims)
+		\item Three annotators: formalized 864, 867, and 860 claims
+		\item We work with annotations from a single annotator (864)
 	\end{itemize}
 \end{frame}
 
@@ -1306,8 +1341,7 @@ Automatically acquiring formalized claims from raw text claims
 			\end{itemize}
 		\item Joint BiLSTM (BiLSTM-J)
 			\begin{itemize}
-				\item end-to-end model
-				\item jointly predicts segmentation and structuring
+				\item joint end-to-end model
 				\item two parts: \texttt{BiLSTM-seg} and \texttt{BiLSTM-struc}
 				\item \texttt{BR} and \texttt{LP} setup
 			\end{itemize}
@@ -1378,9 +1412,9 @@ Automatically acquiring formalized claims from raw text claims
 \begin{frame}
 	\frametitle{Analysis using Formalized Claims}
 	\begin{enumerate}
-		\item most frequent claim analysis
+		\item Most frequent claim analysis
 			\vspace{1cm}
-		\item concomitant claim analysis
+		\item Concomitant claim analysis
 	\end{enumerate}
 \end{frame}
 
@@ -1388,8 +1422,9 @@ Automatically acquiring formalized claims from raw text claims
 	\frametitle{Analysis using Formalized Claims -- Most Frequent Claims}
 
 	\begin{itemize}
-		\item observe most frequent claims from a discussion
-		\item with/without inferred claims
+		\item Observe most frequent claims from a discussion
+			\vspace{1cm}
+		\item With/without inferred claims
 	\end{itemize}
 \end{frame}
 
@@ -1423,9 +1458,9 @@ Automatically acquiring formalized claims from raw text claims
 	\frametitle{Analysis using Formalized Claims -- Concomitant Claims}
 	Groups of speakers that share claims
 	\begin{itemize}
-		\item collaborative filtering approach \cite{he2017neural}
-		\item take asserted and inferred claims
-		\item group claims shared across at least two distinct speakers
+		\item Collaborative filtering approach \cite{he2017neural}
+		\item Take asserted and inferred claims
+		\item Group claims shared across at least two distinct speakers
 	\end{itemize}
 \end{frame}
 
@@ -1441,8 +1476,8 @@ Automatically acquiring formalized claims from raw text claims
 	% & \multicolumn{4}{c}{\con{Marijuana should not be legalized}} 
 	\\[1ex]
 
-	% & 
-	% \multicolumn{4}{c|}{\pro{Marijuana should be taxed}} 
+	& 
+	\multicolumn{4}{c|}{\pro{Marijuana should be taxed}} 
 	% & \multicolumn{4}{c}{\con{Marijuana has negative effects on the human body}} 
 	\\[2ex]
 
@@ -1501,9 +1536,9 @@ Automatically acquiring formalized claims from raw text claims
 \begin{frame}
 \frametitle{Conclusion}
 	\begin{itemize}
-	\item unstructured and structured argumentation mining approaches explored
-	\item built framework for extract, formalizing, and structuring arguments
-	\item showcased example argumentation analysis on the ``Marijuana'' topic
+	\item Unstructured and structured argumentation mining approaches explored
+	\item Built framework for extract, formalizing, and structuring arguments
+	\item Showcased example argumentation analysis on the ``Marijuana'' topic
 	\end{itemize}
 \end{frame}
 
@@ -1513,11 +1548,11 @@ Automatically acquiring formalized claims from raw text claims
 \begin{frame}
 	\frametitle{Expected Scientific Contribution of Proposed Research}
 \begin{enumerate}
-\item Modeling an online discussion using an two-level ontology, where the
+\item Modeling an online discussion using an \textbf{two-level ontology}, where the
 	first level contains domain knowledge and the second models claim
-	patterns, aiming to fully structure online discussions;
-\item Supervised machine learning method for claim detection and claim
-	structuring;
+	patterns, aiming to \textbf{fully structure online discussions};
+\item Supervised machine learning method for \textbf{claim detection} and \textbf{claim
+	structuring};
 \item Framework and support for online discussion analysis involving claim
 	detection, structuring, and analysis based on a comparison of claims
 	from all discussion participants
@@ -1528,556 +1563,43 @@ Automatically acquiring formalized claims from raw text claims
 \begin{frame}
 	\frametitle{Future Work}
 	\begin{itemize}
-		\item research area of implicit knowledge
+		\item Research area of implicit knowledge
 		\begin{itemize}
+			\vspace{0.25cm}
 			\item cultural, user, gender biases
+
 		\end{itemize}
-		\item incorporating implicit knowledge in machine learning models
-		\item combining knowledge-based and statistical models
+			\vspace{0.5cm}
+		\item Incorporating implicit knowledge in machine learning models
+			\vspace{0.5cm}
+		\item Combining knowledge-based and statistical models
 	\end{itemize}
 \end{frame}
 
-% \begin{frame}
-% \animategraphics[loop,controls,width=\linewidth]{20}{something-}{0}{90}
-% \Huge{Thank you!}
-% \end{frame}
+{
 
-% \begin{frame}
-% \frametitle{Teorija argumentacije}
-% \begin{block}{Argumentiranje}
-% Jedno od četiri retorička načina komunikacije. Obrazlaganje stava s ciljem
-% 	uvjeravanja publike \cite{walton1989informal}.
-% \end{block}
-% \vspace{0.5cm}
-% \begin{block}{Teorija argumentacije}
-% Analizira valjanost logičkog zaključivanja. 
-% \end{block}
-% 
-% \vspace{0.5cm}
-% \begin{itemize}
-% \item Razvoj kritičkog mišljenja
-% \vspace{0.5cm}
-% \item Analiza i prosuđivanje činjenica
-% \vspace{0.5cm}
-% \item Prisutnost u raznim oblicima
-% \end{itemize}
-% \end{frame}
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Teorija argumentacije}
-% \includegraphics[width=0.8\textwidth,height=0.9\textheight]{jr/court_trial.png}
-% \footnote{
-% \tiny{Izvor: \url{http://www.glasbergen.com/wp-content/gallery/lawyers/law18.gif}}}
-% \end{frame}
-% 
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Teorija argumentacije}
-% \includegraphics[width=\textwidth,height=0.9\textheight]{jr/thesis_defense.png}
-% \footnote{\tiny{Izvor: \url{https://xkcd.com/1403/}}}
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-%   \frametitle{Teorija argumentacije}
-%   Argumentacija na internetu
-%   \begin{itemize}
-%     \item Društvene mreže
-%       \begin{itemize}
-%         \item Facebook
-%         \item Twitter
-%       \end{itemize}
-%     \item Debatne platforme
-%       \begin{itemize}
-%         \item idebate\footnote{\tiny{\url{http://idebate.org/}}}
-%         \item convince me\footnote{\tiny{\url{www.convinceme.net}}}
-%         \item Change My View\footnote{\tiny{\url{https://www.reddit.com/r/changemyview/}}}
-%       \end{itemize}
-%     \item Forumi
-%   \end{itemize}
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Računalna argumentacija \\ (engl.~\emph{Computational Argumentation})}
-% \begin{itemize}
-% \item \textbf{Cilj:} Računalno potpomognuto donošenje odluka na temelju vrednovanja argumenata
-% \item Dung \cite{bondarenko1997abstract} začetnik definicijom apstraktnog modela argumentacije
-% \item Temeljem Dunga, implementirani
-% računalni modeli neformalne argumentacije \cite{toulmin2003uses, walton2002argumentation, freeman2011dialectics}
-% \end{itemize}
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% \begin{frame}
-%   \frametitle{Računalna argumentacija \\ (engl.~\emph{Computational Argumentation})}
-% 
-% \includegraphics[scale=0.4]{jr/aif_v2.png}
-% \footnote{\tiny{Izrađeno na platformi \url{aifdb.org} }}
-% 
-%   \begin{itemize}
-%     \item Odabir računalnog modela
-%     \item Unos i povezivanje argumenta 
-%     \item Zaključivanje i donošenje odluka
-%   \end{itemize}
-%   \begin{center}
-% \end{center}
-% 
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% 
-% \begin{frame}
-% \frametitle{Dubinska analiza argumentacije  \\ (engl.~\emph{Argument Mining})}
-% \begin{itemize}
-% \item Za računalnu argumentaciju potreban stručnjak
-% 
-% \begin{itemize}
-%   \item Analiza debata
-%   \item Prijenos rezultata analize u računalni model
-% \end{itemize}
-% 
-% \begin{center}
-% \includegraphics[width=0.3\textwidth,height=0.3\textheight]{jr/scroll.jpg}
-% \footnote{\tiny{Izvor: \url{http://www.slate.com/content/dam/slate/articles/technology/technology/2012/10/121002_TECH_Multipage.jpg.CROP.promo-mediumlarge.jpg}}}
-% \end{center}
-% 
-% \item Automatizacija obrade argumentacije iz teksta -- dubinska 
-% analiza argumentacije (engl.~\emph{Argument Mining})
-%   \begin{itemize}
-%   \item Potpodručje obrade prirodnog jezika (engl.~\emph{Natural Language Processing})
-%   \end{itemize}
-% \end{itemize}
-% \end{frame}
-% 
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Dubinska analiza argumentacije  \\ (engl.~\emph{Argument Mining})}
-% Zadaci dubinske analize argumentacije
-% \begin{itemize}
-% \item Razdvajanje argumentativnog teksta od neargumentativnog
-% \item Predviđanje atomarnih tvrdnji
-% \item Prepoznavanje veza između tvrdnji
-% \item Izdvajanje relevantnih potpornih i pobijajućih argumenata
-% \item Procjenjivanje kvalitete argumentacije
-% \item Prepoznavanje logičkih pogrešaka u argumentaciji
-% \item Prepoznavanje stava
-% \end{itemize}
-% \end{frame}
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Dubinska analiza argumentacije  \\ (engl.~\emph{Argument Mining})}
-% 
-% \begin{block}{\emph{Legalizacija opojnih droga}\footnote{\tiny{Izvor: \url{http://www.bug.hr/forum/topic/ostalo/legalizacija-opojnih-droga/112167.aspx}}}
-% }
-% ja mislim da bi se trebala legalizirati marihuana,i žalosno je to da su naši
-% zakoni stavili marihuanu u isti rang sa heroinom,kokainom itd.   Marihuana
-% spada pod lake droge a heroin pod teške \dots onaj koji konzumira
-% heroin može se izvući na tu foru da je ovisan a onaj koji koristi marihuanu
-% mislim da mu to nebi baš prošlo.
-% \end{block}
-% 
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Dubinska analiza argumentacije  \\ 
-% \textcolor{blue}{Predviđanje atomarnih tvrdnji}
-% }
-% \begin{block}{\emph{Legalizacija opojnih droga}\footnote{\tiny{Izvor: \url{http://www.bug.hr/forum/topic/ostalo/legalizacija-opojnih-droga/112167.aspx}}}
-% }
-% \textcolor{blue}{ja mislim da bi se trebala legalizirati marihuana},i žalosno je to da su naši
-% zakoni stavili marihuanu u isti rang sa heroinom,kokainom itd.   \textcolor{blue}{Marihuana
-% spada pod lake droge} \textcolor{blue}{a heroin pod teške } \dots onaj koji konzumira
-% heroin može se izvući na tu foru da je ovisan a onaj koji koristi marihuanu
-% mislim da mu to nebi baš prošlo.
-% \end{block}
-% 
-% \end{frame}
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Dubinska analiza argumentacije  \\ 
-% Prepoznavanje veza između tvrdnji}
-% 
-% \begin{block}{\emph{Legalizacija opojnih droga}\footnote{\tiny{Izvor: \url{http://www.bug.hr/forum/topic/ostalo/legalizacija-opojnih-droga/112167.aspx}}}
-% }
-% ja mislim da bi se trebala legalizirati marihuana,i ...  Marihuana
-% spada pod lake droge a heroin pod teške \dots
-%  onaj koji konzumira
-% heroin može se izvući na tu foru da je ovisan a onaj koji koristi marihuanu
-% mislim da mu to nebi baš prošlo.
-% 
-%   \begin{block}{\textcolor{green}{Potpora} -- ja mislim da bi se trebala legalizirati marihuana}
-%     \begin{itemize}
-%     \item  \emph{Marihuana spada pod lake droge a heroin pod teške}
-%     \item \emph{onaj koji konzumira heroin može se izvući na tu foru da je ovisan a onaj koji koristi marihuanu
-%     mislim da mu to nebi baš prošlo.}
-%     \end{itemize}
-%   \end{block}
-% \end{block}
-% 
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% \begin{frame}
-% \frametitle{Dubinska analiza argumentacije}
-%     Metode obrade prirodnog jezika
-%      \begin{itemize}
-%       \item Izdvajanje značajki teksta
-%       \begin{itemize}
-%          \item Leksičke, semantičke, sintaksne značajke teksta
-%          \item Vanjske baze znanja (\emph{WordNet})
-%       \end{itemize}
-%       \item Primjena metoda strojnog učenja
-%      \begin{itemize}
-%         \item Klasifikacija (npr.~prepoznavanje veza između tvrdnji)
-%         \item Regresija (npr.~predviđanje kvalitete argumentacije na skali)
-%         \item Predviđanje slijeda (npr.~razdvajanje argumentativnog od neargumentativnog teksta)
-%         \item Predikcija strukture (npr.~predviđanje Toulminove strukture iz teksta)
-%      \end{itemize}
-%     \end{itemize}
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% \begin{frame}
-% \frametitle{Predviđanje tvrdnji -- (engl.~\emph{Claim Detection})}
-% \begin{itemize}
-%   \item Tvrdnje -- činjenice i vjerovanja pojedinaca o određenoj temi
-%   \item Predviđanje tvrdnji
-%   \begin{itemize}
-%     \item Tematski zavisno
-%     \begin{itemize}
-%       \item Znanje o domeni
-%       \item Tvrdnje na Wikipediji \cite{levy2014context}
-%     \end{itemize}
-%     \item Tematski nezavisno
-%     \begin{itemize}
-%       \item Pravilnosti u jeziku 
-%         \item \cite{lippi2015context} pokazali kako je pristup zahtjevniji
-%     \end{itemize}
-%   \end{itemize}
-%    \item Izazovi predviđanja tvrdnji 
-%     \begin{itemize}
-%       \item Prepoznavanje parafraziranja tvrdnji
-%       \item Uspoređivanje tvrdnji nužno za analizu tvrdnji
-%       \item Radovi u dubinskoj analizi argumentaciji fokusirani na razinu argumentacije, a ne tvrdnje
-%     \end{itemize}
-% \end{itemize}
-% 
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-% \section{Pregled predistraživanja}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{I. Predistraživanje}
-% Grupiranje tvrdnji \cite{boltuzic2015identifying}
-% 
-% \begin{itemize}
-%   
-%   \item Hijearhijsko grupiranje unaprijed zadanih tvrdnji
-%   \item Internetske rasprave 
-%     \begin{itemize}
-%       \item \emph{Treba li legalizirati pobačaj?}
-%       \item \emph{Treba li legalizirati marihuanu?}
-%       \item \emph{Treba li legalizirati istospolne  brakove?}
-%       \item \emph{Je li Obama dobar predsjednik?} 
-%     \end{itemize}
-%   \item Težak problem
-%   \begin{itemize}
-%     \item Jezična varijabilnost
-%     \item Implicitne tvrdnje 
-%  \end{itemize}
-% \end{itemize}
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{I. Predistraživanje}
-% Jezična varijabilnost: \emph{Treba li legalizirati marihuanu?}
-% \begin{itemize}
-%   \item \emph{Ja sam za legalizaciju marihuane} 
-%   \item \emph{Smatram da treba dozvoliti konzumaciju osušenog cvijeća biljke konoplje}
-%   \item \emph{Da!}
-% \end{itemize}
-% \onslide<2->{Implicitne tvrdnje: \emph{Treba li legalizirati marihuanu?}}
-% \begin{itemize}
-%   \item<2-> Tvrdnja: \emph{Marihuanu treba legalizirati.}
-%   \item<2-> Podatak: \emph{Marihuana djeluje opuštajuće.}
-%     \begin{itemize}
-%       \item<3-> \textcolor{green}{Razlog 1}: \emph{Opušteni ljudi su sretniji ljudi.}
-%       \item<3-> \textcolor{green}{Razlog 2}: \emph{Valja maksimizirati sreću u društvu.} (utilitarizam)
-%     \end{itemize}
-%     \begin{itemize}
-%       \item<4-> \textcolor{red}{Razlog 1}: \emph{Opušteni ljudi su neodgovorni ljudi.}
-%       \item<4-> \textcolor{red}{Razlog 2}: \emph{Neodgovorno ponašanje se ne treba promicati u društvu.}
-%     \end{itemize}
-% \end{itemize}
-% \end{frame}
-% 
-% 
-% \begin{frame}
-% \frametitle{II. Predistraživanje}
-% Struktiriranje tvrdnji u konačan skup tematski specifičnih koncepata i relacija
-% između koncepata \cite{boltuzic2017toward}
-% 
-% \begin{itemize}
-%   \item Mikrostrukture
-%   \item Korištenje mikrostruktura poboljšava predviđanje stava 
-%   \item Alternativa mikrostrukturama kontrolirani jezik ACE \cite{wyner2016working}
-% \end{itemize}
-% 
-% 
-% \includegraphics[scale=0.7]{jr/diagram_microstructure.pdf}
-% 
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{III. Predistraživanje}
-% Istraživanje problema implicitnih premisa \cite{boltuzic2016fill}
-% 
-% \begin{itemize}
-% 
-% \item U prosjeku tri premise iza svake tvrdnje
-% \item Znanje o implicitnim premisama poboljšava predviđanje tvrdnji
-% \item SemEval \emph{Argument Reasoning Comprehension Task}
-% 
-% \end{itemize}
-% 
-% \end{frame}
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Predistraživanje -- zaključak}
-% \begin{itemize}
-%   \item Nužno je moći međusobno uspoređivati tvrdnje
-%   \item Razina tvrdnje naspram razine argumentacije
-%   \item Strukturiranje tvrdnji pomaže pri predviđanju stava
-%   \begin{itemize}
-%     \item Baze znanja -- ontologije
-%   \end{itemize}
-%   \item Znanje o implicitnim tvrdnjama poboljšava predviđanje istaknutih tvrdnji 
-% \end{itemize}
-% 
-% \end{frame}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Cilj i hipoteze istraživanja}
-% 
-% \begin{frame}
-% \frametitle{Cilj i hipoteze istraživanja}
-% 
-% \begin{block}{\textbf{Cilj istraživanja}}
-% Razvoj i ispitivanje sustava zasnovanog na metodama strojnoga učenja 
-% koji omogućava dubinsku analizu argumentacije u okviru specifične teme, 
-% na temelju velike količine teksta sakupljene s internetskih rasprava. 
-% \end{block}
-% 
-% Primjena
-% \begin{itemize}
-%   \item Izdvajanje najučestalijih tvrdnji
-%   \item Grupiranje sudionika rasprave prema zajedničkim tvrdnjama
-% \end{itemize}
-% \end{frame}
-% 
-% \begin{frame}
-% \frametitle{Hipoteze istraživanja -- I. dio}
-% 
-% \begin{enumerate}
-% \item Metode strojnog učenja mogu ostvariti zadovoljavajuću točnost na zadatku
-% prepoznavanja tvrdnji iz teksta; 
-% 
-% \vspace{0.2cm}
-% 
-% \item Moguće je strukturirati tvrdnje iz
-% tekstova internetskih rasprava tako da strukturirane tvrdnje zadržavaju aspekte
-% originalnih tvrdnji relevantne za daljnju argumentativnu analizu; 
-% 
-% \end{enumerate}
-% 
-% \end{frame}
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}
-% \frametitle{Hipoteze istraživanja -- II. dio}
-% \begin{enumerate}
-%   \setcounter{enumi}{2}
-% 
-% \item Ručno izrađena tematski specifična ontološka baza znanja može ostvariti razinu
-% apstrakcije dovoljno visoku da smanji problem jezične varijabilnosti tvrdnji,
-% ali opet dovoljno složenu da omogući daljnju argumentativnu  analizu tvrdnji;
-% 
-% \vspace{0.2cm}
-% 
-% \item Nad strukturiranim tvrdnjama moguće je izvoditi logičko zaključivanje;
-% 
-% \vspace{0.2cm}
-% 
-% \item Prepoznavanje, strukturiranje i analiza tvrdnji može se provesti u
-% vremenu znatno kraćem vremenu od vremena potrebnog za ručno provođenje tih
-% postupaka, uz zadržavanje zadovoljavajuće razine točnosti.
-% \end{enumerate}
-% 
-% \end{frame}
-% 
-% \section{Materijal, ispitanici, metodologija i plan istraživanja}
-% 
-% \begin{frame}
-% 
-% \frametitle{Faze istraživanja}
-% 
-% \begin{enumerate}
-%   \item Postupci za prepoznavanje tvrdnji iz tekstova internetskih rasprava
-%   \item Tematski specifična ontologija i ručno strukturiranje tvrdnji ontologijom
-%   \item Računalni model za automatsko strukturiranje tvrdnji ontologijom
-%   \item Model za analizu tvrdnji na temelju usporedbe tvrdnji više sudionika u raspravi
-% \end{enumerate}
-% \end{frame}
-% %------------------------------------------------
-% \begin{frame}
-% \frametitle{Prva faza istraživanja}
-% Prepoznavanje argumentativno relevantnih tvrdnji iz teksta
-% \begin{itemize}
-%   \item Ručno označavanje tvrdnji i parafraza u komentarima internetskih rasprava
-%   \begin{itemize}
-%     \item Tri označivača, dvije teme 
-%     \item Usuglašavanje označivača oko neslaganja
-%   \end{itemize}
-%   \item Računalne metode za predviđanje argumentativno relevantnih tvrdnji iz teksta
-%   \begin{itemize}
-%     \item Povratne neuronskim mrežama \cite{mikolov2010recurrent}
-%     \item Uvjetna nasumična polja \cite{lafferty2001conditional}
-%   \end{itemize}
-% \end{itemize}
-% \end{frame}
-% %------------------------------------------------
-% \begin{frame}
-% \frametitle{Druga faza istraživanja}
-% Izgradnja ontologije internetske rasprave
-% 
-% \includegraphics[scale=0.4]{jr/knowledge_base.png}
-% \footnote{\tiny{Izvor: \url{https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE9emFcgZUmYMcoPVcDvQULqDZeOTdpyn4YeoDvcBoUdz5mXT_}}}
-% 
-% \begin{itemize}
-%   \item Ekspresivniji formalizam od mikrostruktura
-%   \item Mogućnost logičkog zaključivanja ugrađena u ontologije
-% \end{itemize}
-% \end{frame}
-% 
-% %------------------------------------------------
-% \begin{frame}
-% \frametitle{Druga faza istraživanja}
-% Izgradnja ontologije internetske rasprave \\
-% \vspace{0.3cm}
-% Dvije razine znanja o svijetu
-% \begin{enumerate}
-%   \item Razina znanja o specifičnoj temi
-%   \begin{itemize}
-%     \item Općeprihvaćeni koncepti i relacije
-%     \item Tematski stručnjak izdvaja relevantne koncepte i relacije 
-%     \item Primjer: \emph{ilegalna prodaja marihuane}, \emph{ilegalna organizacija}, \emph{legalizacija marihuane}
-%   \end{itemize}
-%   \item Razina obrasca tvrdnji
-%   \begin{itemize}
-%     \item Neovisno o temi
-%     \item Povezuje tematski specifične koncepte
-%     \item Primjer: \emph{imati posljedicu}, \emph{biti u kontradikciji}
-%     \item Relacije pobuđivanja i potiskivanja \cite{hashimoto2012excitatory}
-%   \end{itemize}
-% \end{enumerate}
-% 
-% \end{frame}
-% 
-% %------------------------------------------------
-% \begin{frame}
-% \frametitle{Druga faza istraživanja}
-% Izgradnja ontologije internetske rasprave \\
-% \vspace{0.3cm}
-% 
-% \begin{itemize}
-%   \item Prevođenje tvrdnje iz prirodnog jezika u strukturu ontologije
-%     \begin{itemize}
-%       \item \emph{Legalizacija marihuane uzrokuje rak}
-%       \item \texttt{\scriptsize{posljedica(legalizacija marihuane, rak)}}
-%     \end{itemize}
-%     \begin{itemize}
-%       \item \emph{Znanstvenici su zaključili kako konzumacija marihuane nema štetne posljedice za zdravlje.}
-%       \item \texttt{\scriptsize{znanost( \\ \hspace{0.3cm} činjenica( \\ \hspace{0.5cm} ne uzrokuje( \\ \hspace{1.5cm} konzumacija marihuane, \\ \hspace{1.5cm} negativan utjecaj na zdravlje \\ \hspace{0.5cm} ) \\ \hspace{0.3cm} ) \\ ) }}
-%     \end{itemize}
-% 
-% \end{itemize}
-% \end{frame}
-% 
-% %------------------------------------------------
-% \begin{frame}
-% \frametitle{Treća faza istraživanja}
-% 
-% \begin{itemize}
-% 
-%   \item Automatsko strukturiranje tvrdnji iz prirodnog jezika
-%   \item Pretvaranje argumentativno relevantnih tvrdnji (prva faza) u strukturirani oblik (druga faza)
-%   \item Metode
-%   \begin{itemize}
-%     \item Prevođenje iz jednog (jezično varijabilnog) jezika u drugi (strukturirani)
-%     \item Nadzirano strojno učenje za predviđanje strukture -- Generalizirani SVM \cite{tsochantaridis2004support}
-%   \end{itemize}
-% \end{itemize}
-% \end{frame}
-% %------------------------------------------------
-% \begin{frame}
-% \frametitle{Četvrta faza istraživanja}
-% Analiza strukturiranih tvrdnji
-% \begin{enumerate}
-%   \item Sažimanje rasprave
-%   \begin{itemize}
-%     \item Najkorištenije tvrdnje \cite{boltuzic2015identifying}
-%     \item Prepoznavanje stava sudionika 
-%     \item Grupiranje rasprava prema sličnim korištenim tvrdnjama
-%   \end{itemize}
-%   \item Analiza novih tvrdnji
-%   \begin{itemize}
-%     \item Integriranje prepoznavanja i strukturiranja tvrdnji
-%     \item Usporedba s prethodno iskazanim tvrdnjama
-%   \end{itemize}
-% \end{enumerate}
-% \end{frame}
-% 
-% %------------------------------------------------
-% \section{Očekivani znanstveni doprinos predloženog istraživanja}
-% %------------------------------------------------
-% \begin{frame}
-% \frametitle{Očekivani znanstveni doprinos predloženog istraživanja}
-% \begin{enumerate}
-% \item Postupak modeliranja internetske rasprave ontologijom u dvije razine,
-% gdje prva razina sadrži tematski specifično znanje rasprave, dok druga razina
-% modelira obrasce tvrdnji, s ciljem strukturiranja tvrdnji u oblik pogodan za
-% daljnju argumentativnu analizu; 
-% 
-% \vspace{0.3cm}
-% 
-% \item Računalni postupak za prepoznavanje i strukturiranje argumentativnih tvrdnji
-% temeljen na metodama nadziranoga strojnog učenja; \\
-% 
-% \vspace{0.3cm}
-% 
-% \item Radni okvir i odgovarajuća programska podrška za računalno potpomognutu
-% analizu tvrdnji koja povezuje korake prepoznavanja, strukturiranja i analize
-% tvrdnji na temelju usporedbe tvrdnji svih sudionika u raspravi.
-% 
-% \end{enumerate}
-% \end{frame}
-% %------------------------------------------------
-% 
+\setbeamertemplate{headline}{}
+\begin{frame}
+
+	\begin{center}\huge{Thank you!}\end{center}
+	\centering
+	\vfill
+	\includegraphics{commodus.png}
+\end{frame}
+}
 
 %------------------------------------------------
+
+\appendix
+{
+
+\setbeamertemplate{headline}{}
 \begin{frame}[allowframebreaks] %allow to expand references to multiple frames (slides)
-\frametitle{References}
-\bibliography{phd-presentation} %bibtex file name without .bib extension
+	\frametitle{References}
+	\bibliography{phd-presentation} %bibtex file name without .bib extension
 
 \end{frame}
+}
 %------------------------------------------------
 
 \end{document}
