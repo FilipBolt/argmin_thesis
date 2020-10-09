@@ -13,6 +13,14 @@
 % needed -shell-escape because of this
 \usepackage{minted}
 \usepackage{varwidth}% http://ctan.org/pkg/varwidth
+\usepackage{afterpage}
+
+\newcommand\myemptypage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+    }
 
 % required for printing index
 % use \index{name} in text
@@ -230,43 +238,69 @@
 \include{prosireni_sazetak}
 % prošireni sažetak na engleskom, ako rad nije pisan na tom jeziku
 %\include{eg_extended_abstract}
+\myemptypage
 
 \include{00_toc}
 %%%%%%%%%%%%%%%%%%%%%%%% POGLAVLJA / CHAPTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\myemptypage
 \include{1-introduction}
 
+\myemptypage
 \part{Background and Methods}\label{part:background}
+\myemptypage
+\myemptypage
 
 \input{2-area_description}
 
+\pagebreak
+\myemptypage
 \include{3-keytechniques}
 
+\pagebreak
+\myemptypage
 \part{Unstructured Argumentation Mining of Claims}
 \label{part:unstruc}
 
+\myemptypage
 \input{4-argclu.tex}
 
+\pagebreak
+\myemptypage
 \input{5-argrec.tex}
 
+\pagebreak
+\myemptypage
 \input{6-argpremises.tex}
 
+\pagebreak
+\myemptypage
 \part{Structured Argumentation Mining of Claims}
 \label{part:struc}
 
+\pagebreak
+\myemptypage
 \input{7-claim_segmentation.tex}
 
 % microstructure vs. ontologies
+\pagebreak
+\myemptypage
 \input{8-formalizations.tex}
 
+\pagebreak
+\myemptypage
 \input{9-claim_structuring.tex}
 
 % analysis 
+\pagebreak
+\myemptypage
 \input{10-struc_arg.tex}
 
 \bookmarksetup{startatroot}
 \addtocontents{toc}{\bigskip}% perhaps as well
 
+\pagebreak
+\myemptypage
 \input{11-conclusion.tex}
 
 % \include{datasets}
@@ -284,9 +318,14 @@
 \setcounter{chapter}{0}%
 \renewcommand{\thechapter}{\Alph{chapter}}%  Letters as 'counters'
 %\part{\appendixname}
+
+\pagebreak
+\myemptypage
 \part{Appendices}
 	\label{part:appendix}
 
+\pagebreak
+\myemptypage
 \input{90_datasets}
 
 \input{91_annotation_guidelines}
@@ -299,6 +338,9 @@
 %%%%%%%%%%%%%%%%%%%%%%% LITERATURA / BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%
 % bibliography style file is modified IEEEtran.bst file,
 % changed to suit FER's literature style
+
+\pagebreak
+\myemptypage
 \addcontentsline{toc}{chapter}{Bibliography}
 %\bibliographystyle{apalike} 
 %\bibliographystyle{unsrtnat}	
@@ -316,6 +358,8 @@
 %\printindex
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\myemptypage
 
 \addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
@@ -326,6 +370,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % insert optional list of tables
 
+\pagebreak
+\myemptypage
 \addcontentsline{toc}{chapter}{List of Tables}
 \listoftables
 \cleardoublepage % start new page

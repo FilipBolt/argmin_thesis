@@ -12,89 +12,202 @@ podučavanje stranog jezika kroz razvoj kritičkog razmišljanja
 i sl. S porastom uporabe interneta sve se više argumentacije nalazi u
 internetskim raspravama. Argumentacijom se obrazlaže mišljenje naspram
 određene teme. Gradivni elementi argumentacije su argumenti, koji se pak sastoje
-od međusobno povezanih tvrdnji. 
+od međusobno povezanih tvrdnji. Detekcija i analiza tvrdnji glavni su problemi kojim se
+bavi ovaj rad. 
 
-Cilj istraživanja bio je razvoj rješenja niza zadataka koji su ključni za 
-dubinsku argumentativnu analizu tvrdnji u internetskim raspravama. 
-Zadatci uključuju ekstrakciju i strukturiranje tvrdnji tvrdnji. Rješavanje
-ovih zadataka vrlo je složeno zbog višeznačnosti jezika i implicitnog 
-znanja ovisnog o kontekstu. Pri istraživanju poseban je naglasak bio na izradi
-radnog okvira za tematski specifičnu dubinsku argumentativnu rasprave. 
-Prvo su provedena tri predistraživanja zasnovana na nestrukturiranim 
-metodama dubinske argumentativne analize. Iz predistraživanja detektirani su 
-nedostaci nestrukturiranih metoda, stoga je predložen pristup strukturiranja tvrdnji
-iskazanih u tekstu, 
-koji se smatra najvažnijim doprinosom rada. 
+Cilj istraživanja je razvoj rješenja niza zadataka koji su ključni za dubinsku
+argumentativnu analizu tvrdnji u internetskim raspravama.  Zadatci uključuju
+ekstrakciju i strukturiranje tvrdnji. Rješavanje ovih zadataka vrlo je složeno
+zbog višeznačnosti jezika i implicitnog znanja ovisnog o kontekstu iznošenja
+tvrdnji. Pri istraživanju, poseban je naglasak bio na izradi radnog okvira za
+tematski specifičnu dubinsku argumentativnu rasprave.  Prvo su provedena tri
+predistraživanja zasnovana na nestrukturiranim metodama dubinske argumentativne
+analize. Iz predistraživanja detektirani su nedostaci nestrukturiranih metoda,
+stoga je predložen pristup strukturiranja tvrdnji iskazanih u tekstu, koji se
+smatra najvažnijim doprinosom rada. U konačnici se pokazuju 
+prednosti korištenja pristupa strukturiranja tvrdnji na primjerima interentske rasprave
+na temu legalizacije marihuane. 
 
-Prvi istražen zadatak u sklopu predistraživanja jest pronalazak istaknutih tvrdnji. 
-Potrebno je, uz skup komentara s internetske rasprave, 
-pronaći istaknute tvrdnje kojima se sudionici rasprave najčešće služe.  
-Prvo se komentari s internetskih rasprava grupiraju u grupe
-koje sadrže istovjetne tvrdnje, a centroid grupa pretpostavljen je za 
-istaknutu tvrdnju. Komentari se hijarhijski grupiraju koristeći 
-njihove distributirane semantičke reprezentacije. 
-Rješavanje ovog zadatka olakšava sažimanje rasprave.
+Prvi istražen zadatak u sklopu predistraživanja jest pronalazak istaknutih
+tvrdnji.  Potrebno je, koristeći komentare korisnika internetskih rasprava (na
+temama o legalizaciji homoseksualnih brakova, legalizaciji marihuane,
+legalizaciji pobačaja te o pozitivnim i negativnim stranama mandata
+predsjednika SAD-a Baracka Obame) pronaći istaknute tvrdnje kojima se sudionici
+rasprave najčešće služe.  Prvo se komentari s internetskih rasprava grupiraju u
+skupine koje bi trebale sadržavati istovjetne tvrdnje u kojima je centroid
+skupine pretpostavljen za istaknutu tvrdnju. S tehničkog aspekta, grupiranje
+komentara odvija se na način da su komentari prvo projecirani u vektorski
+prostor distribuiranih semantičkih reprezentacija, nakon čega dolazi do
+hijerahijskog aglomerativnog grupiranja vektorskih reprezentacija komentara.
+Rješavanje ovog zadatka olakšava sažimanje rasprave.  Rezultati grupiranja
+pokazali su kako je moguće grupirati komentare u skupine, s time da je najteže
+razlikovati tvrdnje potpuno suprotnog stava. Distribuirane
+semantičke reprezentacije tvrdnji suprotnog stava često su vrlo slične, 
+što otežava pronalazak istaknutih tvrdnji.
 
-Drugi zadatak jest postupak prepoznavanja istaknutih tvrdnji u 
-komentarima internetskih rasprava. 
-Komentari mogu biti u podupirati ili pobijati istaknute tvrdnje. Prepoznavanje
-istaknute tvrdnje svodi se na detekciju odnosa između komentara i tvrdnje. 
-Predložen je postupak za prepoznavanje istaknutih tvrdnji 
-temeljen na nadziranom strojnom učenju. 
+Kako bi se istražile metode za bolje razlikovanje tvrdnji (suprotnog stava),
+drugi zadatak dubinske argumentativne analize istražen u sklopu
+predistraživanja jest postupak prepoznavanja istaknutih tvrdnji u komentarima
+internetskih rasprava.  Definirano je da komentari mogu podupirati, pobijati,
+ili biti neutralni naspram istaknute tvrdnje. Dodatno, određeno je kako
+komentar može eksplicitno ili implicitno podupirati ili pobijati tvrdnju. Prema
+tome, svaki komentar odnosi se prema tvrdnji prema jednome od pet prethodno
+nabrojanih načina (eksplicitno podupiranje, implicitno podupiranje,
+neutralnost, implicitno pobijanje, eksplicitno pobijanje).  
+Prikupljen i označen je skup podataka \ComArg koji se sastoji od komentara korisnika
+na internetskim raspravama (na teme legalizacije homoseksualnih brakova i
+uključivanju riječi ,,tako mi Bog pomogao'' prilikom izricanja zakletve) te
+istaknutih tvrdnji na internetskim raspravama s ekvivalentnim temama.  Prepoznavanje istaknute
+tvrdnje svedeno je na detekciju odnosa između komentara i tvrdnje.  Predložen
+je postupak za prepoznavanje istaknutih tvrdnji temeljen na nadziranom strojnom
+učenju. Kao ulaz za model strojnog učenja, korištene su tri skupine značajki: 
+\begin{enumerate*}
+	\item izlazi  \emph{TakeLab Semantic Textual Similarity} 
+		modela semantičke sličnosti teksta,
+	\item izlazi \emph{Excitement Open Platform} modela za 
+		određivanje logičke posljedice, te
+	\item značajka usklađenosti stavova.
+\end{enumerate*} 
+Provedeno je nekoliko vrsta eksperimenata gdje je evaluirana korisnost
+pojedinih kombinacija skupina značajki, prema kojima su se izlazi modela
+\emph{Excitement Open Platform} pokazali najkorisnijom značajkom.
+Naposlijetku, proveden je eksperiment u kojem je ispitana mogućnost primjene
+modela treniranog na jednoj domeni na podatke iz druge domene. U svim
+eksperimentima primjećeno je kako detekcija odnosa između komentara i tvrdnje
+značajno varira po težini, stoga bi bilo dobro dodatno istražiti odnose između
+tvrdnji.  
 
 Naposljetku, treći zadatak u sklopu predistraživanja jest 
 pronalazak implicitnih informacija u komentarima internetskih rasprava. 
-Implicitne informacije između istaknute tvrdnje i komentara koji podupire 
+Implicitne informacije između istaknute tvrdnje i komentara koji podupire ili pobija
 tu istaknutu tvrdnju definirane su putem niza tvrdnji koje upotpunjavaju 
-lanac logičkog zaključivanja. Predložene su metode za prepoznavanje istaknutih 
-tvrdnji u komentarima uz korištenje implicitnih tvrdnji. 
+lanac logičkog zaključivanja između komentara i istaknute tvrdnje. 
+Prvo je prikupljen korpus podataka koji sadrži skupove implicitnih tvrdnji za
+parove zadanih istaknutih tvrdnji i komentara internetskih rasprava. 
+Skupove implicitih tvrdnji generirala su tri označivača te je ispitano slaganje
+između njihovih oznaka. Generirani skupovi implicitnih tvrdnji su
+kvalitativno i kvantitativno evaluirani, te je utvrđeno kako je, 
+u prosjeku, potrebno tri implicitne tvrdnje kako bi se logički povezalo
+komentar s istaknutom tvrdnjom. 
+Zatim su predložene metode za prepoznavanje istaknutih 
+tvrdnji u komentarima uz korištenje generiranih skupova implicitnih tvrdnji. 
 Pokazano je kako korištenje implicitnih tvrdnji nedvojbeno pospješuje 
-rješavanje zadatka prepoznavnaja istaknutih tvrdnji. 
-Iz predistraživanja zaključeno je kako je pronalazak implicitnih informacija
+rješavanje zadatka detekcije istaknutih tvrdnji iz komentara. 
+Potom je osmišljen jednostavan heuristički postupak za dohvaćanje generiranih 
+tvrdnji koje su potom
+korištene za detekciju istaknutih tvrdnji. No, eksperimenti su pokazali kako je 
+dohvaćanje implicitnih tvrdnji iznimno zahtjevan problem, te su uglavnom pogrešne
+implicitne tvrdnje dohvaćane, zbog čega su poboljšanja u detekciji istaknutih tvrdnji 
+bila znatno umanjena. 
+Iz ovog predistraživanja zaključeno je kako je pronalazak implicitnih informacija
 bitan za kvalitetnu dubinsku analizu analizu argumentacije. 
 
-Temeljem zaključaka iz predistraživanja, predložen je 
-strukturirani pristup pronalaska istaknutih tvrdnji kroz 
-radni okvir za strukturiranje tvrdnji. 
-U takvome se pristupu definira formalna struktura tvrdnji kako bi se
-umanjio problem različitih lingvističkih realizacija u tekstu i omogućilo
-izvođenje implicitih tvrdnje logičkim zaključivanjem. 
-Strukturirani pristup konceptualno je proveden u tri dijela. 
-Prvo je predložena metoda za predviđanje tvrdnji iz komentara, 
-zatim su tvrdnje modelirane i strukturirane pomoću računalnih ontologija,
-te je, u konačnici, predložen niz metoda zasnovan na strukturiranom 
-predviđanju za strukturiranje tvrdnji iz teksta. 
+Temeljem zaključaka iz predistraživanja, predložen je strukturirani pristup
+pronalaska istaknutih tvrdnji kroz radni okvir za strukturiranje tvrdnji.  U
+takvome se pristupu definira formalna struktura tvrdnji kako bi se umanjio
+problem različitih lingvističkih realizacija u tekstu i omogućilo dohvaćanje
+implicitih tvrdnje kombinirajući pravila logike i informacije iz eksplicitno
+konstatiranih tvrdnji.  Pristup strukturiranoj dubinskoj argumentativnoj
+analizi konceptualno je proveden u tri dijela.  Prvo je predložena metoda za
+predviđanje tvrdnji iz komentara, zatim su tvrdnje modelirane i strukturirane
+pomoću računalnih ontologija, te je, u konačnici, predložen niz metoda zasnovan
+na kombinaciji metoda iz dubokog učenja i strukturiranog predviđanja 
+za strukturiranje tvrdnji iz teksta. Nakon
+provođenja strukturiranog pristupa dubinskoj argumentativnoj analizi, moguće je
+raditi razne argumentativne analize utemeljene na logičkim pravilima proizašlih ih računalnih
+ontologija, kao što su analize najčešćih tvrdnji u raspravi ili analiza
+zajedničkih tvrdnji skupina sudionika rasprave. 
 
-Problem previđanja tvrdnji iz komentara definiran je sukladno srodnim
+U problemu previđanja tvrdnji iz komentara potrebno je izdvojiti nedjeljive jedinice
+argumentativnog teksta (tvrdnje) u nestrukturiranom tekstu (komentaru).
+Problem je definiran sukladno srodnim
 problemima označavanja sekvenci, kao što je problem ekstrakcije imenovanih
-entiteta.  Matematički je definiran problem predviđanja tvrdnji na dva načina.  Za oba načina
-predloženo je više modela, među njima i model zasnovan na kombinaciji dubokog
+entiteta. 
+Definirano je devet principa kojima se utvrđuje što čini jednu tvrdnju. 
+Temeljem definiranih principa, prošireni su korpusi podataka korišteni u 
+predistraživanju (tekstovi internetskih rasprava na temama 
+legalizacije homoseksualnih brakova i legalizacije marihuane). 
+U komentarima internetskih rasprava označene su tvrdnje i njihove parafraze.
+Formalno, problem predviđanja tvrdnji kodiran je na dva načina: 
+korištenjem višestrukih binarnih oznaka (engl. \emph{multi-label}) 
+te uporabom \texttt{BIO} oznaka. 
+Za oba načina kodiranja
+predloženo je više modela: heuristički postupak zasnovan na razdvajanju po 
+interpunkciji, model potpornih vektora, te model zasnovan na kombinaciji dubokog
 učenja i strukturiranog previđanja. Predloženi modeli eksperimentano su vrednovani 
-te je zaključeno kako metode strukturiranog previđanja pomažu
-prilikom previđanja tvrdnji. 
+te se pokazalo kako model zasnovan na kombinaciji dubokog učenja i strukturiranog predviđanja
+pokazuje najbolje performanse. Predloženi modeli postigli 
+su adekvatne performanse na temelju čega se može zaključiti kako je 
+je moguće kvalitetno detektirati tvrdnje iz komentara. 
 
-S ciljem ublažavanja problema različitih lingvističkih realizacija 
-i implicitnosti teksta, 
+S ciljem ublažavanja niza tipičnih problema prilikom obrade
+nestrukturiranog teksta, kao što su 
+manifestacija različitih lingvističkih realizacija,
+višeznačnosti riječi i izraza, te
+implicitnosti teksta, 
 izdvojene tvrdnje strukturirane su pomoću računalnih ontologija. 
-Kroz dvije razine računalnim ontologijama opisuju se tematski specifični koncepti te 
-generički obrasci tvrdnji. Kako bi se strukturirale tvrdnje, prvo je 
-potrebno definirati tematski specifične koncepte 
-za svaku pojedinu temu rasprave, zatim je moguće kombinirati 
-definirane koncepte s obrascima kako bi se tvrdnje strukturirale. 
+Strukturiranje tvrdnji definirano je 
+kroz dvorazinsku ontologiju. 
+Gornja razina ontologije modelira generičke obrasce tvrdnji, dok 
+domenska (donja) razina ontologije opisuje tematski specifične koncepte. 
+Prilikom strukturiranja tvrdnji, prvo je potrebno definirati 
+domensku ontologiju te sve popratne tematski specifične koncepte i
+svojstva za svaku pojedinu temu rasprave. Zatim je moguće kombinirati 
+definirane koncepte s obrascima gornje razine ontologije kako bi se tvrdnje strukturirale. 
+Postupak strukturiranja tvrdnji kroz dvorazinsku argumentativnu ontologiju
+validiran je na studiji slučaja. Internetska rasprava na temu
+legalizacije marihuane odabrana je kako bi se izradila domenska ontologija. 
+Izrađena domenska ontologija potom je povezana s gornjom ontologijom.
+Korpus tvrdnji kreiran za potrebe predviđanja tvrdnji proširen je
+oznakama strukturiranih tvrdnji. Svakoj tvrdnji tri označivača su dodijelila 
+po jednu strukturiranu tvrdnju. 
+Provedena je analiza njihovih oznaka kako bi se utvrdilo koliko
+strukturirane tvrdnje uistinu reduciraju probleme obrade
+nestrukturiranog teksta. 
 
 Kako bi se dovršio zadnji korak strukturiranog radnog okvira za dubinsku
-argumentativnu analizu predložene su metode za strukturiranje tvrdnji,
-zasnovane na nadziranom strojnom učenju. Problem strukturiranja
-tvrdnji pokazao se kao vrlo težak problem, uglavnom zbog velikog
-broja mogućih rješenja. Eksperimentalnim vrednovanjem najboljim
-metodama pokazala se metoda ulančanih klasifikatora,
-zasnovanih na strukturiranom previđanju. 
+argumentativnu analizu predložene su metode za strukturiranje tvrdnji.
+Formalno, problem strukturiranja tvrdnji definiran je na dva načina:
+predviđanjem čitave strukture odjednom naspram predviđanja komponenti
+strukture.  U slučaju predviđanja pojedinih komponenti strukture konačna
+strukturiranja tvrdnja dobija se spajanjem rezultata predviđanja pojedinih
+komponenti. Osmišljeni su modeli zasnovani na nadziranom strojnom učenju koji
+bi automatizirali strukturiranje tvrdnji iz nestrukturiranih tvrdnji: model
+potpornih vektora, ulančani klasifikatori (engl.  \emph{chain classification})
+gdje je jedan klasifikator model potpornih vektora, skup ulančanih
+klasifikatora (engl. \emph{ensemble chain classification}).  Također,
+predložena dvosmjerna povratna neuronska mreža koja istodobno detektira i
+strukturira tvrdnje iz komentara.  Navedeni modeli su eksperimentalno vrednovani
+uspoređujući predviđanje strukture odjednom i po komponentama.  U
+eksperimentima je korišten korpus strukturiranih tvrdnji kreiran prilikom
+izrade domenske ontologije za temu legalizacije marihuane.    Prema
+eksperimentalnom vrednovanju metoda  skupa ulančanih klasifikatora pokazala se
+najboljom. Metoda istodobnog predviđanja i strukturiranja tvrdnji nije pokazala
+dobre performanse zbog propagiranja pogrešaka u koraku detekcije tvrdnji.
+Generalno gledano problem strukturiranja tvrdnji pokazao se kao vrlo težak
+problem, uglavnom zbog velikog broja mogućih rješenja, pogotovo u slučaju
+predviđanja strukture po komponentama. Potrebno je dodatno istraživanje kako
+bi se pronašla dovoljno dobra metoda za automatsko strukturiranje 
+tvrdnji nad novim temama i tvrdnjama. 
 
-Prednost strukturiranih tvrdnji za dubinsku analizu argumentacije 
-demonstrirana je u vidu dohvaćanja implicitnih tvrdnji logičkim
-zaključivanjem i grupiranjem sudionika temeljem zajedničkih
-tvrdnji u raspravi. Time je pokazan objašnjiv i strukturiran
-način pronalaska implicitnih tvrdnji.  
+Kako bi se demonstrirala prednost strukturiranih tvrdnji nad nestrukturiranima
+za dubinsku analizu argumentacije napravljen je niz analiza na temi
+legalizacije marihuane. Analize uključuju određivanje najučestalijih tvrdnji u
+raspravi te najučestalijih tvrdnji vezanih uz specifični (domenski) koncept,
+izvođenje implicitnih tvrdnji pravilima domenske ontologije te korištenjem
+korisnički definiranih aksioma, analizu stava sudionika kroz vrijeme, te
+grupiranje sudionika temeljem zajedničkih tvrdnji u raspravi.  Niz analiza
+pokazuje načine za dobivanje implicitnih tvrdnji koristeći strukturirane
+tvrdnje. Za implicitne tvrdnje dobivene iz strukturiranih tvrdnji moguće je
+dobiti lanac logičkog zaključivanja temeljem kojeg se izvedene dobivene
+implicitne tvrdnje. 
+
+Radni okvir za dubinsku argumentativnu analizu tekstova internetskih rasprava
+čine model za detekciju tvrdnji, korisnički definirana domenska ontologija integrirana
+u dvorazinsku ontologiju tvrdnji, te model za strukturiranje
+tvrdnji pomoću dvorazinske ontologije. Koristeći takav radni okvir definiran u sklopu
+ovog rada moguće je raditi argumentativne analize nad strukturiranim tvrdnjama nad
+proizvoljnom domenom rasprave.
 
 \vspace{1cm}
 \textbf{Ključne riječi}:  
